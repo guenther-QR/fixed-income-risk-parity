@@ -505,7 +505,7 @@ survives duration matching, costs and borrowing.</p>
 {cards}
 <footer>
 The project this grew out of:
-<a class="plain" href="https://guenther-QR.github.io/macro-portfolio-rebuild/">macro-portfolio-rebuild</a>.
+<a class="plain" href="https://guenther-qr.github.io/macro-portfolio-rebuild/">macro-portfolio-rebuild</a>.
 &nbsp;&middot;&nbsp;
 <a class="plain" href="https://github.com/guenther-QR/fixed-income-risk-parity">Source on GitHub</a>
 </footer>
