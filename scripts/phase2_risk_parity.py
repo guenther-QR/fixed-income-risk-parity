@@ -48,8 +48,8 @@ from macro.backtest import leverage, metrics, speclog  # noqa: E402
 from macro.portfolio import covariance as cov  # noqa: E402
 from macro.stats import inference as inf  # noqa: E402
 
-P2 = import_module("02_allocation_engine")
-P3 = import_module("03_forecast_allocation")
+P2 = import_module("phase2_allocators")
+P3 = import_module("phase2_forecast_tilts")
 PROCESSED = ROOT / "data/processed"
 DEV_END = "2015-12"
 OOS_START = "2016-01"

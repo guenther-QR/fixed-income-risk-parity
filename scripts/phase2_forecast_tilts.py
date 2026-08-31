@@ -44,7 +44,7 @@ from macro.signals import library as lib, literature as lit  # noqa: E402
 sys.path.insert(0, str(ROOT / "scripts"))
 from importlib import import_module  # noqa: E402
 
-P2 = import_module("02_allocation_engine")
+P2 = import_module("phase2_allocators")
 PROCESSED = ROOT / "data/processed"
 MIN_TRAIN = 120
 DEV_END = "2015-12"

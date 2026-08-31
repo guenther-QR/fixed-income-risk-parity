@@ -51,7 +51,7 @@ from macro.backtest import leverage, metrics, speclog  # noqa: E402
 from macro.portfolio import covariance as cov, cross_section as xs  # noqa: E402
 from macro.stats import inference as inf  # noqa: E402
 
-P7 = import_module("07_wide_fi_universe")
+P7 = import_module("phase1_wide_universe")
 PROCESSED = ROOT / "data/processed"
 DEV_END = "2015-12"
 OOS_START = "2016-01"
