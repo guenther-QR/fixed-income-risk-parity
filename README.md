@@ -5,13 +5,13 @@ Gus Guenther, UCLA Anderson MFE
 A bond only portfolio built on one finding: bond returns get harder to forecast
 as they get riskier.
 
-**[Read the full writeup](https://GITHUBNAME.github.io/fixed-income-risk-parity/reports/final_paper.html)**
+**[Read the full writeup](https://guenther-QR.github.io/fixed-income-risk-parity/reports/final_paper.html)**
 
 This is the second half of a larger project. The first half rebuilt a macro
 allocation study I wrote in 2025, fixed nine errors in it, and tested about 1,600
 specifications against a sealed holdout. Nothing beat a 60/40 benchmark. That
 work is in
-[macro-portfolio-rebuild](https://github.com/GITHUBNAME/macro-portfolio-rebuild).
+[macro-portfolio-rebuild](https://github.com/guenther-QR/macro-portfolio-rebuild).
 
 ---
 
