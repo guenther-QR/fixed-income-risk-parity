@@ -153,31 +153,32 @@ against all three benchmarks but small and not significant. That decade was hard
 for every bond portfolio. Equal weight returned 2.2% a year at a Sharpe of 0.03,
 so there was very little for anything to separate on.
 
+## The three phases
+
+| Phase | Report | Scripts |
+|---|---|---|
+| 1. The Idea | `reports/phase1_idea.html` | `phase1_build_universe.py`, `phase1_wide_universe.py` |
+| 2. Strategies | `reports/phase2_strategies.html` | `phase2_allocators.py`, `phase2_forecast_tilts.py`, `phase2_risk_parity.py` |
+| 3. Results and Holdout | `reports/phase3_results.html` | `phase3_predictability.py`, `phase3_shorting.py` |
+
+`reports/index.html` summarizes all three and links to each one.
+
 ## Repo layout
 
 ```
+index.html            redirects to reports/index.html for GitHub Pages
+reports/              one HTML per phase, plus the index
+scripts/              one or more scripts per phase, named to match
+  build_site.py       regenerates every report from the saved data
 src/macro/
-  curves/       zero curve bootstrap, Nelson-Siegel-Svensson, Hull-White,
-                G2++, affine term structure
-  data/         FRED and Yahoo clients, vendor splicing, quality checks
-  portfolio/    optimizers, covariance estimators, cross section tools
-  backtest/     walk forward engine, costs, leverage, sealed holdout,
-                specification log
-  stats/        block bootstrap, Hansen SPA, deflated Sharpe
-  signals/      predictor library
-  report/       HTML report builder
-
-scripts/
-  01_build_universe.py       11 asset bond panel
-  02_allocation_engine.py    risk based allocators vs equal weight
-  03_forecast_allocation.py  forecast driven tilts
-  04_holdout_inference.py    the forecastability vs duration finding
-  06_riskparity_deep.py      duration matched test, HRP, robustness
-  08_shorting.py             long short and market neutral variants
-  report_paper_final.py      regenerates the writeup
-
-reports/
-  final_paper.html           the full writeup
+  curves/             zero curve bootstrap and term structure models
+  data/               FRED and Yahoo clients, vendor splicing, quality checks
+  portfolio/          optimizers, covariance estimators, cross section tools
+  backtest/           walk forward engine, costs, leverage, sealed holdout,
+                      specification log
+  stats/              block bootstrap, Hansen SPA, deflated Sharpe
+  signals/            predictor library
+  report/             HTML report builder
 ```
 
 ## Running it
@@ -186,17 +187,19 @@ reports/
 pip install -r requirements.txt
 export FRED_API_KEY=your_key_here
 
-python scripts/01_build_universe.py
-python scripts/06_riskparity_deep.py
-python scripts/report_paper_final.py
+python scripts/phase1_build_universe.py
+python scripts/phase2_allocators.py
+python scripts/phase2_risk_parity.py
+python scripts/phase3_predictability.py
+python scripts/build_site.py
 ```
 
 A free FRED API key takes about a minute to get from
 https://fred.stlouisfed.org/docs/api/api_key.html
 
 Data files are not committed. The build scripts pull from FRED and Yahoo and
-write to a local `data/` directory, which `.gitignore` excludes. The generated
-report is committed so you can read the results without running anything.
+write to a local `data/` directory, which `.gitignore` excludes. The reports are
+committed so you can read the results without running anything.
 
 ## Limitations
 
