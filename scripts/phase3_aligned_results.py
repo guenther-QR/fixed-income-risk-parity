@@ -6,11 +6,17 @@ disadvantaged strategies for reasons that have nothing to do with the strategies
 
 1. Start dates. Equal weight and the 2s10s barbell need no covariance estimate,
    so they ran from 1982-11. Risk parity, hierarchical risk parity and inverse
-   volatility need one, so a 60-month burn-in pushed them to 1987-11. Equal
-   weight was therefore credited with five extra years of the strongest bond
-   bull market in the sample, and it showed: its development CAGR was 7.58%
-   over the long window against 6.87% over the shared one. Every edge measured
-   against it was overstated by roughly six basis points of Sharpe.
+   volatility need one, so a 60-month burn-in pushed them to 1987-11.
+
+   The direction of that bias is not the obvious one. Those five extra years
+   hold the highest absolute bond returns in the sample, 11.63% a year for
+   equal weight against 6.87% after, so the instinct is that dropping them
+   should hurt the benchmark. It helps it. Cash paid 7.45% over the stub, so
+   11.63% is only 4.18% of excess return, earned at 6.64% volatility in the
+   unstable rate environment after the Volcker disinflation: a Sharpe of 0.575
+   against 0.805 for the period that follows. The extra window was dragging
+   equal weight's Sharpe *down*. Aligning therefore makes the benchmark harder
+   and shrinks every edge by roughly six basis points of Sharpe.
 
    The fix is to start every series, benchmarks included, on the first date the
    slowest strategy can trade.

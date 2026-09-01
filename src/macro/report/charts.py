@@ -5,6 +5,17 @@ light/dark theme switch. Every chart here draws its structural elements
 (text, spines, ticks, grid) in sentinel colors that `to_svg` rewrites into CSS
 custom properties, so the chart inherits the page's theme. Series colors are
 chosen to hold contrast on both grounds and are left alone.
+
+Two conventions the reports rely on:
+
+* **No log scales.** Axes are read in dollars or percent. A log axis makes a
+  ninefold difference look like a small one, which is exactly the difference a
+  reader is trying to judge. Where a series genuinely spans two orders of
+  magnitude, split it across panels rather than compressing the axis.
+* **Role, not just color.** A chart usually has one line that matters, a few
+  that compete with it, and a benchmark. `ROLES` gives each a distinct weight,
+  dash pattern and marker so the hierarchy survives greyscale printing and
+  colorblind viewers.
 """
 from __future__ import annotations
 
@@ -14,14 +25,37 @@ import re
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
+from matplotlib.ticker import FuncFormatter  # noqa: E402
 
 # Sentinels swapped for CSS variables after rendering.
 INK = "#101010"
 MUTED = "#7a7a7a"
 RULE = "#cfcfcf"
 
-# Series palette: mid-tone, legible on both light and dark grounds.
-SERIES = ["#2f6f9f", "#c98a2b", "#4b8f6d", "#a4576f", "#6c6f9c", "#8a7b52"]
+# Series palette. Mid-tone and reasonably far apart in hue and in lightness, so
+# the lines stay separable on a light ground, on a dark ground, and in grey.
+ACCENT = "#0f7d94"      # deep teal, reserved for the featured series
+SERIES = [
+    "#0f7d94",  # teal
+    "#cf6a1a",  # burnt orange
+    "#2f8f5b",  # green
+    "#a83c66",  # rose
+    "#6257b8",  # violet
+    "#9c7d1e",  # ochre
+    "#3d6fa8",  # blue
+]
+NEUTRAL = "#8b949e"     # benchmarks: present, but not competing for attention
+
+# Line treatments by role. `markevery` is a fraction of the line's own path
+# length, so markers stay evenly spaced regardless of series length.
+ROLES = {
+    "hero":      dict(linewidth=2.6, zorder=6, marker="o", markersize=4.6,
+                      markevery=0.09, markeredgecolor="none"),
+    "strategy":  dict(linewidth=1.6, zorder=4),
+    "secondary": dict(linewidth=1.3, zorder=3, alpha=0.9),
+    "benchmark": dict(linewidth=1.7, zorder=5, linestyle=(0, (5, 2)),
+                      color=NEUTRAL),
+}
 
 _SUBS = [(INK, "var(--ink)"), (MUTED, "var(--ink-muted)"), (RULE, "var(--rule)")]
 
@@ -32,6 +66,20 @@ def new_axes(width: float = 9.0, height: float = 3.4):
     ax.patch.set_alpha(0.0)
     style_axes(ax)
     return fig, ax
+
+
+def new_stacked(width: float = 9.0, height: float = 5.0,
+                ratios: tuple[int, int] = (1, 1)):
+    """Two panels sharing an x-axis, for series that differ by an order of
+    magnitude. Splitting them is the alternative to a log scale."""
+    fig, axes = plt.subplots(2, 1, figsize=(width, height), sharex=True,
+                             gridspec_kw={"height_ratios": list(ratios),
+                                          "hspace": 0.16})
+    fig.patch.set_alpha(0.0)
+    for ax in axes:
+        ax.patch.set_alpha(0.0)
+        style_axes(ax)
+    return fig, axes
 
 
 def style_axes(ax) -> None:
@@ -48,6 +96,53 @@ def style_axes(ax) -> None:
         label.set_fontsize(9)
     ax.title.set_color(INK)
     ax.title.set_fontsize(10.5)
+
+
+def style_for(role: str, index: int = 0) -> dict:
+    """Line keywords for a role. Benchmarks carry their own fixed color; every
+    other role draws the next color from the palette."""
+    kw = dict(ROLES.get(role, ROLES["strategy"]))
+    kw.setdefault("color", SERIES[index % len(SERIES)])
+    return kw
+
+
+def dollar_axis(ax, decimals: int | None = None) -> None:
+    """Label the y-axis in dollars. Call after plotting, so the tick precision
+    can be chosen from the range actually drawn."""
+    if decimals is None:
+        decimals = 2 if ax.get_ylim()[1] < 10 else 0
+    ax.yaxis.set_major_formatter(
+        FuncFormatter(lambda v, _: f"${v:,.{decimals}f}"))
+
+
+def percent_axis(ax, decimals: int = 0, already_percent: bool = True) -> None:
+    """Label the y-axis in percent. `already_percent` is True when the plotted
+    values are 12.4 rather than 0.124."""
+    scale = 1.0 if already_percent else 100.0
+    ax.yaxis.set_major_formatter(
+        FuncFormatter(lambda v, _: f"{v * scale:,.{decimals}f}%"))
+
+
+def growth(ax, frame, roles: dict[str, str] | None = None,
+           start: float = 1.0, order: list[str] | None = None):
+    """Plot growth of one dollar for every column, on a linear dollar axis.
+
+    `roles` maps a column name to "hero", "strategy", "secondary" or
+    "benchmark"; anything unlisted is drawn as a strategy. Palette colors are
+    assigned in `order` (default: the frame's own column order) so that a
+    column keeps the same color across every chart in a report.
+    """
+    roles = roles or {}
+    cols = order or list(frame.columns)
+    for i, c in enumerate(cols):
+        if c not in frame.columns:
+            continue
+        s = frame[c].dropna()
+        ax.plot(s.index, start * (1 + s).cumprod(),
+                label=c, **style_for(roles.get(c, "strategy"), i))
+    ax.set_ylabel("growth of $1")
+    dollar_axis(ax)
+    return ax
 
 
 def legend(ax, **kw):

@@ -46,9 +46,27 @@ stationary block bootstrap. Every series starts November 1987, see below.
 **Start dates.** Equal weight and the barbell need no covariance estimate, so
 they originally ran from November 1982. Risk parity, hierarchical risk parity and
 inverse volatility need one, so a 60-month estimation window pushed them to
-November 1987. Equal weight was therefore credited with five extra years of the
-strongest bond bull market in the sample: its development CAGR was 7.58% on the
-long window against 6.87% on the shared one.
+November 1987. Comparing series measured over different windows is not a
+comparison, whichever way the bias runs.
+
+And the bias does not run the way you would guess. Those five extra years hold
+the highest absolute bond returns in the sample, so the instinct is that dropping
+them should make the benchmark look worse. It does the opposite.
+
+| Equal weight over | Return | Cash rate | Excess | Vol | Sharpe |
+|---|---|---|---|---|---|
+| 1982-11 to 1987-10, dropped | 11.63% | 7.45% | 4.18% | 6.64% | 0.575 |
+| 1987-11 to 2015-12, kept | 6.87% | 3.22% | 3.66% | 4.41% | 0.805 |
+| 1982-11 to 2015-12, as first run | 7.58% | 3.85% | 3.72% | 4.82% | 0.744 |
+
+Cash paid 7.45% over those five years. An 11.63% bond return is a large number
+and a mediocre one at the same time: 4.18% of excess return, earned at 6.64%
+volatility in the unstable rate environment after the Volcker disinflation. That
+is a Sharpe of 0.575 against 0.805 for the period that follows. The extra window
+was dragging equal weight's Sharpe **down**, not lifting it.
+
+So aligning the start dates makes the benchmark **harder**, and every edge
+measured against it shrinks by roughly six basis points of Sharpe.
 
 | Strategy | Edge as first reported | Edge on a common start |
 |---|---|---|
@@ -59,7 +77,9 @@ long window against 6.87% on the shared one.
 
 Everything now starts November 1987, benchmarks included. The result survives but
 it is a third smaller than it was, and the Agg proxy moves from behind equal
-weight to slightly ahead of it.
+weight to slightly ahead of it. It is also a reminder that a high-rate decade
+flatters nominal returns and punishes Sharpe ratios, worth holding onto when
+reading any bond result spanning the early 1980s.
 
 **Volatility.** A growth-of-1 chart puts the lowest-volatility line at the
 bottom, which inverts the Sharpe ranking whenever the low-volatility strategy is

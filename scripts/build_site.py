@@ -126,7 +126,8 @@ def phase1():
                         fontsize=8, color=charts.MUTED)
         ax.axhline(0, color=charts.MUTED, linewidth=1.0, linestyle="--")
         ax.set_xlabel("modified duration, years")
-        ax.set_ylabel("out of sample R squared, percent")
+        ax.set_ylabel("out of sample R squared")
+        charts.percent_axis(ax, decimals=1)
         r.figure(charts.to_svg(fig),
                  "Rank correlation negative 0.958, p below 0.001. Every asset "
                  "above five years of duration sits below the line.")
@@ -443,27 +444,56 @@ def phase3():
         "Two problems with the earlier version of this table, both of which "
         "distorted the comparison for reasons unrelated to the strategies."))
     r.prose(
-        "<strong>Start dates.</strong> Equal weight and the 2s10s barbell need no "
-        "covariance estimate, so they ran from November 1982. Risk parity, "
+        "<strong>Start dates.</strong> Equal weight and the 2s10s barbell need "
+        "no covariance estimate, so they ran from November 1982. Risk parity, "
         "hierarchical risk parity and inverse volatility need one, so a sixty "
-        "month estimation window pushed them to November 1987. Equal weight was "
-        "therefore credited with five extra years of the strongest bond bull "
-        "market in the sample. Its development CAGR was 7.58% on the long window "
-        "against 6.87% on the shared one, and every edge measured against it was "
-        "overstated by roughly six basis points of Sharpe.")
+        "month estimation window pushed them to November 1987. Comparing series "
+        "measured over different windows is not a comparison, whichever way the "
+        "bias runs.")
+    r.prose(
+        "<strong>And the bias does not run the way you would guess.</strong> "
+        "Those five extra years contain the highest absolute bond returns "
+        "anywhere in the sample: equal weight compounded at 11.63% a year over "
+        "them, against 6.87% for the period that follows. The instinct is that "
+        "dropping them should make equal weight look worse. It does the "
+        "opposite.")
+    r.table(pd.DataFrame([
+        ("1982-11 to 1987-10, dropped", "11.63%", "7.45%", "4.18%", "6.64%",
+         "0.575"),
+        ("1987-11 to 2015-12, kept", "6.87%", "3.22%", "3.66%", "4.41%",
+         "0.805"),
+        ("1982-11 to 2015-12, as first run", "7.58%", "3.85%", "3.72%", "4.82%",
+         "0.744"),
+    ], columns=["equal weight over", "return", "cash rate", "excess", "vol",
+                "Sharpe"]).set_index("equal weight over"),
+        align_right=["return", "cash rate", "excess", "vol", "Sharpe"])
+    r.prose(
+        "Cash paid <strong>7.45%</strong> over those five years. An 11.63% bond "
+        "return is a large number and a mediocre one at the same time: it is "
+        "4.18% of excess return, earned at 6.64% volatility in the violently "
+        "unstable rate environment that followed the Volcker disinflation. That "
+        "is a Sharpe of 0.575, well below the 0.805 of the period that follows. "
+        "The extra window was <em>dragging equal weight's Sharpe down</em>, not "
+        "lifting it.")
+    r.prose(
+        "So aligning the start dates makes the benchmark harder rather than "
+        "easier, and every edge measured against it shrinks by roughly six basis "
+        "points of Sharpe.")
     r.table(pd.DataFrame([
         ("Hierarchical RP", "+0.190", "+0.129"),
         ("Risk parity (ERC)", "+0.140", "+0.079"),
         ("Inverse volatility", "+0.130", "+0.069"),
         ("Agg index (VBMFX)", "-0.012", "+0.019"),
-    ], columns=["strategy", "edge as previously reported",
+    ], columns=["strategy", "edge as first reported",
                 "edge on a common start"]).set_index("strategy"),
-        align_right=["edge as previously reported", "edge on a common start"])
+        align_right=["edge as first reported", "edge on a common start"])
     r.prose(
         "Everything on this page now starts in November 1987, benchmarks "
         "included. The result survives the correction but it is a third smaller "
         "than it was, and the Aggregate proxy moves from behind equal weight to "
-        "slightly ahead of it.")
+        "slightly ahead of it. This is also a reminder that a high-rate decade "
+        "flatters nominal returns and punishes Sharpe ratios, which is worth "
+        "holding onto when reading any bond result that spans the early 1980s.")
     r.prose(
         "<strong>Volatility.</strong> A growth-of-1 chart puts the lowest "
         "volatility line at the bottom, which inverts the Sharpe ranking "
@@ -509,21 +539,23 @@ def phase3():
             "the point of charging for it rather than assuming it away.")
 
     if C is not None:
-        fig, ax = charts.new_axes(9.0, 3.8)
-        for i, c in enumerate(C.columns):
-            s = C[c].dropna()
-            ax.plot(s.index, (1 + s).cumprod(),
-                    color=charts.SERIES[i % len(charts.SERIES)],
-                    linewidth=2.0 if "Hierarchical" in c else 1.2, label=c)
+        roles = {c: ("benchmark" if c == "1/N" else
+                     "hero" if "Hierarchical" in c else "strategy")
+                 for c in C.columns}
+        fig, ax = charts.new_axes(9.0, 4.0)
+        charts.growth(ax, C, roles=roles)
         ax.axvline(pd.Timestamp("2016-01-01"), color=charts.MUTED,
-                   linestyle="--", linewidth=1.0)
-        ax.set_yscale("log")
-        ax.set_ylabel("growth of 1, log scale")
+                   linestyle=":", linewidth=1.2, zorder=1)
+        ax.annotate("holdout begins", xy=(pd.Timestamp("2016-03-01"), 0.04),
+                    xycoords=("data", "axes fraction"), fontsize=8,
+                    color=charts.MUTED)
         charts.legend(ax, loc="upper left")
         r.figure(charts.to_svg(fig),
-                 "All series levered to equal weight's volatility with financing "
-                 "charged, so vertical position corresponds to risk-adjusted "
-                 "performance. Dashed line marks the start of the holdout.")
+                 "Growth of one dollar with every series levered to equal "
+                 "weight's volatility and financing charged, so vertical "
+                 "position corresponds to risk-adjusted performance. Marked "
+                 "line is hierarchical risk parity; dashed grey is equal "
+                 "weight.")
 
     r.section("Statistical significance", (
         "Monthly returns are serially dependent, so a textbook standard error on "
