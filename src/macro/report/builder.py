@@ -114,7 +114,7 @@ class PhaseReport:
     def next_up(self, phase: str, items: list[str]) -> "PhaseReport":
         lis = "".join(f"<li>{i}</li>" for i in items)
         self._blocks.append(
-            f'<div class="nextup"><h2>Next — {html.escape(phase)}</h2><ul>{lis}</ul></div>'
+            f'<div class="nextup"><h2>Next: {html.escape(phase)}</h2><ul>{lis}</ul></div>'
         )
         return self
 
