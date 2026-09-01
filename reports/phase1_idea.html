@@ -294,10 +294,10 @@ span.pager__slot { border-color: transparent; }  /* first and last page */
     </div>
     <h1><span class="masthead__phase">Phase 1</span>The Idea</h1>
     <p class="standfirst">A prior multi-asset study tested roughly 1,600 specifications against a sealed holdout and none beat a 60/40 benchmark. One relationship in that work held everywhere it was tested, and it pointed at fixed income. This phase sets out that evidence and the universe built on it.</p>
-    <p class="built">Generated 01 September 2026, 16:13</p>
+    <p class="built">Generated 01 September 2026, 16:31</p>
   </header>
   <main>
-    <div class="metrics"><div class="metric"><span class="metric__value">11</span><span class="metric__label">assets in the universe</span></div><div class="metric metric--pass"><span class="metric__value">2.13%</span><span class="metric__label">best bond out of sample R squared</span></div><div class="metric metric--fail"><span class="metric__value">0.05%</span><span class="metric__label">equity out of sample R squared</span></div><div class="metric metric--pass"><span class="metric__value">9 of 12</span><span class="metric__label">fixed income assets forecastable</span></div><div class="metric"><span class="metric__value">1987-2026</span><span class="metric__label">sample</span></div></div><h2>Predictive skill by instrument and by model</h2><p class="note">The parent project fitted eight model families at daily frequency across a seven asset universe, five of which are fixed income. Out of sample R squared is measured against a rolling mean forecast, so a positive number means the model beats simply predicting the average.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">model family</th><th class="num">ig</th><th class="num">hy</th><th class="num">ust2y</th><th class="num">ust10y</th><th class="num">ust30y</th><th class="num">sp500</th><th class="num">gold</th></tr></thead><tbody><tr><td class="rowhead">univariate</td><td class="num">0.00118</td><td class="num">0.00866</td><td class="num">0.00094</td><td class="num">0.00021</td><td class="num">0.00013</td><td class="num">0.00017</td><td class="num">-9e-05</td></tr><tr><td class="rowhead">campbell_thompson</td><td class="num">0.00113</td><td class="num">0.00651</td><td class="num">0.00094</td><td class="num">0.00021</td><td class="num">0.00013</td><td class="num">0.00015</td><td class="num">0.00019</td></tr><tr><td class="rowhead">elastic_net</td><td class="num">-0.01381</td><td class="num">0.16954</td><td class="num">-0.02837</td><td class="num">-0.0274</td><td class="num">-0.00829</td><td class="num">-0.02026</td><td class="num">-0.00909</td></tr><tr><td class="rowhead">pca</td><td class="num">0.00874</td><td class="num">0.12986</td><td class="num">-0.00024</td><td class="num">-0.00431</td><td class="num">-0.00121</td><td class="num">-0.00494</td><td class="num">-0.00479</td></tr><tr><td class="rowhead">random_forest</td><td class="num">0.00753</td><td class="num">0.11165</td><td class="num">-0.00096</td><td class="num">-0.00587</td><td class="num">-0.00851</td><td class="num">-0.0129</td><td class="num">-0.00268</td></tr><tr><td class="rowhead">gradient_boosting</td><td class="num">-0.00576</td><td class="num">-0.04652</td><td class="num">-0.02726</td><td class="num">-0.02731</td><td class="num">-0.03864</td><td class="num">-0.08121</td><td class="num">-0.0508</td></tr><tr><td class="rowhead">regime_conditional</td><td class="num">-0.00077</td><td class="num">0.01335</td><td class="num">-0.00091</td><td class="num">-0.00104</td><td class="num">-0.00027</td><td class="num">0.00046</td><td class="num">-0.00113</td></tr><tr><td class="rowhead">regime_interaction</td><td class="num">0.00116</td><td class="num">0.00873</td><td class="num">0.00087</td><td class="num">0.00014</td><td class="num">0.0001</td><td class="num">0.00017</td><td class="num">-0.00012</td></tr></tbody></table><figcaption>Out of sample R squared, daily. Left block is fixed income, right block is equity and gold.</figcaption></figure><p>Two patterns run through the table. First, <strong>the fixed income columns are systematically better than the equity column</strong>. The two year Treasury is positive under six of eight model families; the S&amp;P 500 is positive under three, and never by more than two basis points of R squared.</p><p>Second, <strong>within fixed income the short maturities dominate the long ones</strong>. That ordering holds across model families sharing no functional form, which is the reason to take it seriously. A result only a random forest can see is a result about random forests. A result that a univariate regression, a shrinkage estimator and a tree ensemble all report is a result about the data.</p><p>The high yield column is the exception, and it is not a real one. The elastic net reports +16.95% and the principal components model +12.99% on high yield, which no credit model achieves. The fund marks illiquid bonds with a lag, so its daily returns autocorrelate at 0.29, and a flexible model learns to predict a move that had already happened. It is flagged here because it recurs later.</p><h2>The relationship that motivated this project</h2><p class="note">Extending the same measurement to twelve fixed income instruments makes the ordering explicit.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">asset</th><th class="num">oos_r2</th><th class="num">vol</th><th class="num">duration</th><th class="num">risk_share</th></tr></thead><tbody><tr><td class="rowhead">ust3m</td><td class="num">0.0344</td><td class="num">0.0087</td><td class="num">0.25</td><td class="num">0.0016</td></tr><tr><td class="rowhead">ust2y</td><td class="num">0.0184</td><td class="num">0.0222</td><td class="num">1.9</td><td class="num">0.0103</td></tr><tr><td class="rowhead">hy</td><td class="num">0.0159</td><td class="num">0.0702</td><td class="num">4.0</td><td class="num">0.1026</td></tr><tr><td class="rowhead">ig_short</td><td class="num">0.0152</td><td class="num">0.0254</td><td class="num">2.5</td><td class="num">0.0135</td></tr><tr><td class="rowhead">mbs</td><td class="num">0.0116</td><td class="num">0.0405</td><td class="num">4.5</td><td class="num">0.0342</td></tr><tr><td class="rowhead">ig</td><td class="num">0.0114</td><td class="num">0.0458</td><td class="num">4.2</td><td class="num">0.0436</td></tr><tr><td class="rowhead">muni_hy</td><td class="num">0.0069</td><td class="num">0.0588</td><td class="num">7.5</td><td class="num">0.072</td></tr><tr><td class="rowhead">muni</td><td class="num">0.0066</td><td class="num">0.0457</td><td class="num">5.0</td><td class="num">0.0435</td></tr><tr><td class="rowhead">ust5y</td><td class="num">0.003</td><td class="num">0.0493</td><td class="num">4.6</td><td class="num">0.0507</td></tr><tr><td class="rowhead">ust10y</td><td class="num">-0.0007</td><td class="num">0.0802</td><td class="num">8.4</td><td class="num">0.1339</td></tr><tr><td class="rowhead">ig_long</td><td class="num">-0.0014</td><td class="num">0.0803</td><td class="num">12.0</td><td class="num">0.1342</td></tr><tr><td class="rowhead">ust30y</td><td class="num">-0.0022</td><td class="num">0.1315</td><td class="num">18.5</td><td class="num">0.3599</td></tr></tbody></table><figcaption>Out of sample R squared, annualised volatility, modified duration, and share of universe variance.</figcaption></figure><figure class="chartwrap"><svg class="chart" preserveAspectRatio="xMidYMid meet" xmlns:xlink="http://www.w3.org/1999/xlink"   viewBox="0 0 514.602138 242.427469" xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <div class="metrics"><div class="metric"><span class="metric__value">11</span><span class="metric__label">assets in the universe</span></div><div class="metric metric--pass"><span class="metric__value">2.13%</span><span class="metric__label">best bond out of sample R squared</span></div><div class="metric metric--fail"><span class="metric__value">0.05%</span><span class="metric__label">equity out of sample R squared</span></div><div class="metric metric--pass"><span class="metric__value">9 of 12</span><span class="metric__label">fixed income assets forecastable</span></div><div class="metric"><span class="metric__value">1987-2026</span><span class="metric__label">sample</span></div></div><h2>Predictive skill by instrument and by model</h2><p class="note">The parent project fitted eight model families at daily frequency across a seven asset universe, five of which are fixed income. Out of sample R squared is measured against a rolling mean forecast, so a positive number means the model beats simply predicting the average.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">model family</th><th class="num">ig</th><th class="num">hy</th><th class="num">ust2y</th><th class="num">ust10y</th><th class="num">ust30y</th><th class="num">sp500</th><th class="num">gold</th></tr></thead><tbody><tr><td class="rowhead">univariate</td><td class="num">0.00118</td><td class="num">0.00866</td><td class="num">0.00094</td><td class="num">0.00021</td><td class="num">0.00013</td><td class="num">0.00017</td><td class="num">-9e-05</td></tr><tr><td class="rowhead">campbell_thompson</td><td class="num">0.00113</td><td class="num">0.00651</td><td class="num">0.00094</td><td class="num">0.00021</td><td class="num">0.00013</td><td class="num">0.00015</td><td class="num">0.00019</td></tr><tr><td class="rowhead">elastic_net</td><td class="num">-0.01381</td><td class="num">0.16954</td><td class="num">-0.02837</td><td class="num">-0.0274</td><td class="num">-0.00829</td><td class="num">-0.02026</td><td class="num">-0.00909</td></tr><tr><td class="rowhead">pca</td><td class="num">0.00874</td><td class="num">0.12986</td><td class="num">-0.00024</td><td class="num">-0.00431</td><td class="num">-0.00121</td><td class="num">-0.00494</td><td class="num">-0.00479</td></tr><tr><td class="rowhead">random_forest</td><td class="num">0.00753</td><td class="num">0.11165</td><td class="num">-0.00096</td><td class="num">-0.00587</td><td class="num">-0.00851</td><td class="num">-0.0129</td><td class="num">-0.00268</td></tr><tr><td class="rowhead">gradient_boosting</td><td class="num">-0.00576</td><td class="num">-0.04652</td><td class="num">-0.02726</td><td class="num">-0.02731</td><td class="num">-0.03864</td><td class="num">-0.08121</td><td class="num">-0.0508</td></tr><tr><td class="rowhead">regime_conditional</td><td class="num">-0.00077</td><td class="num">0.01335</td><td class="num">-0.00091</td><td class="num">-0.00104</td><td class="num">-0.00027</td><td class="num">0.00046</td><td class="num">-0.00113</td></tr><tr><td class="rowhead">regime_interaction</td><td class="num">0.00116</td><td class="num">0.00873</td><td class="num">0.00087</td><td class="num">0.00014</td><td class="num">0.0001</td><td class="num">0.00017</td><td class="num">-0.00012</td></tr></tbody></table><figcaption>Out of sample R squared, daily. Left block is fixed income, right block is equity and gold.</figcaption></figure><p>Two patterns run through the table. First, <strong>the fixed income columns are systematically better than the equity column</strong>. The two year Treasury is positive under six of eight model families; the S&amp;P 500 is positive under three, and never by more than two basis points of R squared.</p><p>Second, <strong>within fixed income the short maturities dominate the long ones</strong>. That ordering holds across model families sharing no functional form, which is the reason to take it seriously. A result only a random forest can see is a result about random forests. A result that a univariate regression, a shrinkage estimator and a tree ensemble all report is a result about the data.</p><p>The high yield column is the exception, and it is not a real one. The elastic net reports +16.95% and the principal components model +12.99% on high yield, which no credit model achieves. The fund marks illiquid bonds with a lag, so its daily returns autocorrelate at 0.29, and a flexible model learns to predict a move that had already happened. The same artefact reappears in Phase 2.</p><h2>The relationship that motivated this project</h2><p class="note">Extending the same measurement to twelve fixed income instruments makes the ordering explicit.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">asset</th><th class="num">oos_r2</th><th class="num">vol</th><th class="num">duration</th><th class="num">risk_share</th></tr></thead><tbody><tr><td class="rowhead">ust3m</td><td class="num">0.0344</td><td class="num">0.0087</td><td class="num">0.25</td><td class="num">0.0016</td></tr><tr><td class="rowhead">ust2y</td><td class="num">0.0184</td><td class="num">0.0222</td><td class="num">1.9</td><td class="num">0.0103</td></tr><tr><td class="rowhead">hy</td><td class="num">0.0159</td><td class="num">0.0702</td><td class="num">4.0</td><td class="num">0.1026</td></tr><tr><td class="rowhead">ig_short</td><td class="num">0.0152</td><td class="num">0.0254</td><td class="num">2.5</td><td class="num">0.0135</td></tr><tr><td class="rowhead">mbs</td><td class="num">0.0116</td><td class="num">0.0405</td><td class="num">4.5</td><td class="num">0.0342</td></tr><tr><td class="rowhead">ig</td><td class="num">0.0114</td><td class="num">0.0458</td><td class="num">4.2</td><td class="num">0.0436</td></tr><tr><td class="rowhead">muni_hy</td><td class="num">0.0069</td><td class="num">0.0588</td><td class="num">7.5</td><td class="num">0.072</td></tr><tr><td class="rowhead">muni</td><td class="num">0.0066</td><td class="num">0.0457</td><td class="num">5.0</td><td class="num">0.0435</td></tr><tr><td class="rowhead">ust5y</td><td class="num">0.003</td><td class="num">0.0493</td><td class="num">4.6</td><td class="num">0.0507</td></tr><tr><td class="rowhead">ust10y</td><td class="num">-0.0007</td><td class="num">0.0802</td><td class="num">8.4</td><td class="num">0.1339</td></tr><tr><td class="rowhead">ig_long</td><td class="num">-0.0014</td><td class="num">0.0803</td><td class="num">12.0</td><td class="num">0.1342</td></tr><tr><td class="rowhead">ust30y</td><td class="num">-0.0022</td><td class="num">0.1315</td><td class="num">18.5</td><td class="num">0.3599</td></tr></tbody></table><figcaption>Out of sample R squared, annualised volatility, modified duration, and share of universe variance.</figcaption></figure><figure class="chartwrap"><svg class="chart" preserveAspectRatio="xMidYMid meet" xmlns:xlink="http://www.w3.org/1999/xlink"   viewBox="0 0 514.602138 242.427469" xmlns="http://www.w3.org/2000/svg" version="1.1">
  <metadata>
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
@@ -339,16 +339,16 @@ z
      <g id="line2d_1">
       <path d="M 62.736053 207.79075 
 L 62.736053 8.20675 
-" clip-path="url(#pbbbe61c299)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p953e75741f)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_2">
       <defs>
-       <path id="m0050f4fb6e" d="M 0 0 
+       <path id="mc18154d233" d="M 0 0 
 L 0 3 
 " style="stroke: var(--ink-muted); stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#m0050f4fb6e" x="62.736053" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mc18154d233" x="62.736053" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_1">
@@ -394,11 +394,11 @@ z
      <g id="line2d_3">
       <path d="M 118.327585 207.79075 
 L 118.327585 8.20675 
-" clip-path="url(#pbbbe61c299)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p953e75741f)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_4">
       <g>
-       <use xlink:href="#m0050f4fb6e" x="118.327585" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mc18154d233" x="118.327585" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_2">
@@ -465,11 +465,11 @@ z
      <g id="line2d_5">
       <path d="M 173.919116 207.79075 
 L 173.919116 8.20675 
-" clip-path="url(#pbbbe61c299)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p953e75741f)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_6">
       <g>
-       <use xlink:href="#m0050f4fb6e" x="173.919116" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mc18154d233" x="173.919116" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_3">
@@ -485,11 +485,11 @@ L 173.919116 8.20675
      <g id="line2d_7">
       <path d="M 229.510648 207.79075 
 L 229.510648 8.20675 
-" clip-path="url(#pbbbe61c299)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p953e75741f)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_8">
       <g>
-       <use xlink:href="#m0050f4fb6e" x="229.510648" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mc18154d233" x="229.510648" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_4">
@@ -517,11 +517,11 @@ z
      <g id="line2d_9">
       <path d="M 285.10218 207.79075 
 L 285.10218 8.20675 
-" clip-path="url(#pbbbe61c299)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p953e75741f)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_10">
       <g>
-       <use xlink:href="#m0050f4fb6e" x="285.10218" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mc18154d233" x="285.10218" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_5">
@@ -554,11 +554,11 @@ z
      <g id="line2d_11">
       <path d="M 340.693712 207.79075 
 L 340.693712 8.20675 
-" clip-path="url(#pbbbe61c299)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p953e75741f)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_12">
       <g>
-       <use xlink:href="#m0050f4fb6e" x="340.693712" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mc18154d233" x="340.693712" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_6">
@@ -575,11 +575,11 @@ L 340.693712 8.20675
      <g id="line2d_13">
       <path d="M 396.285243 207.79075 
 L 396.285243 8.20675 
-" clip-path="url(#pbbbe61c299)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p953e75741f)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_14">
       <g>
-       <use xlink:href="#m0050f4fb6e" x="396.285243" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mc18154d233" x="396.285243" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_7">
@@ -596,11 +596,11 @@ L 396.285243 8.20675
      <g id="line2d_15">
       <path d="M 451.876775 207.79075 
 L 451.876775 8.20675 
-" clip-path="url(#pbbbe61c299)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p953e75741f)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_16">
       <g>
-       <use xlink:href="#m0050f4fb6e" x="451.876775" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mc18154d233" x="451.876775" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_8">
@@ -956,16 +956,16 @@ z
      <g id="line2d_17">
       <path d="M 48.004297 187.671497 
 L 494.404297 187.671497 
-" clip-path="url(#pbbbe61c299)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p953e75741f)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_18">
       <defs>
-       <path id="m853d2d7f36" d="M 0 0 
+       <path id="m56375faf2e" d="M 0 0 
 L -3 0 
 " style="stroke: var(--ink-muted); stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#m853d2d7f36" x="48.004297" y="187.671497" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m56375faf2e" x="48.004297" y="187.671497" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_10">
@@ -1031,11 +1031,11 @@ z
      <g id="line2d_19">
       <path d="M 48.004297 162.91776 
 L 494.404297 162.91776 
-" clip-path="url(#pbbbe61c299)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p953e75741f)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_20">
       <g>
-       <use xlink:href="#m853d2d7f36" x="48.004297" y="162.91776" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m56375faf2e" x="48.004297" y="162.91776" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_11">
@@ -1052,11 +1052,11 @@ L 494.404297 162.91776
      <g id="line2d_21">
       <path d="M 48.004297 138.164022 
 L 494.404297 138.164022 
-" clip-path="url(#pbbbe61c299)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p953e75741f)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_22">
       <g>
-       <use xlink:href="#m853d2d7f36" x="48.004297" y="138.164022" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m56375faf2e" x="48.004297" y="138.164022" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_12">
@@ -1073,11 +1073,11 @@ L 494.404297 138.164022
      <g id="line2d_23">
       <path d="M 48.004297 113.410285 
 L 494.404297 113.410285 
-" clip-path="url(#pbbbe61c299)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p953e75741f)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_24">
       <g>
-       <use xlink:href="#m853d2d7f36" x="48.004297" y="113.410285" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m56375faf2e" x="48.004297" y="113.410285" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_13">
@@ -1094,11 +1094,11 @@ L 494.404297 113.410285
      <g id="line2d_25">
       <path d="M 48.004297 88.656548 
 L 494.404297 88.656548 
-" clip-path="url(#pbbbe61c299)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p953e75741f)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_26">
       <g>
-       <use xlink:href="#m853d2d7f36" x="48.004297" y="88.656548" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m56375faf2e" x="48.004297" y="88.656548" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_14">
@@ -1115,11 +1115,11 @@ L 494.404297 88.656548
      <g id="line2d_27">
       <path d="M 48.004297 63.90281 
 L 494.404297 63.90281 
-" clip-path="url(#pbbbe61c299)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p953e75741f)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_28">
       <g>
-       <use xlink:href="#m853d2d7f36" x="48.004297" y="63.90281" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m56375faf2e" x="48.004297" y="63.90281" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_15">
@@ -1136,11 +1136,11 @@ L 494.404297 63.90281
      <g id="line2d_29">
       <path d="M 48.004297 39.149073 
 L 494.404297 39.149073 
-" clip-path="url(#pbbbe61c299)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p953e75741f)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_30">
       <g>
-       <use xlink:href="#m853d2d7f36" x="48.004297" y="39.149073" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m56375faf2e" x="48.004297" y="39.149073" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_16">
@@ -1191,11 +1191,11 @@ z
      <g id="line2d_31">
       <path d="M 48.004297 14.395335 
 L 494.404297 14.395335 
-" clip-path="url(#pbbbe61c299)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p953e75741f)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_32">
       <g>
-       <use xlink:href="#m853d2d7f36" x="48.004297" y="14.395335" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m56375faf2e" x="48.004297" y="14.395335" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_17">
@@ -1329,7 +1329,7 @@ z
    <g id="line2d_33">
     <path d="M 48.004297 187.671497 
 L 494.404297 187.671497 
-" clip-path="url(#pbbbe61c299)" style="fill: none; stroke-dasharray: 3.7,1.6; stroke-dashoffset: 0; stroke: var(--ink-muted)"/>
+" clip-path="url(#p953e75741f)" style="fill: none; stroke-dasharray: 3.7,1.6; stroke-dashoffset: 0; stroke: var(--ink-muted)"/>
    </g>
    <g id="patch_3">
     <path d="M 48.004297 207.79075 
@@ -1343,7 +1343,7 @@ L 494.404297 207.79075
    </g>
    <g id="PathCollection_1">
     <defs>
-     <path id="mfb371b1e36" d="M 0 4.1833 
+     <path id="m68185e858d" d="M 0 4.1833 
 C 1.109424 4.1833 2.173559 3.742521 2.95804 2.95804 
 C 3.742521 2.173559 4.1833 1.109424 4.1833 0 
 C 4.1833 -1.109424 3.742521 -2.173559 2.95804 -2.95804 
@@ -1355,19 +1355,19 @@ C -2.173559 3.742521 -1.109424 4.1833 0 4.1833
 z
 " style="stroke: #4169e1"/>
     </defs>
-    <g clip-path="url(#pbbbe61c299)">
-     <use xlink:href="#mfb371b1e36" x="68.295206" y="17.27875" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfb371b1e36" x="104.985617" y="96.426597" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfb371b1e36" x="151.682504" y="108.739454" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfb371b1e36" x="118.327585" y="112.399198" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfb371b1e36" x="162.80081" y="130.053806" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfb371b1e36" x="156.129826" y="131.143074" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfb371b1e36" x="229.510648" y="153.316931" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfb371b1e36" x="173.919116" y="155.070191" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfb371b1e36" x="165.024471" y="172.997992" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfb371b1e36" x="249.523599" y="190.981175" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfb371b1e36" x="329.575405" y="194.361483" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfb371b1e36" x="474.113388" y="198.71875" style="fill: #4169e1; stroke: #4169e1"/>
+    <g clip-path="url(#p953e75741f)">
+     <use xlink:href="#m68185e858d" x="68.295206" y="17.27875" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m68185e858d" x="104.985617" y="96.426597" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m68185e858d" x="151.682504" y="108.739454" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m68185e858d" x="118.327585" y="112.399198" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m68185e858d" x="162.80081" y="130.053806" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m68185e858d" x="156.129826" y="131.143074" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m68185e858d" x="229.510648" y="153.316931" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m68185e858d" x="173.919116" y="155.070191" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m68185e858d" x="165.024471" y="172.997992" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m68185e858d" x="249.523599" y="190.981175" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m68185e858d" x="329.575405" y="194.361483" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m68185e858d" x="474.113388" y="198.71875" style="fill: #4169e1; stroke: #4169e1"/>
     </g>
    </g>
    <g id="text_19">
@@ -1585,12 +1585,12 @@ z
   </g>
  </g>
  <defs>
-  <clipPath id="pbbbe61c299">
+  <clipPath id="p953e75741f">
    <rect x="48.004297" y="8.20675" width="446.4" height="199.584"/>
   </clipPath>
  </defs>
 </svg>
-<figcaption>Rank correlation negative 0.958, p below 0.001. Every asset above five years of duration sits below the line.</figcaption></figure><p>The rank correlation between out of sample R squared and modified duration is <strong>negative 0.958</strong>, with p below 0.001. Against volatility it is negative 0.818. The four most forecastable assets carry 12.8% of universe variance; the four least forecastable carry 67.9%.</p><p>The mechanism is in the return decomposition. A constant maturity bond return splits into carry, rolldown, duration and convexity, and the first two are known at purchase. A short bond's return is mostly those two. A long bond's return is mostly the yield change, which is not known. The same fact that makes short bonds forecastable also makes them low risk.</p><p>The first test of this included equities, so the obvious objection was that equities were doing the work. Removing them strengthened the relationship rather than weakening it. It is a property of bonds.</p><h2>What this implies for portfolio construction</h2><p class="note">The finding cuts two ways, and both directions shaped the design of this project.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">implication</th><th class="">reasoning</th></tr></thead><tbody><tr><td class="rowhead">Fixed income is the better place to forecast</td><td class="">Out of sample R squared reaches 2.13% on the two year Treasury and 1.81% on high yield, against 0.05% on equities. Nine of twelve fixed income assets are forecastable out of sample; two of seven multi asset ones are.</td></tr><tr><td class="rowhead">But forecasting cannot carry the portfolio</td><td class="">Skill is concentrated in the assets that carry almost none of the risk. A forecast can only move the book through positions too small to matter. That predicts, in advance, that forecast driven tilts will fail here, and Phase 2 confirms it.</td></tr><tr><td class="rowhead">So the covariance matrix is where to work</td><td class="">If expected returns cannot be estimated usefully but the risk structure can, then a method using only the second moment should outperform one that needs the first. That is the hypothesis this project tests.</td></tr></tbody></table></figure><h2>The universe</h2><p class="note">Eleven assets, monthly. All comparisons run from November 1987, the first month the covariance-based methods can trade after their estimation window.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">group</th><th class="">what is in it</th></tr></thead><tbody><tr><td class="rowhead">Treasuries</td><td class="">2, 5, 10 and 30 year constant maturity holdings, built from a bootstrapped zero curve so they differ only in maturity</td></tr><tr><td class="rowhead">Corporate credit</td><td class="">Short, intermediate and long investment grade, plus high yield</td></tr><tr><td class="rowhead">Securitized and municipal</td><td class="">GNMA agency mortgages, intermediate municipals, high yield municipals</td></tr></tbody></table></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">asset</th><th class="">group</th><th class="num">cagr</th><th class="num">vol</th><th class="num">sharpe</th><th class="num">corr_ust10y</th></tr></thead><tbody><tr><td class="rowhead">ust3m</td><td class="">curve</td><td class="num">0.0369</td><td class="num">0.0084</td><td class="num">1.0989</td><td class="num">0.2019</td></tr><tr><td class="rowhead">ust2y</td><td class="">curve</td><td class="num">0.0485</td><td class="num">0.0215</td><td class="num">0.6914</td><td class="num">0.7768</td></tr><tr><td class="rowhead">ust5y</td><td class="">curve</td><td class="num">0.0593</td><td class="num">0.0479</td><td class="num">0.521</td><td class="num">0.9458</td></tr><tr><td class="rowhead">ust10y</td><td class="">curve</td><td class="num">0.0652</td><td class="num">0.0786</td><td class="num">0.4077</td><td class="num">1.0</td></tr><tr><td class="rowhead">ust30y</td><td class="">curve</td><td class="num">0.069</td><td class="num">0.1356</td><td class="num">0.3055</td><td class="num">0.9223</td></tr><tr><td class="rowhead">ig_short</td><td class="">credit</td><td class="num">0.0536</td><td class="num">0.0262</td><td class="num">0.7398</td><td class="num">0.6382</td></tr><tr><td class="rowhead">ig</td><td class="">credit</td><td class="num">0.0593</td><td class="num">0.0473</td><td class="num">0.5244</td><td class="num">0.8117</td></tr><tr><td class="rowhead">ig_long</td><td class="">credit</td><td class="num">0.0714</td><td class="num">0.0893</td><td class="num">0.4333</td><td class="num">0.8013</td></tr><tr><td class="rowhead">hy</td><td class="">credit</td><td class="num">0.0748</td><td class="num">0.0691</td><td class="num">0.5824</td><td class="num">0.1848</td></tr><tr><td class="rowhead">mbs</td><td class="">securitized</td><td class="num">0.0595</td><td class="num">0.0428</td><td class="num">0.5868</td><td class="num">0.8313</td></tr><tr><td class="rowhead">muni</td><td class="">securitized</td><td class="num">0.0542</td><td class="num">0.0456</td><td class="num">0.4331</td><td class="num">0.6481</td></tr><tr><td class="rowhead">muni_hy</td><td class="">securitized</td><td class="num">0.063</td><td class="num">0.0601</td><td class="num">0.4819</td><td class="num">0.5933</td></tr></tbody></table></figure><p>The three month bill is excluded from the portfolio universe. It is a cash proxy at 0.9% volatility, and every risk minimizing method piles into it if allowed. A portfolio that wants less risk should hold less of the portfolio, not relabel cash as an asset. It is retained in the predictability table above because it is the cleanest illustration of the duration relationship.</p><p><strong>This universe contains 1.92 independent bets out of 11.</strong> The first principal component explains 70.4% of the variance. Fixed income is close to a single factor, and adding more bonds does not fix that. Extending the universe from 12 assets to 26 reduced measured independence rather than raising it, because the additions were redundant: interpolated curve points, a second mortgage fund correlated 0.98 with the first, duplicate managers in the same sector.</p><div class="nextup"><h2>Next: Phase 2 - Strategies</h2><ul><li>Forecast driven tilts: carry, momentum and regression</li><li>Why they fail, and why the failure was predictable</li><li>Risk parity, and Lopez de Prado's hierarchical extension</li></ul></div>
+<figcaption>Rank correlation negative 0.958, p below 0.001. Every asset above five years of duration sits below the line.</figcaption></figure><p>The claim is about <em>ordering</em>: rank the assets by how forecastable they are, rank them again by how much interest rate risk they carry, and the two orderings run opposite. That is a Spearman correlation, so the ranks themselves are worth putting on the page rather than summarising.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">asset</th><th class="num">oos_r2</th><th class="num">duration</th><th class="num">vol</th><th class="num">rank_r2</th><th class="num">rank_duration</th><th class="num">rank_vol</th></tr></thead><tbody><tr><td class="rowhead">ust3m</td><td class="num">0.0344</td><td class="num">0.25</td><td class="num">0.0087</td><td class="num">1.0</td><td class="num">12.0</td><td class="num">12.0</td></tr><tr><td class="rowhead">ust2y</td><td class="num">0.0184</td><td class="num">1.9</td><td class="num">0.0222</td><td class="num">2.0</td><td class="num">11.0</td><td class="num">11.0</td></tr><tr><td class="rowhead">hy</td><td class="num">0.0159</td><td class="num">4.0</td><td class="num">0.0702</td><td class="num">3.0</td><td class="num">9.0</td><td class="num">4.0</td></tr><tr><td class="rowhead">ig_short</td><td class="num">0.0152</td><td class="num">2.5</td><td class="num">0.0254</td><td class="num">4.0</td><td class="num">10.0</td><td class="num">10.0</td></tr><tr><td class="rowhead">mbs</td><td class="num">0.0116</td><td class="num">4.5</td><td class="num">0.0405</td><td class="num">5.0</td><td class="num">7.0</td><td class="num">9.0</td></tr><tr><td class="rowhead">ig</td><td class="num">0.0114</td><td class="num">4.2</td><td class="num">0.0458</td><td class="num">6.0</td><td class="num">8.0</td><td class="num">7.0</td></tr><tr><td class="rowhead">muni_hy</td><td class="num">0.0069</td><td class="num">7.5</td><td class="num">0.0588</td><td class="num">7.0</td><td class="num">4.0</td><td class="num">5.0</td></tr><tr><td class="rowhead">muni</td><td class="num">0.0066</td><td class="num">5.0</td><td class="num">0.0457</td><td class="num">8.0</td><td class="num">5.0</td><td class="num">8.0</td></tr><tr><td class="rowhead">ust5y</td><td class="num">0.003</td><td class="num">4.6</td><td class="num">0.0493</td><td class="num">9.0</td><td class="num">6.0</td><td class="num">6.0</td></tr><tr><td class="rowhead">ust10y</td><td class="num">-0.0007</td><td class="num">8.4</td><td class="num">0.0802</td><td class="num">10.0</td><td class="num">3.0</td><td class="num">3.0</td></tr><tr><td class="rowhead">ig_long</td><td class="num">-0.0014</td><td class="num">12.0</td><td class="num">0.0803</td><td class="num">11.0</td><td class="num">2.0</td><td class="num">2.0</td></tr><tr><td class="rowhead">ust30y</td><td class="num">-0.0022</td><td class="num">18.5</td><td class="num">0.1315</td><td class="num">12.0</td><td class="num">1.0</td><td class="num">1.0</td></tr></tbody></table><figcaption>Rank 1 is the most forecastable asset, the longest duration and the highest volatility respectively. Read the two rank columns against each other.</figcaption></figure><p>The two rank columns are close to exact mirrors. The three most forecastable assets are ranked 12th, 11th and 9th by duration; the three least forecastable are ranked 1st, 2nd and 3rd. Only high yield and the 5 year Treasury sit meaningfully out of place.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">predictor</th><th class="num">n</th><th class="num">spearman rho</th><th class="num">spearman p</th><th class="num">pearson r</th><th class="num">pearson p</th><th class="num">OLS slope</th><th class="num">OLS t</th><th class="num">OLS R2</th></tr></thead><tbody><tr><td class="rowhead">duration</td><td class="num">12.0</td><td class="num">-0.958</td><td class="num">0.0</td><td class="num">-0.7811</td><td class="num">0.0027</td><td class="num">-0.0016</td><td class="num">-3.9561</td><td class="num">0.6101</td></tr><tr><td class="rowhead">vol</td><td class="num">12.0</td><td class="num">-0.8182</td><td class="num">0.0011</td><td class="num">-0.7795</td><td class="num">0.0028</td><td class="num">-0.2475</td><td class="num">-3.9349</td><td class="num">0.6076</td></tr></tbody></table><figcaption>Out of sample R squared regressed on, and rank correlated with, two measures of risk.</figcaption></figure><p>Spearman gives <strong>-0.958 against duration with p below 0.001</strong>, and -0.818 against volatility at p = 0.001. The parametric versions agree: Pearson is -0.78 on both, and an ordinary least squares fit of R squared on duration gives a slope of -0.0016 per year of duration with a t statistic of -3.96 and an R squared of 0.61. With twelve observations the 5% critical value for a Spearman coefficient is about 0.58, so this is not a marginal result.</p><p>Twelve assets is a small sample and the assets are not independent draws, so the p-values should be read as descriptive rather than as a clean hypothesis test. The reason to take the ordering seriously is that it also holds across model families, and that it has a mechanical explanation rather than only a statistical one.</p><p>The mechanism is in the return decomposition. A constant maturity bond return splits into carry, rolldown, duration and convexity, and the first two are known at purchase. A short bond's return is mostly those two. A long bond's return is mostly the yield change, which is not known. The same fact that makes short bonds forecastable also makes them low risk.</p><p>The first test of this included equities, so the obvious objection was that equities were doing the work. Removing them strengthened the relationship rather than weakening it. It is a property of bonds.</p><h2>What this implies for portfolio construction</h2><p class="note">The finding cuts two ways, and both directions shaped the design of this project.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">implication</th><th class="">reasoning</th></tr></thead><tbody><tr><td class="rowhead">Fixed income is the better place to forecast</td><td class="">Out of sample R squared reaches 2.13% on the two year Treasury and 1.81% on high yield, against 0.05% on equities. Nine of twelve fixed income assets are forecastable out of sample; two of seven multi asset ones are.</td></tr><tr><td class="rowhead">But forecasting cannot carry the portfolio</td><td class="">Skill is concentrated in the assets that carry almost none of the risk. A forecast can only move the book through positions too small to matter. That predicts, in advance, that forecast driven tilts will fail here, and Phase 2 confirms it.</td></tr><tr><td class="rowhead">So the covariance matrix is where to work</td><td class="">If expected returns cannot be estimated usefully but the risk structure can, then a method using only the second moment should outperform one that needs the first. That is the hypothesis this project tests.</td></tr></tbody></table></figure><h2>The universe</h2><p class="note">Eleven assets, monthly. All comparisons run from November 1987, the first month the covariance-based methods can trade after their estimation window.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">group</th><th class="">what is in it</th></tr></thead><tbody><tr><td class="rowhead">Treasuries</td><td class="">2, 5, 10 and 30 year constant maturity holdings, built from a bootstrapped zero curve so they differ only in maturity</td></tr><tr><td class="rowhead">Corporate credit</td><td class="">Short, intermediate and long investment grade, plus high yield</td></tr><tr><td class="rowhead">Securitized and municipal</td><td class="">GNMA agency mortgages, intermediate municipals, high yield municipals</td></tr></tbody></table></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">asset</th><th class="">group</th><th class="num">cagr</th><th class="num">vol</th><th class="num">sharpe</th><th class="num">corr_ust10y</th></tr></thead><tbody><tr><td class="rowhead">ust3m</td><td class="">curve</td><td class="num">0.0369</td><td class="num">0.0084</td><td class="num">1.0989</td><td class="num">0.2019</td></tr><tr><td class="rowhead">ust2y</td><td class="">curve</td><td class="num">0.0485</td><td class="num">0.0215</td><td class="num">0.6914</td><td class="num">0.7768</td></tr><tr><td class="rowhead">ust5y</td><td class="">curve</td><td class="num">0.0593</td><td class="num">0.0479</td><td class="num">0.521</td><td class="num">0.9458</td></tr><tr><td class="rowhead">ust10y</td><td class="">curve</td><td class="num">0.0652</td><td class="num">0.0786</td><td class="num">0.4077</td><td class="num">1.0</td></tr><tr><td class="rowhead">ust30y</td><td class="">curve</td><td class="num">0.069</td><td class="num">0.1356</td><td class="num">0.3055</td><td class="num">0.9223</td></tr><tr><td class="rowhead">ig_short</td><td class="">credit</td><td class="num">0.0536</td><td class="num">0.0262</td><td class="num">0.7398</td><td class="num">0.6382</td></tr><tr><td class="rowhead">ig</td><td class="">credit</td><td class="num">0.0593</td><td class="num">0.0473</td><td class="num">0.5244</td><td class="num">0.8117</td></tr><tr><td class="rowhead">ig_long</td><td class="">credit</td><td class="num">0.0714</td><td class="num">0.0893</td><td class="num">0.4333</td><td class="num">0.8013</td></tr><tr><td class="rowhead">hy</td><td class="">credit</td><td class="num">0.0748</td><td class="num">0.0691</td><td class="num">0.5824</td><td class="num">0.1848</td></tr><tr><td class="rowhead">mbs</td><td class="">securitized</td><td class="num">0.0595</td><td class="num">0.0428</td><td class="num">0.5868</td><td class="num">0.8313</td></tr><tr><td class="rowhead">muni</td><td class="">securitized</td><td class="num">0.0542</td><td class="num">0.0456</td><td class="num">0.4331</td><td class="num">0.6481</td></tr><tr><td class="rowhead">muni_hy</td><td class="">securitized</td><td class="num">0.063</td><td class="num">0.0601</td><td class="num">0.4819</td><td class="num">0.5933</td></tr></tbody></table></figure><p>The three month bill is excluded from the portfolio universe. It is a cash proxy at 0.9% volatility, and every risk minimizing method piles into it if allowed. A portfolio that wants less risk should hold less of the portfolio, not relabel cash as an asset. It is retained in the predictability table above because it is the cleanest illustration of the duration relationship.</p><h2>How much of this universe is genuinely distinct</h2><p class="note">Eleven tickers is not eleven decisions. The question is how much independent variation the correlation matrix actually contains, and it has a defined answer rather than a rule of thumb.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">component</th><th class="num">eigenvalue</th><th class="num">share of variance</th><th class="num">cumulative</th></tr></thead><tbody><tr><td class="rowhead">PC1</td><td class="num">7.7456</td><td class="num">0.7041</td><td class="num">0.7041</td></tr><tr><td class="rowhead">PC2</td><td class="num">1.4577</td><td class="num">0.1325</td><td class="num">0.8367</td></tr><tr><td class="rowhead">PC3</td><td class="num">0.6376</td><td class="num">0.058</td><td class="num">0.8946</td></tr><tr><td class="rowhead">PC4</td><td class="num">0.5879</td><td class="num">0.0534</td><td class="num">0.9481</td></tr><tr><td class="rowhead">PC5</td><td class="num">0.1898</td><td class="num">0.0173</td><td class="num">0.9653</td></tr><tr><td class="rowhead">PC6</td><td class="num">0.1565</td><td class="num">0.0142</td><td class="num">0.9795</td></tr><tr><td class="rowhead">PC7</td><td class="num">0.0755</td><td class="num">0.0069</td><td class="num">0.9864</td></tr><tr><td class="rowhead">PC8</td><td class="num">0.0551</td><td class="num">0.005</td><td class="num">0.9914</td></tr><tr><td class="rowhead">PC9</td><td class="num">0.05</td><td class="num">0.0045</td><td class="num">0.996</td></tr><tr><td class="rowhead">PC10</td><td class="num">0.0334</td><td class="num">0.003</td><td class="num">0.999</td></tr><tr><td class="rowhead">PC11</td><td class="num">0.0109</td><td class="num">0.001</td><td class="num">1.0</td></tr></tbody></table><figcaption>Eigenvalues of the correlation matrix of monthly excess returns. Eleven assets, so the eigenvalues sum to 11.</figcaption></figure><p>The standard summary of that spectrum is the <strong>participation ratio</strong>, the same statistic used to count effective degrees of freedom in a spectrum:</p><div class="formula">N<sub>eff</sub> &nbsp;=&nbsp; <span class='t t1'>(&Sigma; &lambda;<sub>i</sub>)&sup2;</span> &nbsp;/&nbsp; <span class='t t3'>&Sigma; &lambda;<sub>i</sub>&sup2;</span><span class="formula__cap">effective number of independent assets</span></div><p>It has two fixed points that make it readable. If every asset were uncorrelated, all eleven eigenvalues would equal 1 and the ratio would return <code>11&sup2;/11 = 11</code>. If all eleven were the same asset, one eigenvalue would be 11 and the rest 0, returning <code>11&sup2;/11&sup2; = 1</code>. On this universe the eigenvalues sum to 11 and their squares sum to 62.94, so the ratio is <code>121 / 62.94 = 1.92</code>.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">measure</th><th class="num">value</th><th class="">what it is</th></tr></thead><tbody><tr><td class="rowhead">nominal assets</td><td class="num">11.0</td><td class="">assets held in the portfolio</td></tr><tr><td class="rowhead">effective independent assets</td><td class="num">1.92</td><td class="">participation ratio of the eigenvalues, (sum L)^2 / sum(L^2)</td></tr><tr><td class="rowhead">PC1 share</td><td class="num">0.7041</td><td class="">share of variance in the first principal component</td></tr><tr><td class="rowhead">mean correlation</td><td class="num">0.6599</td><td class="">average pairwise correlation of excess returns</td></tr></tbody></table></figure><p><strong>Read this as a description of the covariance structure, not as a test.</strong> It is one summary statistic among several and it carries no p-value. Two others in the table point the same way: the first principal component holds 70.4% of the variance, and the average pairwise correlation of excess returns is 0.66. Fixed income is close to a single factor, and the practical consequence is that adding more bonds does not add much. Extending the universe from 12 assets to 26 lowered this measure rather than raising it, because the additions were redundant: interpolated curve points, a second mortgage fund correlated 0.98 with the first, duplicate managers in the same sector.</p><div class="nextup"><h2>Next: Phase 2 - Strategies</h2><ul><li>Forecast driven tilts: carry, momentum and regression</li><li>Why they fail, and why the failure was predictable</li><li>Risk parity, and Lopez de Prado's hierarchical extension</li></ul></div>
   </main>
   <nav class="pager"><span class="pager__slot"></span><a class="pager__slot pager__slot--index" href="index.html"><span class="pager__kind">All phases</span><span class="pager__label">All phases</span></a><a class="pager__slot pager__slot--next" href="phase2_strategies.html"><span class="pager__kind">Next &rarr;</span><span class="pager__label">Strategies</span></a></nav>
   <footer class="colophon">

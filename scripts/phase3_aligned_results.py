@@ -50,7 +50,31 @@ P = ROOT / "data/processed"
 
 DEV_END = "2015-12-31"
 OOS_START = "2016-01-01"
-SPREAD_BP = 50.0
+# Financing spread over the risk-free rate, in basis points.
+#
+# This project assumes an institutional book: a fund or bank desk with access to
+# repo, listed futures and cleared swaps, not a retail margin account. The
+# levered exposure here is mostly Treasury, and Treasury leverage is the
+# cheapest financing that exists:
+#
+#   Treasury GC repo        ~0 to 5bp over SOFR. SOFR is itself constructed from
+#                           Treasury GC repo transactions, and the GC versus
+#                           non-GC component of the fixing has averaged 3.2bp.
+#   Treasury futures        implied repo, so GC repo plus or minus the delivery
+#                           option. No separate financing leg to pay.
+#   Cleared swaps / TRS     +30 to +75bp funding on the credit sleeve, plus a
+#                           10 to 25bp fee where an agent bank is involved.
+#   Prime broker margin     +50 to +150bp. This is the retail-adjacent tier and
+#                           is not what an institution levering Treasuries pays.
+#
+# Four of the eleven assets are Treasuries that can be levered through futures
+# or repo at a handful of basis points. The credit and municipal sleeves are
+# funds, which need a swap or a margin loan. 25bp is a blended assumption that
+# is conservative for the Treasury exposure and optimistic for nothing.
+# SPREADS below runs the whole comparison from zero to a punitive 150bp so no
+# conclusion rests on this number.
+SPREAD_BP = 25.0
+SPREADS = [0.0, 25.0, 50.0, 100.0, 150.0]
 BENCH = "1/N"
 
 ORDER = ["Hierarchical RP", "Risk parity (ERC)", "Inverse volatility",
@@ -159,6 +183,23 @@ def main() -> int:
     Bt = pd.DataFrame(boot).T.reindex(
         [c for c in ORDER if c in boot])
     Bt.to_parquet(P / "fi_aligned_bootstrap.parquet")
+
+    # ------------------------------------- 4. sensitivity to the spread
+    rows = {}
+    full = w["full"]
+    target = float(A[BENCH][full].std() * np.sqrt(12))
+    for bp in SPREADS:
+        for c in A.columns:
+            s = A[c][full].dropna()
+            lv = leverage.required_leverage(float(s.std() * np.sqrt(12)), target)
+            ls = leverage.lever_series(s, rf.reindex(s.index), lv, spread_bp=bp)
+            rows.setdefault(c, {})[f"{bp:.0f}bp"] = metrics.performance(
+                ls, rf.reindex(ls.index))["sharpe"]
+    S = pd.DataFrame(rows).T.reindex([c for c in ORDER if c in rows])
+    S.to_parquet(P / "fi_aligned_spread_sensitivity.parquet")
+    print("Levered Sharpe by financing spread, full sample:")
+    print(S.round(3).to_string())
+    print()
 
     print("Block bootstrap against 1/N on the aligned window:")
     for c in Bt.index:

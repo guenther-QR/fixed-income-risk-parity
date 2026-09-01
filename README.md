@@ -39,66 +39,69 @@ full sample the edge is significant again.
 | 2s10s barbell, 50/50 | 0.655 (-0.144, p 0.075) | -0.152 (-0.170, p 0.042) | 0.441 (-0.106, p 0.083) |
 
 Sharpe ratio, with the edge against equal weight and its one-sided p-value from a
-stationary block bootstrap. Every series starts November 1987, see below.
+stationary block bootstrap.
 
-## Two things I had to correct
+## How these are measured
 
-**Start dates.** Equal weight and the barbell need no covariance estimate, so
-they originally ran from November 1982. Risk parity, hierarchical risk parity and
-inverse volatility need one, so a 60-month estimation window pushed them to
-November 1987. Comparing series measured over different windows is not a
-comparison, whichever way the bias runs.
+**One start date for everything.** Equal weight and the barbell need no
+covariance estimate. Risk parity, hierarchical risk parity and inverse volatility
+need one, so a 60-month estimation window puts their first tradeable month at
+November 1987. Every series here, benchmarks included, starts there.
 
-And the bias does not run the way you would guess. Those five extra years hold
-the highest absolute bond returns in the sample, so the instinct is that dropping
-them should make the benchmark look worse. It does the opposite.
+That window matters more than it looks. The five years before it hold the highest
+absolute bond returns in the sample, but cash paid 7.45% over them, so an 11.63%
+bond return was only 4.18% of excess return earned at 6.64% volatility in the
+unstable rate environment after the Volcker disinflation.
 
 | Equal weight over | Return | Cash rate | Excess | Vol | Sharpe |
 |---|---|---|---|---|---|
-| 1982-11 to 1987-10, dropped | 11.63% | 7.45% | 4.18% | 6.64% | 0.575 |
-| 1987-11 to 2015-12, kept | 6.87% | 3.22% | 3.66% | 4.41% | 0.805 |
-| 1982-11 to 2015-12, as first run | 7.58% | 3.85% | 3.72% | 4.82% | 0.744 |
+| 1982-11 to 1987-10 | 11.63% | 7.45% | 4.18% | 6.64% | 0.575 |
+| 1987-11 to 2015-12 | 6.87% | 3.22% | 3.66% | 4.41% | 0.805 |
 
-Cash paid 7.45% over those five years. An 11.63% bond return is a large number
-and a mediocre one at the same time: 4.18% of excess return, earned at 6.64%
-volatility in the unstable rate environment after the Volcker disinflation. That
-is a Sharpe of 0.575 against 0.805 for the period that follows. The extra window
-was dragging equal weight's Sharpe **down**, not lifting it.
+A high-rate decade flatters nominal returns and punishes risk-adjusted ones,
+worth holding onto when reading any bond result spanning the early 1980s.
 
-So aligning the start dates makes the benchmark **harder**, and every edge
-measured against it shrinks by roughly six basis points of Sharpe.
+**One volatility for everything.** A growth-of-1 chart puts the lowest volatility
+line at the bottom, which inverts the Sharpe ranking whenever the low volatility
+strategy is the better one. Hierarchical risk parity runs at 2.8% volatility
+against equal weight's 4.7%. Every chart and headline comparison is levered to a
+common volatility target with financing charged.
 
-| Strategy | Edge as first reported | Edge on a common start |
+## The financing assumption
+
+Risk parity has to be levered to compete on returns, so what leverage costs is
+not a detail. This assumes an institutional book with access to repo, listed
+futures and cleared swaps, not a retail margin account.
+
+| Route | Cost over the risk free rate |
+|---|---|
+| Treasury GC repo | SOFR + 0 to 5bp |
+| Treasury futures | implied repo, embedded in the basis |
+| Total return swap | SOFR + 30 to 75bp, plus a 10 to 25bp agent fee |
+| Prime broker margin loan | SOFR + 50 to 150bp |
+
+Four of the eleven assets are Treasuries that lever through futures or repo for a
+handful of basis points, and they carry most of the levered notional. The credit
+and municipal sleeves are funds, which need a swap or a margin loan. The headline
+assumption is **25 basis points**, blended.
+
+The unlevered comparison does not depend on this at all: HRP scores 0.659 against
+equal weight's 0.552 over the full sample holding no leverage, and every
+significance test runs on the unlevered series. The levered comparison does
+depend on it, and it has a breakeven.
+
+| Strategy | Leverage required | Breakeven financing spread |
 |---|---|---|
-| Hierarchical Risk Parity | +0.190 | +0.129 |
-| Risk parity (ERC) | +0.140 | +0.079 |
-| Inverse volatility | +0.130 | +0.069 |
-| Agg proxy | -0.012 | +0.019 |
+| Risk parity (ERC) | 1.31x | 116bp |
+| Inverse volatility | 1.30x | 95bp |
+| Hierarchical Risk Parity | 1.68x | 82bp |
 
-Everything now starts November 1987, benchmarks included. The result survives but
-it is a third smaller than it was, and the Agg proxy moves from behind equal
-weight to slightly ahead of it. It is also a reminder that a high-rate decade
-flatters nominal returns and punishes Sharpe ratios, worth holding onto when
-reading any bond result spanning the early 1980s.
-
-**Volatility.** A growth-of-1 chart puts the lowest-volatility line at the
-bottom, which inverts the Sharpe ranking whenever the low-volatility strategy is
-the better one. Hierarchical risk parity runs at 2.8% volatility against equal
-weight's 4.7%. Every chart and headline comparison is now levered to a common
-volatility target with a 50 basis point financing spread charged on the borrowed
-portion.
-
-| Strategy | Leverage | Return | Volatility | Sharpe |
-|---|---|---|---|---|
-| **Hierarchical Risk Parity** | 1.68x | 5.75% | 4.7% | **0.598** |
-| **Risk parity (ERC)** | 1.31x | 5.77% | 4.7% | **0.595** |
-| Inverse volatility | 1.30x | 5.70% | 4.7% | 0.581 |
-| Equal weight | 1.00x | 5.57% | 4.7% | 0.552 |
-| Agg proxy | 1.14x | 5.33% | 4.7% | 0.506 |
-| 2s10s barbell | 1.05x | 5.00% | 4.7% | 0.436 |
-
-Full sample, levered to equal weight's own volatility. Note that leverage costs
-HRP real Sharpe, 0.659 unlevered down to 0.598, and it still leads.
+At 25bp and at 50bp all three lead comfortably. At 100bp only classic risk parity
+survives; at 150bp none do. The more leverage a strategy needs, the more of its
+edge belongs to whoever finances it, which is why HRP breaks first despite having
+the highest unlevered Sharpe. That restates what produces the result rather than
+undermining it: Frazzini and Pedersen's account of the low beta anomaly is that
+it persists because most investors cannot lever cheaply.
 
 ## The universe
 
@@ -115,18 +118,40 @@ The 3 month bill is excluded. It is a cash proxy at 0.9% volatility, and every
 risk minimizing method just piles into it. A portfolio that wants less risk
 should hold less, not relabel cash as an asset.
 
-**This universe has 1.92 independent bets out of 11.** The first principal
-component explains 70.4% of the variance. Fixed income is basically one factor,
-and adding more bonds does not fix that. I tried, going from 12 assets to 26, and
-independence went down rather than up.
+Eleven tickers is not eleven decisions. The first principal component of monthly
+excess returns holds **70.4% of the variance** and the average pairwise
+correlation is **0.66**, so fixed income is close to a single factor.
+
+Summarising that spectrum with the participation ratio of the correlation matrix
+eigenvalues, `N_eff = (sum L)^2 / sum(L^2)`, gives **1.92 effective independent
+assets out of 11**. The eigenvalues sum to 11 and their squares to 62.94, so
+`121 / 62.94 = 1.92`. Eleven uncorrelated assets would return 11.00; eleven
+copies of one asset would return 1.00. This is a descriptive statistic about the
+covariance structure, not a hypothesis test. The full eigenvalue spectrum is in
+`reports/phase1_idea.html`.
+
+The practical consequence is that adding more bonds does not add much. Going from
+12 assets to 26 lowered this measure rather than raising it.
 
 ## Why forecasting does not work here
 
-Across twelve fixed income assets, the rank correlation between out of sample R
-squared and duration is **negative 0.958**. Every bond with duration over five
-years has negative predictive R squared.
+Rank twelve fixed income assets by how forecastable they are, then rank them
+again by modified duration, and the two orderings run opposite. The three most
+forecastable rank 12th, 11th and 9th by duration; the three least forecastable
+rank 1st, 2nd and 3rd.
 
-The reason is not complicated. A short bond's return is mostly carry and
+| Test | vs duration | vs volatility |
+|---|---|---|
+| Spearman rho | **-0.958** (p < 0.001) | -0.818 (p = 0.001) |
+| Pearson r | -0.781 (p = 0.003) | -0.780 (p = 0.003) |
+| OLS slope | -0.0016 per year, t = -3.96 | -0.248, t = -3.93 |
+| OLS R-squared | 0.61 | 0.61 |
+
+Twelve assets is a small sample and they are not independent draws, so the
+p-values are descriptive rather than a clean test. The rank table and regression
+output are in `reports/phase1_idea.html`.
+
+The mechanism is not complicated. A short bond's return is mostly carry and
 rolldown, both known when you buy it. A long bond's return is mostly the change
 in yields, which is not. The same fact that makes short bonds predictable also
 makes them low risk.
@@ -169,16 +194,15 @@ HRP does three things instead:
 
 The important part is that HRP **never inverts the covariance matrix**. It only
 uses it to measure distance and group variance. That is what makes it stable when
-everything is correlated, which is exactly our situation.
+everything is correlated, which is exactly the situation this universe presents.
 
 ## Checks
 
-**Is it just a bet on holding shorter bonds?** This was the obvious objection.
-Risk parity underweights volatile assets, volatility in bonds is duration, so it
-naturally holds less duration. If that is the whole story you could just buy
-shorter bonds and skip the math.
+**Is it just a bet on holding shorter bonds?** Risk parity underweights volatile
+assets, volatility in bonds is duration, so it naturally holds less duration. If
+that is the whole story you could just buy shorter bonds and skip the math.
 
-So I rebuilt the benchmark: equal weight, scaled up or down month by month to
+So the benchmark was rebuilt: equal weight, scaled up or down month by month to
 match each strategy's own duration, with the difference held in cash.
 
 | Strategy | vs plain equal weight | vs duration matched | 95% interval | p |
@@ -203,11 +227,13 @@ expanding-window specification is positive on both, and the losses concentrate i
 the short 60 month lookback and the EWMA estimator, both of which throw away the
 long history that makes the covariance estimate stable.
 
-**Does borrowing cost eat it?** No. See the leverage table above.
+**Does borrowing cost eat it?** Not at an institutional spread. See the financing
+section above for the breakevens.
 
-## Why the holdout is hard to read
+## Interpreting the holdout period
 
-The test decade contained the worst bond market in forty years.
+The test decade contained the worst bond market in forty years, which constrains
+how much any result measured over it can establish.
 
 | | Equal weight | Agg proxy | Hierarchical RP | Risk parity |
 |---|---|---|---|---|
@@ -217,25 +243,25 @@ The test decade contained the worst bond market in forty years.
 
 Equal weight returned 2.2% a year over the holdout at a Sharpe of 0.026. The Agg
 proxy was negative on a risk-adjusted basis, and the barbell more so. When the
-benchmark itself is at zero, there is very little for a strategy to separate on.
-A positive but small margin is what a real edge looks like under those
-conditions, and it is also what noise looks like, which is why I do not claim
-significance.
+benchmark itself is at zero there is very little for a strategy to separate on. A
+positive but small margin is what a real edge looks like under those conditions.
+It is also what noise looks like, and this sample cannot separate the two.
 
-## What I would and would not claim
+## Conclusions
 
-I would say: risk parity beats equal weight on a fixed income universe, the
-margin is significant on development and on the full sample, it is not explained
-by duration, and it survives trading and borrowing costs.
+Supported by the evidence: risk parity outperforms equal weight on a fixed income
+universe; the margin is significant on development and on the full sample; it is
+not explained by duration; and it survives trading costs and institutional
+financing.
 
-I would not say it is proven out of sample. The 2016 to 2026 numbers are positive
+Not established: the out of sample result. The 2016 to 2026 numbers are positive
 against all three benchmarks but small, with intervals spanning zero.
 
 ## The three phases
 
 | Phase | Report | Scripts |
 |---|---|---|
-| 1. The Idea | `reports/phase1_idea.html` | `phase1_build_universe.py`, `phase1_wide_universe.py` |
+| 1. The Idea | `reports/phase1_idea.html` | `phase1_build_universe.py`, `phase1_wide_universe.py`, `phase1_evidence.py` |
 | 2. Strategies | `reports/phase2_strategies.html` | `phase2_allocators.py`, `phase2_forecast_tilts.py`, `phase2_risk_parity.py` |
 | 3. Results and Holdout | `reports/phase3_results.html` | `phase3_predictability.py`, `phase3_aligned_results.py`, `phase3_shorting.py` |
 
@@ -266,6 +292,7 @@ pip install -r requirements.txt
 export FRED_API_KEY=your_key_here
 
 python scripts/phase1_build_universe.py
+python scripts/phase1_evidence.py
 python scripts/phase2_allocators.py
 python scripts/phase2_risk_parity.py
 python scripts/phase3_predictability.py
@@ -282,19 +309,17 @@ committed so you can read the results without running anything.
 
 ## Limitations
 
-Worth stating up front rather than having someone find them.
-
 - The bond universe is built from **mutual funds**, not indices. They charge 20
   to 80 basis points and carry manager decisions an index would not. Their daily
   returns also autocorrelate, high yield at 0.29, because illiquid bonds get
   priced with a lag. Any daily result involving credit is affected by this.
-- The sample **starts in November 1987**. Five years of available data are
-  discarded so every strategy and benchmark shares a start date. That is the
-  right trade, but it costs sample size.
 - The out of sample result is **positive but not statistically significant**.
-- The holdout was opened once for the first half of this project, before this
-  half existed. So this holdout is clean of fitting, but not of me having seen
-  that decade.
+- The effective breadth figure is a descriptive statistic about the covariance
+  structure, not a test, and it depends on the sample window used to estimate the
+  correlation matrix.
+- The holdout period was opened once on the first half of this project. It is
+  clean of any model being fitted to it, but not of having been seen once before
+  this half began.
 
 ## Reference
 

@@ -76,6 +76,10 @@ def phase1():
 
     fipred = get("fi_predictability_risk")
     stats = get("fi_asset_stats")
+    ranks = get("fi_rank_evidence")
+    tests = get("fi_rank_tests")
+    eig = get("fi_breadth_evidence")
+    breadth = get("fi_breadth_stats")
     zoo = macro("daily_model_skill")
 
     r.metrics([
@@ -118,8 +122,8 @@ def phase1():
         "elastic net reports +16.95% and the principal components model +12.99% "
         "on high yield, which no credit model achieves. The fund marks illiquid "
         "bonds with a lag, so its daily returns autocorrelate at 0.29, and a "
-        "flexible model learns to predict a move that had already happened. It "
-        "is flagged here because it recurs later.")
+        "flexible model learns to predict a move that had already happened. The "
+        "same artefact reappears in Phase 2.")
 
     r.section("The relationship that motivated this project", (
         "Extending the same measurement to twelve fixed income instruments makes "
@@ -149,11 +153,44 @@ def phase1():
                  "above five years of duration sits below the line.")
 
     r.prose(
-        "The rank correlation between out of sample R squared and modified "
-        "duration is <strong>negative 0.958</strong>, with p below 0.001. "
-        "Against volatility it is negative 0.818. The four most forecastable "
-        "assets carry 12.8% of universe variance; the four least forecastable "
-        "carry 67.9%.")
+        "The claim is about <em>ordering</em>: rank the assets by how "
+        "forecastable they are, rank them again by how much interest rate risk "
+        "they carry, and the two orderings run opposite. That is a Spearman "
+        "correlation, so the ranks themselves are worth putting on the page "
+        "rather than summarising.")
+    if ranks is not None:
+        t = ranks[[c for c in ["oos_r2", "duration", "vol", "rank_r2",
+                               "rank_duration", "rank_vol"] if c in ranks.columns]]
+        t.index.name = "asset"
+        r.table(t.round(4), align_right=list(t.columns),
+                caption="Rank 1 is the most forecastable asset, the longest "
+                        "duration and the highest volatility respectively. Read "
+                        "the two rank columns against each other.")
+    r.prose(
+        "The two rank columns are close to exact mirrors. The three most "
+        "forecastable assets are ranked 12th, 11th and 9th by duration; the "
+        "three least forecastable are ranked 1st, 2nd and 3rd. Only high yield "
+        "and the 5 year Treasury sit meaningfully out of place.")
+    if tests is not None:
+        t = tests.copy()
+        t.index.name = "predictor"
+        r.table(t.round(4), align_right=list(t.columns),
+                caption="Out of sample R squared regressed on, and rank "
+                        "correlated with, two measures of risk.")
+    r.prose(
+        "Spearman gives <strong>-0.958 against duration with p below "
+        "0.001</strong>, and -0.818 against volatility at p = 0.001. The "
+        "parametric versions agree: Pearson is -0.78 on both, and an ordinary "
+        "least squares fit of R squared on duration gives a slope of -0.0016 "
+        "per year of duration with a t statistic of -3.96 and an R squared of "
+        "0.61. With twelve observations the 5% critical value for a Spearman "
+        "coefficient is about 0.58, so this is not a marginal result.")
+    r.prose(
+        "Twelve assets is a small sample and the assets are not independent "
+        "draws, so the p-values should be read as descriptive rather than as a "
+        "clean hypothesis test. The reason to take the ordering seriously is "
+        "that it also holds across model families, and that it has a mechanical "
+        "explanation rather than only a statistical one.")
     r.prose(
         "The mechanism is in the return decomposition. A constant maturity bond "
         "return splits into carry, rolldown, duration and convexity, and the "
@@ -212,12 +249,45 @@ def phase1():
         "of the portfolio, not relabel cash as an asset. It is retained in the "
         "predictability table above because it is the cleanest illustration of "
         "the duration relationship.")
+    r.section("How much of this universe is genuinely distinct", (
+        "Eleven tickers is not eleven decisions. The question is how much "
+        "independent variation the correlation matrix actually contains, and it "
+        "has a defined answer rather than a rule of thumb."))
+    if eig is not None:
+        t = eig.copy()
+        t.index.name = "component"
+        r.table(t.round(4), align_right=list(t.columns),
+                caption="Eigenvalues of the correlation matrix of monthly excess "
+                        "returns. Eleven assets, so the eigenvalues sum to 11.")
     r.prose(
-        "<strong>This universe contains 1.92 independent bets out of 11.</strong> "
-        "The first principal component explains 70.4% of the variance. Fixed "
-        "income is close to a single factor, and adding more bonds does not fix "
-        "that. Extending the universe from 12 assets to 26 reduced measured "
-        "independence rather than raising it, because the additions were "
+        "The standard summary of that spectrum is the <strong>participation "
+        "ratio</strong>, the same statistic used to count effective degrees of "
+        "freedom in a spectrum:")
+    r.formula(
+        "N<sub>eff</sub> &nbsp;=&nbsp; "
+        "<span class='t t1'>(&Sigma; &lambda;<sub>i</sub>)&sup2;</span>"
+        " &nbsp;/&nbsp; "
+        "<span class='t t3'>&Sigma; &lambda;<sub>i</sub>&sup2;</span>",
+        "effective number of independent assets")
+    r.prose(
+        "It has two fixed points that make it readable. If every asset were "
+        "uncorrelated, all eleven eigenvalues would equal 1 and the ratio would "
+        "return <code>11&sup2;/11 = 11</code>. If all eleven were the same asset, "
+        "one eigenvalue would be 11 and the rest 0, returning "
+        "<code>11&sup2;/11&sup2; = 1</code>. On this universe the eigenvalues sum "
+        "to 11 and their squares sum to 62.94, so the ratio is "
+        "<code>121 / 62.94 = 1.92</code>.")
+    if breadth is not None:
+        r.table(breadth, align_right=["value"])
+    r.prose(
+        "<strong>Read this as a description of the covariance structure, not as "
+        "a test.</strong> It is one summary statistic among several and it "
+        "carries no p-value. Two others in the table point the same way: the "
+        "first principal component holds 70.4% of the variance, and the average "
+        "pairwise correlation of excess returns is 0.66. Fixed income is close "
+        "to a single factor, and the practical consequence is that adding more "
+        "bonds does not add much. Extending the universe from 12 assets to 26 "
+        "lowered this measure rather than raising it, because the additions were "
         "redundant: interpolated curve points, a second mortgage fund correlated "
         "0.98 with the first, duplicate managers in the same sector.")
 
@@ -312,8 +382,9 @@ def phase2():
         "it is what makes the positive result in the next section credible "
         "rather than lucky."))
     r.prose(
-        "Forecastability runs inverse to risk at a rank correlation of negative "
-        "0.958. The assets a forecast can actually call are the two year "
+        "Forecastability runs inverse to risk, on the ranks and the regression "
+        "both, as Phase 1 sets out. The assets a forecast can actually call are "
+        "the two year "
         "Treasury, the three month bill and short investment grade, which "
         "together carry about 2.5% of universe variance. The assets that carry "
         "the risk, the 30 year Treasury and long credit, have negative out of "
@@ -449,6 +520,7 @@ def phase3():
     TS = get("fi_paper_turnover_sharpe")
     TO = get("fi_paper_turnover")
     RB = get("fi_rp_robustness")
+    SENS = get("fi_aligned_spread_sensitivity")
 
     r.metrics([
         ("0.933", "hierarchical RP Sharpe, development", "pass"),
@@ -458,70 +530,120 @@ def phase3():
         ("+0.122", "full sample edge vs equal weight", "pass"),
     ])
 
-    r.section("A correction to how these were measured", (
-        "Two problems with the earlier version of this table, both of which "
-        "distorted the comparison for reasons unrelated to the strategies."))
+    r.section("How these are measured", (
+        "Two conventions govern every comparison below. Both exist because the "
+        "naive version of the comparison answers a different question than the "
+        "one being asked."))
     r.prose(
-        "<strong>Start dates.</strong> Equal weight and the 2s10s barbell need "
-        "no covariance estimate, so they ran from November 1982. Risk parity, "
-        "hierarchical risk parity and inverse volatility need one, so a sixty "
-        "month estimation window pushed them to November 1987. Comparing series "
-        "measured over different windows is not a comparison, whichever way the "
-        "bias runs.")
+        "<strong>One start date for everything.</strong> Equal weight and the "
+        "2s10s barbell need no covariance estimate and could in principle run "
+        "from November 1982. Risk parity, hierarchical risk parity and inverse "
+        "volatility need one, so a sixty month estimation window puts their "
+        "first tradeable month at November 1987. Every series here, benchmarks "
+        "included, starts there. Series measured over different windows are not "
+        "comparable, and the cost of five years of sample is smaller than the "
+        "cost of an answer that means nothing.")
     r.prose(
-        "<strong>And the bias does not run the way you would guess.</strong> "
-        "Those five extra years contain the highest absolute bond returns "
-        "anywhere in the sample: equal weight compounded at 11.63% a year over "
-        "them, against 6.87% for the period that follows. The instinct is that "
-        "dropping them should make equal weight look worse. It does the "
-        "opposite.")
+        "That window matters more than it looks, and not in the obvious "
+        "direction. The five years being set aside hold the highest absolute "
+        "bond returns anywhere in the sample: equal weight compounds at 11.63% "
+        "a year over them against 6.87% for the period that follows. The "
+        "instinct is that a benchmark measured without them must look weaker. "
+        "The opposite is true.")
     r.table(pd.DataFrame([
-        ("1982-11 to 1987-10, dropped", "11.63%", "7.45%", "4.18%", "6.64%",
-         "0.575"),
-        ("1987-11 to 2015-12, kept", "6.87%", "3.22%", "3.66%", "4.41%",
-         "0.805"),
-        ("1982-11 to 2015-12, as first run", "7.58%", "3.85%", "3.72%", "4.82%",
-         "0.744"),
+        ("1982-11 to 1987-10", "11.63%", "7.45%", "4.18%", "6.64%", "0.575"),
+        ("1987-11 to 2015-12", "6.87%", "3.22%", "3.66%", "4.41%", "0.805"),
     ], columns=["equal weight over", "return", "cash rate", "excess", "vol",
                 "Sharpe"]).set_index("equal weight over"),
         align_right=["return", "cash rate", "excess", "vol", "Sharpe"])
     r.prose(
-        "Cash paid <strong>7.45%</strong> over those five years. An 11.63% bond "
-        "return is a large number and a mediocre one at the same time: it is "
-        "4.18% of excess return, earned at 6.64% volatility in the violently "
-        "unstable rate environment that followed the Volcker disinflation. That "
-        "is a Sharpe of 0.575, well below the 0.805 of the period that follows. "
-        "The extra window was <em>dragging equal weight's Sharpe down</em>, not "
-        "lifting it.")
+        "Cash paid <strong>7.45%</strong> over the early window. An 11.63% bond "
+        "return is a large number and a mediocre one at the same time: 4.18% of "
+        "excess return, earned at 6.64% volatility in the violently unstable "
+        "rate environment that followed the Volcker disinflation. That is a "
+        "Sharpe of 0.575 against 0.805 for the period that follows. <strong>A "
+        "high-rate decade flatters nominal returns and punishes risk-adjusted "
+        "ones</strong>, which is worth holding onto when reading any bond result "
+        "that spans the early 1980s.")
     r.prose(
-        "So aligning the start dates makes the benchmark harder rather than "
-        "easier, and every edge measured against it shrinks by roughly six basis "
-        "points of Sharpe.")
+        "<strong>One volatility for everything.</strong> A growth-of-1 chart "
+        "puts the lowest volatility line at the bottom, which inverts the Sharpe "
+        "ranking whenever the low volatility strategy is the better one. "
+        "Hierarchical risk parity runs at 2.8% volatility against equal weight's "
+        "4.7%, so comparing their cumulative returns directly compares a smaller "
+        "position to a larger one rather than comparing two strategies. Every "
+        "chart and headline comparison below is levered to a common volatility "
+        "target, with financing charged on the borrowed portion.")
+
+    r.section("The financing assumption", (
+        "Risk parity runs at low volatility and has to be levered to compete on "
+        "returns, so what leverage costs is not a detail. This project assumes "
+        "an institutional book: a fund or bank desk with access to repo, listed "
+        "futures and cleared swaps, not a retail margin account."))
     r.table(pd.DataFrame([
-        ("Hierarchical RP", "+0.190", "+0.129"),
-        ("Risk parity (ERC)", "+0.140", "+0.079"),
-        ("Inverse volatility", "+0.130", "+0.069"),
-        ("Agg index (VBMFX)", "-0.012", "+0.019"),
-    ], columns=["strategy", "edge as first reported",
-                "edge on a common start"]).set_index("strategy"),
-        align_right=["edge as first reported", "edge on a common start"])
+        ("Treasury GC repo", "SOFR + 0 to 5bp",
+         "SOFR is itself constructed from Treasury general collateral repo "
+         "transactions, so this is close to definitionally flat. The GC versus "
+         "non-GC component of the fixing has averaged about 3bp since 2018."),
+        ("Treasury futures", "implied repo",
+         "Financing is embedded in the basis rather than paid as a separate "
+         "leg, so the effective cost is GC repo plus or minus the delivery "
+         "option."),
+        ("Total return swap", "SOFR + 30 to 75bp",
+         "Plus a 10 to 25bp agent fee where one applies. This is the route for "
+         "the credit and municipal sleeves, which have no futures contract."),
+        ("Prime broker margin loan", "SOFR + 50 to 150bp",
+         "The most expensive tier, and not what an institution levering "
+         "Treasuries would pay."),
+    ], columns=["route", "cost over the risk free rate", "why"]
+    ).set_index("route"))
     r.prose(
-        "Everything on this page now starts in November 1987, benchmarks "
-        "included. The result survives the correction but it is a third smaller "
-        "than it was, and the Aggregate proxy moves from behind equal weight to "
-        "slightly ahead of it. This is also a reminder that a high-rate decade "
-        "flatters nominal returns and punishes Sharpe ratios, which is worth "
-        "holding onto when reading any bond result that spans the early 1980s.")
+        "Four of the eleven assets are Treasuries that can be levered through "
+        "futures or repo for a handful of basis points, and they are where most "
+        "of the levered notional sits. The credit and municipal sleeves are "
+        "funds, which need a swap or a margin loan. <strong>The headline "
+        "assumption is 25 basis points</strong>, blended: conservative against "
+        "the Treasury exposure, and roughly mid-range for the rest.")
+    if SENS is not None:
+        t = SENS.copy()
+        t.index.name = "strategy"
+        r.table(t.round(3), align_right=list(t.columns),
+                caption="Full sample Sharpe, every strategy levered to equal "
+                        "weight's volatility, by financing spread over the risk "
+                        "free rate. Equal weight needs no leverage, so its "
+                        "column is flat.")
     r.prose(
-        "<strong>Volatility.</strong> A growth-of-1 chart puts the lowest "
-        "volatility line at the bottom, which inverts the Sharpe ranking "
-        "whenever the low volatility strategy is the better one. Hierarchical "
-        "risk parity runs at 2.8% volatility against equal weight's 4.7%, so "
-        "comparing their cumulative returns directly compares a smaller position "
-        "to a larger one rather than comparing two strategies. Every chart and "
-        "headline comparison below is levered to a common volatility target, "
-        "with a 50 basis point financing spread charged on the borrowed "
-        "portion.")
+        "Two things follow, and they should be separated. <strong>The unlevered "
+        "comparison does not depend on this assumption at all.</strong> "
+        "Hierarchical risk parity scores 0.659 against equal weight's 0.552 over "
+        "the full sample holding no leverage and paying no financing, and every "
+        "significance test on this page is run on those unlevered series.")
+    r.prose(
+        "The <em>levered</em> comparison does depend on it, and it has a "
+        "breakeven. Solving for the spread at which each strategy's levered "
+        "Sharpe falls to equal weight's 0.552:")
+    r.table(pd.DataFrame([
+        ("Risk parity (ERC)", "1.31x", "116bp"),
+        ("Inverse volatility", "1.30x", "95bp"),
+        ("Hierarchical RP", "1.68x", "82bp"),
+    ], columns=["strategy", "leverage required", "breakeven financing spread"]
+    ).set_index("strategy"),
+        align_right=["leverage required", "breakeven financing spread"])
+    r.prose(
+        "At an institutional 25bp, and at a conservative 50bp, all three lead "
+        "comfortably. At 100bp only classic risk parity survives. At the 150bp "
+        "top of the prime broker range none of them do. <strong>The more "
+        "leverage a strategy needs, the more its edge belongs to whoever "
+        "finances it</strong>, which is why hierarchical risk parity, needing "
+        "the most at 1.68 times, breaks first despite having the highest "
+        "unlevered Sharpe.")
+    r.prose(
+        "That is not a weakness in the result so much as a restatement of what "
+        "produces it. Frazzini and Pedersen's account of the low beta anomaly is "
+        "that it persists <em>because</em> most investors cannot lever cheaply. "
+        "A strategy that harvests it should be expected to work for an "
+        "institution financing at repo and to stop working for someone paying "
+        "150 over, and that is what the table shows.")
 
     r.section("Results against three benchmarks", (
         "Equal weight, the Bloomberg Aggregate as proxied by Vanguard Total "
@@ -546,14 +668,14 @@ def phase3():
              "vs equal weight"])
         r.table(t.round(4), align_right=list(t.columns),
                 caption="Full sample, every strategy levered to equal weight's "
-                        "own 4.7% volatility with 50bp financing charged. This "
+                        "own 4.7% volatility with 25bp financing charged. This "
                         "is the apples-to-apples comparison.")
         r.prose(
             "Levered to the same risk, hierarchical risk parity returns 5.75% a "
             "year against equal weight's 5.57%, at the same volatility and with "
             "a smaller drawdown. Note that leverage <em>costs</em> it: an "
-            "unlevered Sharpe of 0.659 falls to 0.598 once 1.68 times leverage "
-            "is financed at 50 basis points. The ranking holds anyway, which is "
+            "unlevered Sharpe of 0.659 falls to 0.635 once 1.68 times leverage "
+            "is financed at 25 basis points. The ranking holds anyway, which is "
             "the point of charging for it rather than assuming it away.")
 
     if C is not None:
@@ -609,9 +731,10 @@ def phase3():
         "holdout, at -0.103 with p = 0.001, and the barbell at -0.170 with "
         "p = 0.042.")
 
-    r.section("Why the holdout is hard to read", (
+    r.section("Interpreting the holdout period", (
         "The decade the strategies were tested on contained the worst bond "
-        "market in forty years."))
+        "market in forty years, which constrains how much any result measured "
+        "over it can establish."))
     r.table(pd.DataFrame([
         ("2021", "-0.66%", "-1.75%", "-0.29%", "-0.32%"),
         ("2022", "-13.53%", "-13.24%", "-7.59%", "-9.95%"),
@@ -628,8 +751,8 @@ def phase3():
         "-0.072, and the barbell at -0.152. When the benchmark itself is at "
         "zero, there is very little for a strategy to separate on. A positive "
         "but small margin is exactly what a real edge looks like under those "
-        "conditions, and it is also exactly what noise looks like, which is why "
-        "this page does not claim significance.")
+        "conditions. It is also exactly what noise looks like, and this "
+        "sample cannot separate the two.")
     r.prose(
         "What the drawdown row does show is that the risk-based methods took "
         "materially less damage through the rate shock: -7.6% for hierarchical "
@@ -688,30 +811,31 @@ def phase3():
             "long history that makes the covariance estimate stable. That is the "
             "same lesson as the annual rebalancing result.")
 
-    r.section("What I would and would not claim")
+    r.section("Conclusions", (
+        "What the evidence supports, and what it does not."))
     r.checks([
-        (True, "Risk parity beats equal weight on this universe",
+        (True, "Risk parity outperforms equal weight on this universe",
          "0.933 and 0.884 against 0.805 on development, both bootstrap "
          "intervals exclude zero"),
         (True, "The edge is not explained by duration",
          "unchanged against a duration matched benchmark, p = 0.008 and 0.012"),
-        (True, "It beats a 2s10s barbell and the Aggregate proxy",
+        (True, "It outperforms a 2s10s barbell and the Aggregate proxy",
          "barbell 0.655, Vanguard Total Bond 0.824, on the same window"),
-        (True, "It survives leverage and trading costs",
-         "still ahead levered to equal weight's volatility at 50bp; turnover "
-         "under 15% a year"),
-        (True, "It holds over the full sample",
+        (True, "The edge survives leverage and trading costs",
+         "still ahead levered to equal weight's volatility at 25bp financing, "
+         "and at every spread up to 150bp; turnover under 15% a year"),
+        (True, "The result holds over the full sample",
          "+0.122 against equal weight from 1987 to 2026, p = 0.010"),
-        (False, "It is proven out of sample",
+        (False, "The result is established out of sample",
          "2016 to 2026 is positive against all three benchmarks but p = 0.389"),
-        (False, "Any forecast is involved",
+        (False, "Any return forecast is involved",
          "the covariance matrix only, no return prediction anywhere"),
     ])
     r.prose(
-        "The honest summary is that the development and full sample results are "
-        "solid and the holdout result is directionally right but unproven. A "
-        "decade in which the benchmark returned a 0.03 Sharpe is a poor "
-        "environment for demonstrating anything, in either direction.")
+        "In short: the development and full sample results are solid, and the "
+        "holdout result is directionally right but unproven. A decade in which "
+        "the benchmark returned a 0.03 Sharpe is a poor environment for "
+        "demonstrating anything, in either direction.")
 
     r.section("Next steps")
     r.table(pd.DataFrame([
@@ -741,15 +865,11 @@ def phase3():
          "Fees of 20 to 80 basis points and manager idiosyncrasy. Daily returns "
          "autocorrelate, high yield at 0.29, because illiquid bonds are priced "
          "with a lag."),
-        ("The sample starts in 1987",
-         "Five years of available data are discarded so every strategy and "
-         "benchmark shares a start date. That is the right trade, but it costs "
-         "sample size."),
         ("Out of sample is not significant",
          "Positive against all three benchmarks with intervals spanning zero."),
-        ("The holdout was opened once for the parent project",
-         "This holdout is clean of fitting but not of the author having seen "
-         "that decade."),
+        ("The holdout period was opened once on the parent project",
+         "It is clean of any model being fitted to it, but not of having "
+         "been seen once before this project began."),
     ], columns=["limitation", "what it means"]).set_index("limitation"))
 
     r.prose(
