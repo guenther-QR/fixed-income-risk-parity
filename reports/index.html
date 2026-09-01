@@ -10,11 +10,18 @@
 body{margin:0;background:var(--bg);color:var(--fg);font-family:"IBM Plex Sans",system-ui,sans-serif;line-height:1.6}
 .wrap{max-width:52rem;margin:0 auto;padding:4rem 1.5rem 5rem}
 .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
-h1{font-size:2.1rem;margin:.5rem 0 .4rem;letter-spacing:-.02em}
-.sub{color:var(--mut);max-width:40rem;margin:0 0 .6rem}
-.stats{display:flex;flex-wrap:wrap;gap:1.6rem;padding:1.4rem 0;margin:1.6rem 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
-.stat b{display:block;font-family:"IBM Plex Mono",monospace;font-size:1.4rem;font-weight:500}
-.stat span{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+h1{font-size:2.1rem;margin:.5rem 0 1.2rem;letter-spacing:-.02em}
+h2{font-size:.78rem;font-family:"IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin:2.4rem 0 .8rem}
+.intro p{margin:0 0 1rem;max-width:42rem}
+.scroll{overflow-x:auto;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+table{border-collapse:collapse;width:100%;font-size:.86rem;font-variant-numeric:tabular-nums}
+th,td{padding:.6rem .7rem;text-align:right;border-bottom:1px solid var(--rule);white-space:nowrap;vertical-align:top}
+thead th{font-weight:500;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);line-height:1.4}
+tbody th{text-align:left;font-weight:400}
+tbody tr:last-child td,tbody tr:last-child th{border-bottom:none}
+tr.me th,tr.me td{font-weight:600}
+.d{display:block;font-size:.74rem;color:var(--mut);font-weight:400}
+.note{font-size:.8rem;color:var(--mut);margin:.7rem 0 2.4rem;max-width:42rem}
 .card{display:block;background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:1.1rem 1.3rem;margin-bottom:.7rem;text-decoration:none;color:inherit}
 .card:hover{border-color:var(--acc)}
 .num{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--acc)}
@@ -26,17 +33,67 @@ a.plain{color:var(--acc)}
 <div class="wrap">
 <span class="eyebrow">Gus Guenther &middot; UCLA Anderson MFE</span>
 <h1>Fixed Income Risk Parity</h1>
-<p class="sub">A bond only portfolio built on one finding: bond returns get
-harder to forecast as they get riskier. Risk parity beats equal weight by 0.14
-Sharpe in sample, and Lopez de Prado's hierarchical version by 0.19. The edge
-survives duration matching, costs and borrowing.</p>
-<div class="stats">
-  <div class="stat"><b>-0.96</b><span>forecastability vs duration</span></div>
-  <div class="stat"><b>0.93</b><span>HRP Sharpe</span></div>
-  <div class="stat"><b>0.74</b><span>equal weight</span></div>
-  <div class="stat"><b>0.009</b><span>p-value, duration matched</span></div>
+<div class="intro">
+<p>This project builds on my <a class="plain" href="https://guenther-qr.github.io/macro-portfolio-rebuild/">macro portfolio
+rebuild</a>, which showed how difficult equity returns are to predict but also
+produced real evidence that fixed income returns are predictable. The goal here
+was to take that evidence seriously and build a bond-only portfolio that beats
+its benchmark.</p>
+
+<p>The universe extends to eleven fixed income assets: four constant maturity
+Treasury holdings at 2, 5, 10 and 30 years, four corporate credit sleeves running
+from short investment grade through to high yield, and three securitized and
+municipal positions covering agency mortgages, intermediate municipals and high
+yield municipals. It uses the same underlying data and the same walk-forward
+backtesting framework as the prior project, so results across the two are
+directly comparable.</p>
+
+<p>I developed a range of predictive models here, using regression forecasts,
+carry and momentum signals, and machine learning. Those results were
+inconclusive, for a reason that turned out to be structural rather than
+technical: in fixed income, the assets you can forecast are the ones carrying
+almost none of the risk. Along the way it became clear that a <strong>risk parity
+framework works considerably better</strong>, because it never needs an expected
+return at all.</p>
+
+<p>I built and tested both classic risk parity and Marcos Lopez de Prado's
+Hierarchical Risk Parity, and both show a clear edge over the benchmarks in
+development. Against equal weight, hierarchical risk parity delivers a
+<strong>0.933 Sharpe against 0.805</strong>, an edge of +0.150 with a 95%
+confidence interval of [+0.034, +0.271] and p = 0.009. Classic risk parity
+delivers 0.884, an edge of +0.085 at p = 0.015. Both also beat the Bloomberg
+Aggregate proxy at 0.824 and a 2s10s Treasury barbell at 0.655.</p>
+
+<p>The results continue to perform out of sample, though not at a level I would
+call significant: hierarchical risk parity is +0.012 against equal weight over
+the holdout and classic risk parity +0.030, with confidence intervals spanning
+zero. Some of that is the environment. The holdout decade contained the worst
+bond market in forty years, with equal weight down 13.5% in 2022 and returning
+just 2.2% a year across the period at a 0.03 Sharpe. There was very little for
+anything to separate on. <strong>Over the full sample the edge is significant
+again</strong>, at +0.122 for hierarchical risk parity (p = 0.010) and +0.077 for
+classic risk parity (p = 0.006).</p>
+
+<p>Because risk parity naturally holds less duration, the obvious objection is
+that this is simply a bet on shorter bonds. It is not. Measured against an equal
+weight benchmark rescaled month by month to match each strategy's own portfolio
+duration, the edge is essentially unchanged: <strong>+0.147 for hierarchical risk
+parity at p = 0.008</strong>, and +0.088 for classic risk parity at p = 0.012.</p>
 </div>
-<a class="card" href="phase1_idea.html"><span class="num">Phase 1</span><span class="ttl">The Idea</span><span class="dsc">Where this comes from: a macro project where 1,600 specifications failed, and the one finding that survived. Bond returns get harder to forecast as duration rises, at a rank correlation of negative 0.96.</span></a><a class="card" href="phase2_strategies.html"><span class="num">Phase 2</span><span class="ttl">Strategies</span><span class="dsc">Forecast tilts and regime conditioning fail here too. Risk parity works without any forecast, and Lopez de Prado's hierarchical version works better. How both methods actually operate.</span></a><a class="card" href="phase3_results.html"><span class="num">Phase 3</span><span class="ttl">Results and Holdout</span><span class="dsc">Against equal weight, a Treasury barbell and the Agg index. The duration matched test that should have killed it. Costs, turnover, borrowing, and the sealed holdout.</span></a>
+
+<h2>Sharpe ratio, and edge against equal weight</h2>
+<div class="scroll">
+<table>
+<thead><tr><th>Strategy</th><th>Development<br>1987-2015</th><th>Holdout<br>2016-2026</th><th>Full sample<br>1987-2026</th></tr></thead>
+<tbody><tr class="me"><th>Hierarchical RP</th><td>0.933<span class="d">+0.149 &middot; p 0.009</span></td><td>0.036<span class="d">+0.012 &middot; p 0.389</span></td><td>0.659<span class="d">+0.122 &middot; p 0.010</span></td></tr><tr class="me"><th>Risk parity (ERC)</th><td>0.884<span class="d">+0.085 &middot; p 0.015</span></td><td>0.057<span class="d">+0.030 &middot; p 0.178</span></td><td>0.624<span class="d">+0.077 &middot; p 0.006</span></td></tr><tr><th>Inverse volatility</th><td>0.874<span class="d">+0.076 &middot; p 0.009</span></td><td>0.033<span class="d">+0.006 &middot; p 0.386</span></td><td>0.609<span class="d">+0.062 &middot; p 0.009</span></td></tr><tr><th>1/N</th><td>0.805<span class="d">benchmark</span></td><td>0.026<span class="d">benchmark</span></td><td>0.552<span class="d">benchmark</span></td></tr><tr><th>Agg index (VBMFX)</th><td>0.824<span class="d">+0.028 &middot; p 0.286</span></td><td>-0.072<span class="d">-0.103 &middot; p 0.001</span></td><td>0.518<span class="d">-0.031 &middot; p 0.219</span></td></tr><tr><th>2s10s barbell 50/50</th><td>0.655<span class="d">-0.144 &middot; p 0.075</span></td><td>-0.152<span class="d">-0.170 &middot; p 0.042</span></td><td>0.440<span class="d">-0.106 &middot; p 0.083</span></td></tr></tbody>
+</table>
+</div>
+<p class="note">Every series starts in November 1987, the first month the
+covariance-based methods can trade after their estimation window, so no strategy
+or benchmark gets a head start. p-values are one-sided, from a stationary block
+bootstrap with twelve month expected blocks.</p>
+
+<a class="card" href="phase1_idea.html"><span class="num">Phase 1</span><span class="ttl">The Idea</span><span class="dsc">Predictive skill by instrument and by model family. Fixed income is more forecastable than equity, short maturities more than long, and the ordering holds across model families that share no functional form.</span></a><a class="card" href="phase2_strategies.html"><span class="num">Phase 2</span><span class="ttl">Strategies</span><span class="dsc">Nine allocation methods. Carry, momentum and regression tilts all lose to equal weight; risk parity and Lopez de Prado's hierarchical version both beat it. Why the split was predictable.</span></a><a class="card" href="phase3_results.html"><span class="num">Phase 3</span><span class="ttl">Results and Holdout</span><span class="dsc">Development, holdout and full sample against three benchmarks, matched on start date, on leverage and on duration. Turnover, costs, borrowing, and what is not proven.</span></a>
 <footer>
 The project this grew out of:
 <a class="plain" href="https://guenther-qr.github.io/macro-portfolio-rebuild/">macro-portfolio-rebuild</a>.
