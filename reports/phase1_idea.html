@@ -294,7 +294,7 @@ span.pager__slot { border-color: transparent; }  /* first and last page */
     </div>
     <h1><span class="masthead__phase">Phase 1</span>The Idea</h1>
     <p class="standfirst">A prior multi-asset study tested roughly 1,600 specifications against a sealed holdout and none beat a 60/40 benchmark. One relationship in that work held everywhere it was tested, and it pointed at fixed income. This phase sets out that evidence and the universe built on it.</p>
-    <p class="built">Generated 01 September 2026, 16:39</p>
+    <p class="built">Generated 01 September 2026, 16:54</p>
   </header>
   <main>
     <div class="metrics"><div class="metric"><span class="metric__value">11</span><span class="metric__label">assets in the universe</span></div><div class="metric metric--pass"><span class="metric__value">2.13%</span><span class="metric__label">best bond out of sample R squared</span></div><div class="metric metric--fail"><span class="metric__value">0.05%</span><span class="metric__label">equity out of sample R squared</span></div><div class="metric metric--pass"><span class="metric__value">9 of 12</span><span class="metric__label">fixed income assets forecastable</span></div><div class="metric"><span class="metric__value">1987-2026</span><span class="metric__label">sample</span></div></div><h2>Predictive skill by instrument and by model</h2><p class="note">The parent project fitted eight model families at daily frequency across a seven asset universe, five of which are fixed income. Out of sample R squared is measured against a rolling mean forecast, so a positive number means the model beats simply predicting the average.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">model family</th><th class="num">ig</th><th class="num">hy</th><th class="num">ust2y</th><th class="num">ust10y</th><th class="num">ust30y</th><th class="num">sp500</th><th class="num">gold</th></tr></thead><tbody><tr><td class="rowhead">univariate</td><td class="num">0.00118</td><td class="num">0.00866</td><td class="num">0.00094</td><td class="num">0.00021</td><td class="num">0.00013</td><td class="num">0.00017</td><td class="num">-9e-05</td></tr><tr><td class="rowhead">campbell_thompson</td><td class="num">0.00113</td><td class="num">0.00651</td><td class="num">0.00094</td><td class="num">0.00021</td><td class="num">0.00013</td><td class="num">0.00015</td><td class="num">0.00019</td></tr><tr><td class="rowhead">elastic_net</td><td class="num">-0.01381</td><td class="num">0.16954</td><td class="num">-0.02837</td><td class="num">-0.0274</td><td class="num">-0.00829</td><td class="num">-0.02026</td><td class="num">-0.00909</td></tr><tr><td class="rowhead">pca</td><td class="num">0.00874</td><td class="num">0.12986</td><td class="num">-0.00024</td><td class="num">-0.00431</td><td class="num">-0.00121</td><td class="num">-0.00494</td><td class="num">-0.00479</td></tr><tr><td class="rowhead">random_forest</td><td class="num">0.00753</td><td class="num">0.11165</td><td class="num">-0.00096</td><td class="num">-0.00587</td><td class="num">-0.00851</td><td class="num">-0.0129</td><td class="num">-0.00268</td></tr><tr><td class="rowhead">gradient_boosting</td><td class="num">-0.00576</td><td class="num">-0.04652</td><td class="num">-0.02726</td><td class="num">-0.02731</td><td class="num">-0.03864</td><td class="num">-0.08121</td><td class="num">-0.0508</td></tr><tr><td class="rowhead">regime_conditional</td><td class="num">-0.00077</td><td class="num">0.01335</td><td class="num">-0.00091</td><td class="num">-0.00104</td><td class="num">-0.00027</td><td class="num">0.00046</td><td class="num">-0.00113</td></tr><tr><td class="rowhead">regime_interaction</td><td class="num">0.00116</td><td class="num">0.00873</td><td class="num">0.00087</td><td class="num">0.00014</td><td class="num">0.0001</td><td class="num">0.00017</td><td class="num">-0.00012</td></tr></tbody></table><figcaption>Out of sample R squared, daily. Left block is fixed income, right block is equity and gold.</figcaption></figure><p>Two patterns run through the table. First, <strong>the fixed income columns are systematically better than the equity column</strong>. The two year Treasury is positive under six of eight model families; the S&amp;P 500 is positive under three, and never by more than two basis points of R squared.</p><p>Second, <strong>within fixed income the short maturities dominate the long ones</strong>. That ordering holds across model families sharing no functional form, which is the reason to take it seriously. A result only a random forest can see is a result about random forests. A result that a univariate regression, a shrinkage estimator and a tree ensemble all report is a result about the data.</p><p>The high yield column is the exception, and it is not a real one. The elastic net reports +16.95% and the principal components model +12.99% on high yield, which no credit model achieves. The fund marks illiquid bonds with a lag, so its daily returns autocorrelate at 0.29, and a flexible model learns to predict a move that had already happened. The same artefact reappears in Phase 2.</p><h2>The relationship that motivated this project</h2><p class="note">Extending the same measurement to twelve fixed income instruments makes the ordering explicit.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">asset</th><th class="num">oos_r2</th><th class="num">vol</th><th class="num">duration</th><th class="num">risk_share</th></tr></thead><tbody><tr><td class="rowhead">ust3m</td><td class="num">0.0344</td><td class="num">0.0087</td><td class="num">0.25</td><td class="num">0.0016</td></tr><tr><td class="rowhead">ust2y</td><td class="num">0.0184</td><td class="num">0.0222</td><td class="num">1.9</td><td class="num">0.0103</td></tr><tr><td class="rowhead">hy</td><td class="num">0.0159</td><td class="num">0.0702</td><td class="num">4.0</td><td class="num">0.1026</td></tr><tr><td class="rowhead">ig_short</td><td class="num">0.0152</td><td class="num">0.0254</td><td class="num">2.5</td><td class="num">0.0135</td></tr><tr><td class="rowhead">mbs</td><td class="num">0.0116</td><td class="num">0.0405</td><td class="num">4.5</td><td class="num">0.0342</td></tr><tr><td class="rowhead">ig</td><td class="num">0.0114</td><td class="num">0.0458</td><td class="num">4.2</td><td class="num">0.0436</td></tr><tr><td class="rowhead">muni_hy</td><td class="num">0.0069</td><td class="num">0.0588</td><td class="num">7.5</td><td class="num">0.072</td></tr><tr><td class="rowhead">muni</td><td class="num">0.0066</td><td class="num">0.0457</td><td class="num">5.0</td><td class="num">0.0435</td></tr><tr><td class="rowhead">ust5y</td><td class="num">0.003</td><td class="num">0.0493</td><td class="num">4.6</td><td class="num">0.0507</td></tr><tr><td class="rowhead">ust10y</td><td class="num">-0.0007</td><td class="num">0.0802</td><td class="num">8.4</td><td class="num">0.1339</td></tr><tr><td class="rowhead">ig_long</td><td class="num">-0.0014</td><td class="num">0.0803</td><td class="num">12.0</td><td class="num">0.1342</td></tr><tr><td class="rowhead">ust30y</td><td class="num">-0.0022</td><td class="num">0.1315</td><td class="num">18.5</td><td class="num">0.3599</td></tr></tbody></table><figcaption>Out of sample R squared, annualised volatility, modified duration, and share of universe variance.</figcaption></figure><figure class="chartwrap"><svg class="chart" preserveAspectRatio="xMidYMid meet" xmlns:xlink="http://www.w3.org/1999/xlink"   viewBox="0 0 514.602138 242.427469" xmlns="http://www.w3.org/2000/svg" version="1.1">
@@ -339,16 +339,16 @@ z
      <g id="line2d_1">
       <path d="M 62.736053 207.79075 
 L 62.736053 8.20675 
-" clip-path="url(#p60316fd2b0)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p8c50c8cc02)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_2">
       <defs>
-       <path id="m97515fbeac" d="M 0 0 
+       <path id="m84e24c557b" d="M 0 0 
 L 0 3 
 " style="stroke: var(--ink-muted); stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#m97515fbeac" x="62.736053" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m84e24c557b" x="62.736053" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_1">
@@ -394,11 +394,11 @@ z
      <g id="line2d_3">
       <path d="M 118.327585 207.79075 
 L 118.327585 8.20675 
-" clip-path="url(#p60316fd2b0)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p8c50c8cc02)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_4">
       <g>
-       <use xlink:href="#m97515fbeac" x="118.327585" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m84e24c557b" x="118.327585" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_2">
@@ -465,11 +465,11 @@ z
      <g id="line2d_5">
       <path d="M 173.919116 207.79075 
 L 173.919116 8.20675 
-" clip-path="url(#p60316fd2b0)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p8c50c8cc02)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_6">
       <g>
-       <use xlink:href="#m97515fbeac" x="173.919116" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m84e24c557b" x="173.919116" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_3">
@@ -485,11 +485,11 @@ L 173.919116 8.20675
      <g id="line2d_7">
       <path d="M 229.510648 207.79075 
 L 229.510648 8.20675 
-" clip-path="url(#p60316fd2b0)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p8c50c8cc02)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_8">
       <g>
-       <use xlink:href="#m97515fbeac" x="229.510648" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m84e24c557b" x="229.510648" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_4">
@@ -517,11 +517,11 @@ z
      <g id="line2d_9">
       <path d="M 285.10218 207.79075 
 L 285.10218 8.20675 
-" clip-path="url(#p60316fd2b0)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p8c50c8cc02)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_10">
       <g>
-       <use xlink:href="#m97515fbeac" x="285.10218" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m84e24c557b" x="285.10218" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_5">
@@ -554,11 +554,11 @@ z
      <g id="line2d_11">
       <path d="M 340.693712 207.79075 
 L 340.693712 8.20675 
-" clip-path="url(#p60316fd2b0)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p8c50c8cc02)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_12">
       <g>
-       <use xlink:href="#m97515fbeac" x="340.693712" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m84e24c557b" x="340.693712" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_6">
@@ -575,11 +575,11 @@ L 340.693712 8.20675
      <g id="line2d_13">
       <path d="M 396.285243 207.79075 
 L 396.285243 8.20675 
-" clip-path="url(#p60316fd2b0)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p8c50c8cc02)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_14">
       <g>
-       <use xlink:href="#m97515fbeac" x="396.285243" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m84e24c557b" x="396.285243" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_7">
@@ -596,11 +596,11 @@ L 396.285243 8.20675
      <g id="line2d_15">
       <path d="M 451.876775 207.79075 
 L 451.876775 8.20675 
-" clip-path="url(#p60316fd2b0)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p8c50c8cc02)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_16">
       <g>
-       <use xlink:href="#m97515fbeac" x="451.876775" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m84e24c557b" x="451.876775" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_8">
@@ -956,16 +956,16 @@ z
      <g id="line2d_17">
       <path d="M 48.004297 187.671497 
 L 494.404297 187.671497 
-" clip-path="url(#p60316fd2b0)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p8c50c8cc02)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_18">
       <defs>
-       <path id="mab1c3cb317" d="M 0 0 
+       <path id="m802423fcb1" d="M 0 0 
 L -3 0 
 " style="stroke: var(--ink-muted); stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#mab1c3cb317" x="48.004297" y="187.671497" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m802423fcb1" x="48.004297" y="187.671497" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_10">
@@ -1031,11 +1031,11 @@ z
      <g id="line2d_19">
       <path d="M 48.004297 162.91776 
 L 494.404297 162.91776 
-" clip-path="url(#p60316fd2b0)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p8c50c8cc02)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_20">
       <g>
-       <use xlink:href="#mab1c3cb317" x="48.004297" y="162.91776" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m802423fcb1" x="48.004297" y="162.91776" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_11">
@@ -1052,11 +1052,11 @@ L 494.404297 162.91776
      <g id="line2d_21">
       <path d="M 48.004297 138.164022 
 L 494.404297 138.164022 
-" clip-path="url(#p60316fd2b0)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p8c50c8cc02)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_22">
       <g>
-       <use xlink:href="#mab1c3cb317" x="48.004297" y="138.164022" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m802423fcb1" x="48.004297" y="138.164022" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_12">
@@ -1073,11 +1073,11 @@ L 494.404297 138.164022
      <g id="line2d_23">
       <path d="M 48.004297 113.410285 
 L 494.404297 113.410285 
-" clip-path="url(#p60316fd2b0)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p8c50c8cc02)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_24">
       <g>
-       <use xlink:href="#mab1c3cb317" x="48.004297" y="113.410285" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m802423fcb1" x="48.004297" y="113.410285" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_13">
@@ -1094,11 +1094,11 @@ L 494.404297 113.410285
      <g id="line2d_25">
       <path d="M 48.004297 88.656548 
 L 494.404297 88.656548 
-" clip-path="url(#p60316fd2b0)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p8c50c8cc02)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_26">
       <g>
-       <use xlink:href="#mab1c3cb317" x="48.004297" y="88.656548" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m802423fcb1" x="48.004297" y="88.656548" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_14">
@@ -1115,11 +1115,11 @@ L 494.404297 88.656548
      <g id="line2d_27">
       <path d="M 48.004297 63.90281 
 L 494.404297 63.90281 
-" clip-path="url(#p60316fd2b0)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p8c50c8cc02)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_28">
       <g>
-       <use xlink:href="#mab1c3cb317" x="48.004297" y="63.90281" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m802423fcb1" x="48.004297" y="63.90281" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_15">
@@ -1136,11 +1136,11 @@ L 494.404297 63.90281
      <g id="line2d_29">
       <path d="M 48.004297 39.149073 
 L 494.404297 39.149073 
-" clip-path="url(#p60316fd2b0)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p8c50c8cc02)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_30">
       <g>
-       <use xlink:href="#mab1c3cb317" x="48.004297" y="39.149073" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m802423fcb1" x="48.004297" y="39.149073" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_16">
@@ -1191,11 +1191,11 @@ z
      <g id="line2d_31">
       <path d="M 48.004297 14.395335 
 L 494.404297 14.395335 
-" clip-path="url(#p60316fd2b0)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p8c50c8cc02)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_32">
       <g>
-       <use xlink:href="#mab1c3cb317" x="48.004297" y="14.395335" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m802423fcb1" x="48.004297" y="14.395335" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_17">
@@ -1329,7 +1329,7 @@ z
    <g id="line2d_33">
     <path d="M 48.004297 187.671497 
 L 494.404297 187.671497 
-" clip-path="url(#p60316fd2b0)" style="fill: none; stroke-dasharray: 3.7,1.6; stroke-dashoffset: 0; stroke: var(--ink-muted)"/>
+" clip-path="url(#p8c50c8cc02)" style="fill: none; stroke-dasharray: 3.7,1.6; stroke-dashoffset: 0; stroke: var(--ink-muted)"/>
    </g>
    <g id="patch_3">
     <path d="M 48.004297 207.79075 
@@ -1343,7 +1343,7 @@ L 494.404297 207.79075
    </g>
    <g id="PathCollection_1">
     <defs>
-     <path id="mfc04c45678" d="M 0 4.1833 
+     <path id="m6356c97689" d="M 0 4.1833 
 C 1.109424 4.1833 2.173559 3.742521 2.95804 2.95804 
 C 3.742521 2.173559 4.1833 1.109424 4.1833 0 
 C 4.1833 -1.109424 3.742521 -2.173559 2.95804 -2.95804 
@@ -1355,19 +1355,19 @@ C -2.173559 3.742521 -1.109424 4.1833 0 4.1833
 z
 " style="stroke: #4169e1"/>
     </defs>
-    <g clip-path="url(#p60316fd2b0)">
-     <use xlink:href="#mfc04c45678" x="68.295206" y="17.27875" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfc04c45678" x="104.985617" y="96.426597" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfc04c45678" x="151.682504" y="108.739454" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfc04c45678" x="118.327585" y="112.399198" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfc04c45678" x="162.80081" y="130.053806" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfc04c45678" x="156.129826" y="131.143074" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfc04c45678" x="229.510648" y="153.316931" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfc04c45678" x="173.919116" y="155.070191" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfc04c45678" x="165.024471" y="172.997992" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfc04c45678" x="249.523599" y="190.981175" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfc04c45678" x="329.575405" y="194.361483" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#mfc04c45678" x="474.113388" y="198.71875" style="fill: #4169e1; stroke: #4169e1"/>
+    <g clip-path="url(#p8c50c8cc02)">
+     <use xlink:href="#m6356c97689" x="68.295206" y="17.27875" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m6356c97689" x="104.985617" y="96.426597" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m6356c97689" x="151.682504" y="108.739454" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m6356c97689" x="118.327585" y="112.399198" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m6356c97689" x="162.80081" y="130.053806" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m6356c97689" x="156.129826" y="131.143074" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m6356c97689" x="229.510648" y="153.316931" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m6356c97689" x="173.919116" y="155.070191" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m6356c97689" x="165.024471" y="172.997992" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m6356c97689" x="249.523599" y="190.981175" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m6356c97689" x="329.575405" y="194.361483" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m6356c97689" x="474.113388" y="198.71875" style="fill: #4169e1; stroke: #4169e1"/>
     </g>
    </g>
    <g id="text_19">
@@ -1585,7 +1585,7 @@ z
   </g>
  </g>
  <defs>
-  <clipPath id="p60316fd2b0">
+  <clipPath id="p8c50c8cc02">
    <rect x="48.004297" y="8.20675" width="446.4" height="199.584"/>
   </clipPath>
  </defs>

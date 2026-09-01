@@ -93,10 +93,20 @@ BENCH_FINANCING_BP = {"2s10s barbell 50/50": 3.0, "Agg index (VBMFX)": 40.0}
 # Sensitivity grid: a flat spread applied to every asset, so the per-asset
 # result can be located against the simpler assumption.
 SPREADS = [0.0, 25.0, 50.0, 100.0, 150.0]
-BENCH = "1/N"
+# The Aggregate index is the benchmark a fixed income mandate is actually
+# measured against, so it is the primary comparison and the volatility target.
+# Equal weight is kept as a second reference because it is the naive allocation
+# any method has to beat to justify itself, but nobody is benchmarked to it.
+#
+# The Agg is never levered. Levering a benchmark to match a strategy inverts the
+# question being asked: the mandate is fixed and the strategy has to fit it, not
+# the other way round. So every strategy is scaled to the Agg's volatility and
+# the Agg is held as it comes.
+BENCH = "Agg index (VBMFX)"
+BENCH2 = "1/N"
 
 ORDER = ["Hierarchical RP", "Risk parity (ERC)", "Inverse volatility",
-         "1/N", "Agg index (VBMFX)", "2s10s barbell 50/50"]
+         "Agg index (VBMFX)", "1/N", "2s10s barbell 50/50"]
 
 
 def windows(idx):
@@ -114,7 +124,8 @@ def stats_block(nets, rf, mask, tag):
                    f"{tag}_sharpe": m["sharpe"], f"{tag}_dd": m["max_drawdown"],
                    f"{tag}_n": len(s)}
     t = pd.DataFrame(rows).T
-    t[f"{tag}_vs_1N"] = t[f"{tag}_sharpe"] - t.loc[BENCH, f"{tag}_sharpe"]
+    t[f"{tag}_vs_agg"] = t[f"{tag}_sharpe"] - t.loc[BENCH, f"{tag}_sharpe"]
+    t[f"{tag}_vs_1N"] = t[f"{tag}_sharpe"] - t.loc[BENCH2, f"{tag}_sharpe"]
     return t
 
 
@@ -189,14 +200,12 @@ def main() -> int:
     T = T.reindex([c for c in ORDER if c in T.index])
     T.to_parquet(P / "fi_aligned_table.parquet")
 
-    print("Aligned Sharpe, and the edge the misalignment was worth:")
-    old = pd.read_parquet(P / "fi_paper_table.parquet")
+    print("Aligned Sharpe against both benchmarks:")
     for c in T.index:
-        if c in old.index:
-            print(f"    {c:<24} dev {old.loc[c, 'dev_sharpe']:.4f} -> "
-                  f"{T.loc[c, 'dev_sharpe']:.4f}   "
-                  f"edge {old.loc[c, 'dev_vs_1N']:+.4f} -> "
-                  f"{T.loc[c, 'dev_vs_1N']:+.4f}")
+        if True:
+            print(f"    {c:<24} dev {T.loc[c, 'dev_sharpe']:.4f}  "
+                  f"vs Agg {T.loc[c, 'dev_vs_agg']:+.4f}  "
+                  f"vs 1/N {T.loc[c, 'dev_vs_1N']:+.4f}")
     print()
 
     # ------------------------------------------------ 2. common volatility
@@ -230,7 +239,9 @@ def main() -> int:
         for c in A.columns:
             s = A[c][mask].dropna()
             vol = float(s.std() * np.sqrt(12))
-            L = leverage.required_leverage(vol, target)
+            # The benchmark defines the risk budget, so it is held as it comes.
+            # Anything already above the budget is cut rather than levered.
+            L = 1.0 if c == BENCH else leverage.required_leverage(vol, target)
             ls = leverage.lever_series(s, rf.reindex(s.index), L,
                                        spread_bp=spread_for(c))
             m = metrics.performance(ls, rf.reindex(ls.index))
@@ -243,8 +254,10 @@ def main() -> int:
                 curves[c] = ls
     L = pd.DataFrame(lev_rows).T.reindex([c for c in ORDER if c in lev_rows])
     for tag in ["dev", "oos", "full"]:
+        L[f"{tag}_lev_vs_agg"] = (L[f"{tag}_lev_sharpe"]
+                                  - L.loc[BENCH, f"{tag}_lev_sharpe"])
         L[f"{tag}_lev_vs_1N"] = (L[f"{tag}_lev_sharpe"]
-                                 - L.loc[BENCH, f"{tag}_lev_sharpe"])
+                                 - L.loc[BENCH2, f"{tag}_lev_sharpe"])
     L.to_parquet(P / "fi_aligned_levered.parquet")
     C = pd.DataFrame(curves)[[c for c in ORDER if c in curves]]
     C.to_parquet(P / "fi_aligned_curves.parquet")
@@ -280,25 +293,32 @@ def main() -> int:
                      "breakeven_bp": lo, "headroom_bp": lo - paid})
     BE = pd.DataFrame(rows).set_index("strategy")
     BE.to_parquet(P / "fi_financing_breakeven.parquet")
-    print("Breakeven financing spread, against equal weight at "
-          f"{base:.3f}:")
+    print(f"Breakeven financing spread, against {BENCH} at {base:.3f}:")
     print(BE.round(1).to_string())
     print()
 
     # ------------------------------------------------------- 3. inference
-    boot = {}
-    for c in A.columns:
-        if c == BENCH:
-            continue
-        for tag, mask in w.items():
-            d = inference.sharpe_difference(A[c][mask], A[BENCH][mask],
-                                            rf=rf[mask])
-            boot.setdefault(c, {}).update({
-                f"{tag}_edge": d["difference"], f"{tag}_lo": d["ci_lo"],
-                f"{tag}_hi": d["ci_hi"], f"{tag}_p": d["p_one_sided"]})
-    Bt = pd.DataFrame(boot).T.reindex(
-        [c for c in ORDER if c in boot])
-    Bt.to_parquet(P / "fi_aligned_bootstrap.parquet")
+    # Run against both benchmarks. The Agg is what a mandate is measured on;
+    # equal weight is the naive allocation any method has to beat to justify
+    # its own complexity. A result that only clears one of them is a weaker
+    # result than one that clears both, and the two files say which.
+    boots = {}
+    for bench, fname in [(BENCH, "fi_aligned_bootstrap"),
+                         (BENCH2, "fi_aligned_bootstrap_1n")]:
+        boot = {}
+        for c in A.columns:
+            if c == bench:
+                continue
+            for tag, mask in w.items():
+                d = inference.sharpe_difference(A[c][mask], A[bench][mask],
+                                                rf=rf[mask])
+                boot.setdefault(c, {}).update({
+                    f"{tag}_edge": d["difference"], f"{tag}_lo": d["ci_lo"],
+                    f"{tag}_hi": d["ci_hi"], f"{tag}_p": d["p_one_sided"]})
+        boots[bench] = pd.DataFrame(boot).T.reindex(
+            [c for c in ORDER if c in boot])
+        boots[bench].to_parquet(P / f"{fname}.parquet")
+    Bt = boots[BENCH]
 
     # ------------------------------------- 4. sensitivity to the spread
     rows = {}
@@ -317,12 +337,15 @@ def main() -> int:
     print(S.round(3).to_string())
     print()
 
-    print("Block bootstrap against 1/N on the aligned window:")
-    for c in Bt.index:
-        for tag in ["dev", "oos", "full"]:
-            print(f"    {c:<24} {tag:<5} {Bt.loc[c, f'{tag}_edge']:+.4f}  "
-                  f"[{Bt.loc[c, f'{tag}_lo']:+.4f}, "
-                  f"{Bt.loc[c, f'{tag}_hi']:+.4f}]  p={Bt.loc[c, f'{tag}_p']:.4f}")
+    for bench, frame in boots.items():
+        print(f"Block bootstrap against {bench} on the aligned window:")
+        for c in frame.index:
+            for tag in ["dev", "oos", "full"]:
+                print(f"    {c:<24} {tag:<5} {frame.loc[c, f'{tag}_edge']:+.4f}  "
+                      f"[{frame.loc[c, f'{tag}_lo']:+.4f}, "
+                      f"{frame.loc[c, f'{tag}_hi']:+.4f}]  "
+                      f"p={frame.loc[c, f'{tag}_p']:.4f}")
+        print()
     return 0
 
 

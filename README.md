@@ -25,21 +25,41 @@ the assets you can forecast are the ones carrying almost none of the risk.
 
 What did work is **risk parity**, which never needs an expected return at all. I
 built and tested both classic risk parity and Marcos Lopez de Prado's
-Hierarchical Risk Parity, and both beat every benchmark on the development
-sample. They stay positive out of sample but are not significant there. Over the
-full sample the edge is significant again.
+Hierarchical Risk Parity.
+
+The benchmark is the **Bloomberg Aggregate**, proxied by Vanguard Total Bond
+Market, because that is what a fixed income mandate is measured against. Equal
+weight across the same eleven assets is carried as a second reference. The
+Aggregate is never levered: it sets the risk budget and the strategies are scaled
+to fit inside it.
 
 | Strategy | Development<br>1987-2015 | Holdout<br>2016-2026 | Full sample<br>1987-2026 |
 |---|---|---|---|
-| **Hierarchical Risk Parity** | **0.933** (+0.150, p 0.009) | 0.036 (+0.012, p 0.389) | **0.659** (+0.122, p 0.010) |
-| **Risk parity (ERC)** | **0.884** (+0.085, p 0.015) | 0.057 (+0.030, p 0.178) | **0.624** (+0.077, p 0.006) |
-| Inverse volatility | 0.874 (+0.076, p 0.009) | 0.033 (+0.006, p 0.386) | 0.609 (+0.062, p 0.009) |
-| Equal weight | 0.805 | 0.026 | 0.552 |
-| Agg proxy (Vanguard Total Bond) | 0.824 (+0.028, p 0.286) | -0.072 (-0.103, p 0.001) | 0.518 (-0.031, p 0.219) |
-| 2s10s barbell, 50/50 | 0.655 (-0.144, p 0.075) | -0.152 (-0.170, p 0.042) | 0.441 (-0.106, p 0.083) |
+| **Hierarchical Risk Parity** | **0.933** (+0.121, p 0.036) | 0.036 (+0.115, p 0.042) | **0.659** (+0.153, p 0.002) |
+| **Risk parity (ERC)** | **0.884** (+0.057, p 0.168) | 0.057 (+0.134, p 0.006) | **0.624** (+0.108, p 0.007) |
+| Inverse volatility | 0.874 (+0.048, p 0.160) | 0.033 (+0.109, p 0.006) | 0.609 (+0.093, p 0.006) |
+| Agg index (VBMFX) | 0.824 | -0.072 | 0.518 |
+| Equal weight | 0.805 (-0.028, p 0.303) | 0.026 (+0.103, p 0.003) | 0.552 (+0.031, p 0.234) |
+| 2s10s barbell, 50/50 | 0.655 (-0.172, p 0.021) | -0.152 (-0.067, p 0.229) | 0.441 (-0.075, p 0.149) |
 
-Sharpe ratio, with the edge against equal weight and its one-sided p-value from a
-stationary block bootstrap.
+Sharpe ratio, with the edge against the Aggregate and its one-sided p-value from
+a stationary block bootstrap.
+
+**The result clears the Aggregate in all three windows, holdout included.** That
+deserves one caveat. The holdout decade contained the worst bond market in forty
+years, the Aggregate returned a negative Sharpe across it, and equal weight beat
+the index too (+0.103, p 0.003). So clearing the Aggregate out of sample is a
+real result against the benchmark a mandate uses, and a weaker claim about skill
+than it first looks. Against equal weight the holdout is +0.012 with an interval
+spanning zero.
+
+Against equal weight, for completeness:
+
+| Strategy | Development | Holdout | Full sample |
+|---|---|---|---|
+| Hierarchical Risk Parity | +0.150 (p 0.009) | +0.012 (p 0.389) | +0.122 (p 0.010) |
+| Risk parity (ERC) | +0.085 (p 0.015) | +0.030 (p 0.178) | +0.077 (p 0.006) |
+| Inverse volatility | +0.076 (p 0.009) | +0.006 (p 0.386) | +0.062 (p 0.009) |
 
 ## How these are measured
 
@@ -64,8 +84,13 @@ worth holding onto when reading any bond result spanning the early 1980s.
 **One volatility for everything.** A growth-of-1 chart puts the lowest volatility
 line at the bottom, which inverts the Sharpe ranking whenever the low volatility
 strategy is the better one. Hierarchical risk parity runs at 2.8% volatility
-against equal weight's 4.7%. Every chart and headline comparison is levered to a
-common volatility target with financing charged.
+against the Aggregate's 4.17%. Every chart and headline comparison is scaled to
+the Aggregate's own volatility with financing charged.
+
+The Aggregate is never levered. Levering a benchmark to match a strategy inverts
+the question: a mandate has a risk budget and the strategy has to fit inside it.
+Equal weight runs hotter than the Aggregate at 4.74%, so under this convention it
+is scaled *down* to 0.88x with the balance in cash rather than levered up.
 
 ## The financing assumption
 
@@ -73,32 +98,52 @@ Risk parity has to be levered to compete on returns, so what leverage costs is
 not a detail. This assumes an institutional book with access to repo, listed
 futures and cleared swaps, not a retail margin account.
 
-| Route | Cost over the risk free rate |
-|---|---|
-| Treasury GC repo | SOFR + 0 to 5bp |
-| Treasury futures | implied repo, embedded in the basis |
-| Total return swap | SOFR + 30 to 75bp, plus a 10 to 25bp agent fee |
-| Prime broker margin loan | SOFR + 50 to 150bp |
+Financing is charged **per asset**, the same way trading costs are, because what
+it costs to lever a position depends on what instrument carries it.
 
-Four of the eleven assets are Treasuries that lever through futures or repo for a
-handful of basis points, and they carry most of the levered notional. The credit
-and municipal sleeves are funds, which need a swap or a margin loan. The headline
-assumption is **25 basis points**, blended.
+| Holding | Over the risk free rate | Route |
+|---|---|---|
+| Treasuries, 2-30y | 3bp | Repo or the futures basis |
+| Agency mortgages | 15bp | TBA dollar rolls, agency repo |
+| Investment grade credit | 50bp | Total return swap plus agent fee |
+| High yield | 65bp | Same structure, priced wider |
+| Municipals | 110bp | Margin loan; no derivative exists |
 
-The unlevered comparison does not depend on this at all: HRP scores 0.659 against
-equal weight's 0.552 over the full sample holding no leverage, and every
+Levering a portfolio by L borrows L-1 of NAV against the book as it stands, so
+what a strategy pays is the weighted average of what its own holdings cost. That
+comes to 39-42bp for every method here, a spread of under three basis points
+across them. Risk parity tilts toward the 2-year Treasury at 3bp, but it tilts
+just as hard toward short investment grade at 50bp and keeps most of the
+municipals, so the cheap Treasury tilt does not buy cheap financing.
+
+Scaling every position proportionally means margin-lending against the municipal
+fund, which no desk would do. The alternative is an overlay: hold municipals at
+cash weight and take the borrowed exposure only through instruments with a
+derivative.
+
+| Strategy | Proportional | Overlay |
+|---|---|---|
+| Equal weight | 42.0bp | 26.9bp |
+| Risk parity (ERC) | 41.1bp | 28.3bp |
+| Hierarchical Risk Parity | 39.3bp | 27.8bp |
+
+Every number reported uses the proportional figure, the more expensive of the
+two, so the financing drag here is an upper bound.
+
+The unlevered comparison does not depend on any of this: HRP scores 0.659 against
+the Aggregate's 0.518 over the full sample holding no leverage, and every
 significance test runs on the unlevered series. The levered comparison does
 depend on it, and it has a breakeven.
 
-| Strategy | Leverage required | Breakeven financing spread |
-|---|---|---|
-| Risk parity (ERC) | 1.31x | 116bp |
-| Inverse volatility | 1.30x | 95bp |
-| Hierarchical Risk Parity | 1.68x | 82bp |
+| Strategy | Leverage required | Pays | Breakeven | Headroom |
+|---|---|---|---|---|
+| Risk parity (ERC) | 1.15x | 41bp | 294bp | +252bp |
+| Inverse volatility | 1.15x | 40bp | 263bp | +224bp |
+| Hierarchical Risk Parity | 1.48x | 39bp | 129bp | +90bp |
 
-At 25bp and at 50bp all three lead comfortably. At 100bp only classic risk parity
-survives; at 150bp none do. The more leverage a strategy needs, the more of its
-edge belongs to whoever finances it, which is why HRP breaks first despite having
+Financing would have to be seven times more expensive than assumed before classic
+risk parity reverses. The more leverage a strategy needs, the more of its edge
+belongs to whoever finances it, which is why HRP has the least headroom despite
 the highest unlevered Sharpe. That restates what produces the result rather than
 undermining it: Frazzini and Pedersen's account of the low beta anomaly is that
 it persists because most investors cannot lever cheaply.
@@ -241,21 +286,25 @@ how much any result measured over it can establish.
 | 2021-2023 cumulative | -8.75% | -9.96% | -2.67% | -4.80% |
 | Holdout worst drawdown | -17.3% | -17.5% | -10.3% | -13.0% |
 
-Equal weight returned 2.2% a year over the holdout at a Sharpe of 0.026. The Agg
-proxy was negative on a risk-adjusted basis, and the barbell more so. When the
-benchmark itself is at zero there is very little for a strategy to separate on. A
-positive but small margin is what a real edge looks like under those conditions.
-It is also what noise looks like, and this sample cannot separate the two.
+The Aggregate returned a Sharpe of -0.072 over the holdout and the barbell
+-0.152, while equal weight managed +0.026 on 2.2% a year. Every risk-based method
+cleared the Aggregate and the margin was significant, but so did equal weight.
+When the index itself is negative, clearing it is a lower bar than it looks,
+which is why the comparison against equal weight is reported alongside and why it
+is the one that does not clear.
 
 ## Conclusions
 
-Supported by the evidence: risk parity outperforms equal weight on a fixed income
-universe; the margin is significant on development and on the full sample; it is
-not explained by duration; and it survives trading costs and institutional
-financing.
+Supported by the evidence: risk parity outperforms the Bloomberg Aggregate on a
+fixed income universe, significantly and in all three windows; it also
+outperforms equal weight in sample and over the full sample; the margin is not
+explained by duration; and it survives trading costs and institutional financing
+with 90 to 252bp of headroom to the breakeven spread.
 
-Not established: the out of sample result. The 2016 to 2026 numbers are positive
-against all three benchmarks but small, with intervals spanning zero.
+Not established: that the out of sample result demonstrates skill rather than
+diversification. It clears the Aggregate at p = 0.042, but equal weight cleared
+the Aggregate too, and against equal weight the holdout is +0.012 with an
+interval spanning zero.
 
 ## The three phases
 

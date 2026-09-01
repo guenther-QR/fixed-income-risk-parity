@@ -515,6 +515,7 @@ def phase3():
     T = get("fi_aligned_table")
     L = get("fi_aligned_levered")
     Bt = get("fi_aligned_bootstrap")
+    Bt1 = get("fi_aligned_bootstrap_1n")
     C = get("fi_aligned_curves")
     DT = get("fi_rp_duration_test")
     TS = get("fi_paper_turnover_sharpe")
@@ -527,10 +528,10 @@ def phase3():
 
     r.metrics([
         ("0.933", "hierarchical RP Sharpe, development", "pass"),
-        ("0.805", "equal weight Sharpe, development", None),
+        ("0.824", "Agg index Sharpe, development", None),
+        ("+0.153", "full sample edge vs the Agg", "pass"),
+        ("0.002", "full sample p-value", "pass"),
         ("+0.147", "edge after duration matching", "pass"),
-        ("0.008", "development p-value", "pass"),
-        ("+0.122", "full sample edge vs equal weight", "pass"),
     ])
 
     r.section("How these are measured", (
@@ -666,14 +667,15 @@ def phase3():
         "Two things follow, and they should be kept separate."))
     r.prose(
         "<strong>The unlevered comparison does not depend on it at all.</strong> "
-        "Hierarchical risk parity scores 0.659 against equal weight's 0.552 over "
-        "the full sample holding no leverage and paying no financing, and every "
-        "significance test on this page runs on those unlevered series.")
+        "Hierarchical risk parity scores 0.659 against the Aggregate's 0.518 "
+        "over the full sample holding no leverage and paying no financing, and "
+        "every significance test on this page runs on those unlevered series.")
     r.prose(
         "The <em>levered</em> comparison does depend on it, and it has a "
         "breakeven: the spread at which each strategy's levered Sharpe falls to "
-        "equal weight's 0.552. Equal weight needs no leverage, so it pays "
-        "nothing regardless of what its holdings would cost to finance.")
+        "the Aggregate's 0.518. The Aggregate is held unlevered by "
+        "construction, so it pays nothing regardless of what its holdings would "
+        "cost to finance.")
     if FBE is not None:
         t = FBE[[c for c in ["leverage", "pays_bp", "breakeven_bp",
                              "headroom_bp"] if c in FBE.columns]].copy()
@@ -683,13 +685,16 @@ def phase3():
                 caption="Full sample. Negative headroom means the strategy does "
                         "not beat equal weight even before financing.")
     r.prose(
-        "All three risk-based methods have room. Classic risk parity pays 41 "
-        "basis points against a breakeven of 116, so <strong>financing would "
-        "have to be nearly three times more expensive than assumed before the "
+        "All three risk-based methods have substantial room. Classic risk parity "
+        "pays 41 basis points against a breakeven of 294, so <strong>financing "
+        "would have to be seven times more expensive than assumed before the "
         "result reverses</strong>. Hierarchical risk parity has the least "
-        "headroom at 42 basis points, because it needs the most leverage at 1.68 "
-        "times. On the overlay implementation every headroom figure widens by "
-        "roughly another twelve basis points.")
+        "headroom at 90 basis points, because it needs the most leverage at 1.48 "
+        "times. The headroom is far wider than in an equal-weight-targeted "
+        "comparison, because the Aggregate runs at 4.17% volatility against "
+        "equal weight's 4.74%, so less leverage is required to reach it. On the "
+        "overlay implementation every figure widens by roughly another twelve "
+        "basis points.")
     if SENS is not None:
         t = SENS.copy()
         t.index.name = "strategy"
@@ -706,9 +711,30 @@ def phase3():
         "harvesting it should be expected to work for an institution financing "
         "at repo and to stop working for someone paying 150 over.")
 
-    r.section("Results against three benchmarks", (
-        "Equal weight, the Bloomberg Aggregate as proxied by Vanguard Total "
-        "Bond, and a 50/50 two year and ten year Treasury barbell."))
+    r.section("Benchmarks", (
+        "The Aggregate index is the primary comparison. Equal weight and a "
+        "2s10s Treasury barbell are secondary."))
+    r.table(pd.DataFrame([
+        ("Bloomberg Aggregate", "primary",
+         "Proxied by Vanguard Total Bond Market. This is what a fixed income "
+         "mandate is actually measured against, so it sets the risk budget and "
+         "it is the benchmark every headline number reports against."),
+        ("Equal weight", "secondary",
+         "The naive allocation across the same eleven assets. Nobody is "
+         "benchmarked to it, but any method has to beat it to justify its own "
+         "complexity, so it is reported alongside throughout."),
+        ("2s10s barbell, 50/50", "secondary",
+         "A common rates-desk construction, included to check that the result "
+         "is not simply a curve position."),
+    ], columns=["benchmark", "role", "why"]).set_index("benchmark"))
+    r.prose(
+        "<strong>The Aggregate is never levered.</strong> Levering a benchmark "
+        "to match a strategy inverts the question: a mandate has a risk budget "
+        "and the strategy has to fit inside it, not the other way round. So the "
+        "Aggregate is held as it comes, its 4.17% volatility is the target, and "
+        "every strategy is scaled to that. Equal weight runs hotter than the "
+        "Aggregate at 4.74%, so under this convention it is scaled <em>down</em> "
+        "to 0.88 times with the balance in cash rather than levered up.")
     if T is not None:
         for tag, cap in [("dev", "Development, November 1987 to December 2015."),
                          ("oos", "Holdout, 2016 to 2026. Nothing was fitted on "
@@ -716,28 +742,29 @@ def phase3():
                          ("full", "Full sample, November 1987 to August 2026.")]:
             t = three_window(
                 T, [f"{tag}_cagr", f"{tag}_vol", f"{tag}_sharpe", f"{tag}_dd",
-                    f"{tag}_vs_1N"],
+                    f"{tag}_vs_agg", f"{tag}_vs_1N"],
                 ["return", "volatility", "Sharpe", "worst drawdown",
-                 "vs equal weight"])
+                 "vs the Agg", "vs equal weight"])
             r.table(t.round(4), align_right=list(t.columns), caption=cap)
 
     if L is not None:
         t = three_window(
             L, ["full_leverage", "full_lev_cagr", "full_lev_vol",
-                "full_lev_sharpe", "full_lev_dd", "full_lev_vs_1N"],
+                "full_lev_sharpe", "full_lev_dd", "full_lev_vs_agg"],
             ["leverage", "return", "volatility", "Sharpe", "worst drawdown",
-             "vs equal weight"])
+             "vs the Agg"])
         r.table(t.round(4), align_right=list(t.columns),
-                caption="Full sample, every strategy levered to equal weight's "
-                        "own 4.7% volatility with per-asset financing charged. This "
-                        "is the apples-to-apples comparison.")
+                caption="Full sample, every strategy scaled to the Aggregate's "
+                        "own 4.17% volatility with per-asset financing charged. "
+                        "This is the apples-to-apples comparison.")
         r.prose(
-            "Levered to the same risk, hierarchical risk parity returns 5.83% a "
-            "year against equal weight's 5.57%, at the same volatility and with "
-            "a smaller drawdown. Note that leverage <em>costs</em> it: an "
-            "unlevered Sharpe of 0.659 falls to 0.614 once 1.68 times leverage "
-            "is financed at its 39bp blended rate. The ranking holds anyway, "
-            "the point of charging for it rather than assuming it away.")
+            "At the Aggregate's own risk, hierarchical risk parity returns "
+            "5.54% a year against the Aggregate's 5.11%, and classic risk "
+            "parity 5.52%, both at 4.17% volatility. Leverage does cost "
+            "something: an unlevered Sharpe of 0.659 falls to 0.623 once 1.48 "
+            "times leverage is financed at its 39bp blended rate. The ranking "
+            "holds anyway, which is the point of charging for it rather than "
+            "assuming it away.")
 
     if C is not None:
         bench = {"1/N", "Agg index (VBMFX)", "2s10s barbell 50/50"}
@@ -764,13 +791,16 @@ def phase3():
         "a Sharpe ratio is too narrow. A stationary block bootstrap with twelve "
         "month expected blocks, paired so the common market move is differenced "
         "away rather than adding noise to the comparison."))
-    if Bt is not None:
-        for tag, cap in [("dev", "Development."), ("oos", "Holdout."),
-                         ("full", "Full sample.")]:
+    for frame, who in [(Bt, "the Agg"), (Bt1, "equal weight")]:
+        if frame is None:
+            continue
+        for tag, win in [("dev", "Development"), ("oos", "Holdout"),
+                         ("full", "Full sample")]:
             t = three_window(
-                Bt, [f"{tag}_edge", f"{tag}_lo", f"{tag}_hi", f"{tag}_p"],
-                ["edge vs equal weight", "CI low", "CI high", "p"])
-            r.table(t.round(4), align_right=list(t.columns), caption=cap)
+                frame, [f"{tag}_edge", f"{tag}_lo", f"{tag}_hi", f"{tag}_p"],
+                [f"edge vs {who}", "CI low", "CI high", "p"])
+            r.table(t.round(4), align_right=list(t.columns),
+                    caption=f"{win}, against {who}.")
     r.prose(
         "These edges differ slightly from the <em>vs equal weight</em> column in "
         "the performance tables above, by one or two basis points of Sharpe. The "
@@ -779,18 +809,26 @@ def phase3():
         "be resampled in paired blocks. The two conventions agree on ranking and "
         "on sign, and the bootstrap number is the one each p-value refers to.")
     r.prose(
-        "<strong>Development and full sample are significant; the holdout is "
-        "not.</strong> Hierarchical risk parity is +0.150 on development with a "
-        "95% interval of [+0.034, +0.271] and p = 0.009, and +0.122 on the full "
-        "sample at p = 0.010. On the holdout alone it is +0.012 with an interval "
-        "of [-0.085, +0.166] and p = 0.389. Risk parity is the stronger of the "
-        "two out of sample, at +0.030 with p = 0.178, and that is still not "
-        "significant.")
+        "<strong>Against the Aggregate the result is significant in all three "
+        "windows.</strong> Hierarchical risk parity is +0.122 on development at "
+        "p = 0.036, +0.115 on the holdout at p = 0.042, and +0.153 on the full "
+        "sample at p = 0.002. Classic risk parity is not significant on "
+        "development at p = 0.168 but is on both the holdout and the full "
+        "sample, at p = 0.006 and p = 0.007.")
     r.prose(
-        "Both benchmarks go the other way with more confidence. The Aggregate "
-        "proxy is significantly <em>worse</em> than equal weight over the "
-        "holdout, at -0.103 with p = 0.001, and the barbell at -0.170 with "
-        "p = 0.042.")
+        "<strong>Against equal weight the holdout does not clear.</strong> "
+        "Hierarchical risk parity is +0.150 on development at p = 0.009 and "
+        "+0.122 on the full sample at p = 0.010, but only +0.012 on the holdout "
+        "with an interval of [-0.085, +0.166] and p = 0.389.")
+    r.prose(
+        "The gap between those two paragraphs is the honest centre of this "
+        "page, and it is worth stating rather than picking whichever benchmark "
+        "reads better. <strong>Equal weight itself beat the Aggregate over the "
+        "holdout by +0.103 at p = 0.003.</strong> Over that decade almost any "
+        "diversified bond book beat the index, so clearing the Aggregate out of "
+        "sample is a real result against the benchmark a mandate uses, and a "
+        "weaker claim about skill than clearing equal weight would have been. "
+        "Both numbers are reported above for that reason.")
 
     r.section("Interpreting the holdout period", (
         "The decade the strategies were tested on contained the worst bond "
@@ -807,13 +845,13 @@ def phase3():
         align_right=["equal weight", "Agg proxy", "Hierarchical RP",
                      "Risk parity"])
     r.prose(
-        "Equal weight returned 2.2% a year over the holdout at a Sharpe of "
-        "0.026. The Aggregate proxy was negative on a risk-adjusted basis at "
-        "-0.072, and the barbell at -0.152. When the benchmark itself is at "
-        "zero, there is very little for a strategy to separate on. A positive "
-        "but small margin is exactly what a real edge looks like under those "
-        "conditions. It is also exactly what noise looks like, and this "
-        "sample cannot separate the two.")
+        "The Aggregate returned a Sharpe of -0.072 over the holdout and the "
+        "barbell -0.152, while equal weight managed +0.026 on 2.2% a year. "
+        "Every risk-based method cleared the Aggregate and the margin was "
+        "significant, but so did equal weight. When the index itself is "
+        "negative, clearing it is a lower bar than it looks, which is why the "
+        "comparison against equal weight is reported alongside and why it is "
+        "the one that does not clear.")
     r.prose(
         "What the drawdown row does show is that the risk-based methods took "
         "materially less damage through the rate shock: -7.6% for hierarchical "
@@ -875,29 +913,34 @@ def phase3():
     r.section("Conclusions", (
         "What the evidence supports, and what it does not."))
     r.checks([
-        (True, "Risk parity outperforms equal weight on this universe",
+        (True, "Risk parity outperforms the Aggregate index",
+         "0.933 and 0.884 against 0.824 on development; significant in all "
+         "three windows, full sample p = 0.002 and 0.007"),
+        (True, "It also outperforms equal weight in sample",
          "0.933 and 0.884 against 0.805 on development, both bootstrap "
          "intervals exclude zero"),
         (True, "The edge is not explained by duration",
          "unchanged against a duration matched benchmark, p = 0.008 and 0.012"),
-        (True, "It outperforms a 2s10s barbell and the Aggregate proxy",
-         "barbell 0.655, Vanguard Total Bond 0.824, on the same window"),
+        (True, "It outperforms a 2s10s Treasury barbell",
+         "barbell 0.655 on development, negative against every method"),
         (True, "The edge survives leverage and trading costs",
-         "still ahead levered to equal weight's volatility at per-asset "
-         "financing, with 42 to 75bp of headroom to the breakeven; "
-         "turnover under 15% a year"),
+         "still ahead at the Agg's own risk with per-asset financing, and 90 to "
+         "252bp of headroom to the breakeven; turnover under 15% a year"),
         (True, "The result holds over the full sample",
          "+0.122 against equal weight from 1987 to 2026, p = 0.010"),
-        (False, "The result is established out of sample",
-         "2016 to 2026 is positive against all three benchmarks but p = 0.389"),
+        (False, "The out of sample result establishes skill",
+         "it clears the Agg at p = 0.042, but equal weight cleared the Agg too, "
+         "and against equal weight the holdout is +0.012 at p = 0.389"),
         (False, "Any return forecast is involved",
          "the covariance matrix only, no return prediction anywhere"),
     ])
     r.prose(
-        "In short: the development and full sample results are solid, and the "
-        "holdout result is directionally right but unproven. A decade in which "
-        "the benchmark returned a 0.03 Sharpe is a poor environment for "
-        "demonstrating anything, in either direction.")
+        "In short: against the Aggregate the result holds in every window and "
+        "survives duration matching, per-asset financing and trading costs. "
+        "Against equal weight it holds in sample and over the full sample but "
+        "not on the holdout alone. A decade in which the index returned a "
+        "negative Sharpe is a poor environment for separating skill from "
+        "diversification, in either direction.")
 
     r.section("Next steps")
     r.table(pd.DataFrame([
@@ -1043,41 +1086,57 @@ framework works considerably better</strong>, because it never needs an expected
 return at all.</p>
 
 <p>I built and tested both classic risk parity and Marcos Lopez de Prado's
-Hierarchical Risk Parity, and both show a clear edge over the benchmarks in
-development. Against equal weight, hierarchical risk parity delivers a
-<strong>0.933 Sharpe against 0.805</strong>, an edge of +0.150 with a 95%
-confidence interval of [+0.034, +0.271] and p = 0.009. Classic risk parity
-delivers 0.884, an edge of +0.085 at p = 0.015. Both also beat the Bloomberg
-Aggregate proxy at 0.824 and a 2s10s Treasury barbell at 0.655.</p>
+Hierarchical Risk Parity. The benchmark is the <strong>Bloomberg
+Aggregate</strong>, proxied by Vanguard Total Bond Market, because that is what a
+fixed income mandate is actually measured against. Equal weight across the same
+eleven assets is carried alongside as a second reference. The Aggregate is never
+levered: it sets the risk budget at 4.17% volatility, and the strategies are
+scaled to fit inside it.</p>
 
-<p>The results continue to perform out of sample, though not at a level I would
-call significant: hierarchical risk parity is +0.012 against equal weight over
-the holdout and classic risk parity +0.030, with confidence intervals spanning
-zero. Some of that is the environment. The holdout decade contained the worst
-bond market in forty years, with equal weight down 13.5% in 2022 and returning
-just 2.2% a year across the period at a 0.03 Sharpe. There was very little for
-anything to separate on. <strong>Over the full sample the edge is significant
-again</strong>, at +0.122 for hierarchical risk parity (p = 0.010) and +0.077 for
-classic risk parity (p = 0.006).</p>
+<p>Against the Aggregate, hierarchical risk parity delivers a <strong>0.933
+Sharpe against 0.824</strong> in development and <strong>0.659 against 0.518
+over the full sample</strong>, an edge of +0.153 with a 95% confidence interval
+of [+0.053, +0.253] and p = 0.002. Classic risk parity delivers 0.624 full
+sample, an edge of +0.108 at p = 0.007. Both also beat a 2s10s Treasury barbell
+at 0.441.</p>
+
+<p><strong>The result clears the Aggregate in all three windows, holdout
+included</strong>, at p = 0.042 for the hierarchical version and p = 0.006 for
+the classic one. That is worth one caveat rather than a victory lap. The holdout
+decade contained the worst bond market in forty years, the Aggregate returned a
+negative Sharpe of -0.072 across it, and equal weight beat the index too. So
+clearing the Aggregate out of sample is a genuine result against the benchmark a
+mandate uses, and a weaker claim about skill than it first appears. Measured
+against equal weight instead, the holdout is +0.012 with an interval spanning
+zero.</p>
 
 <p>Because risk parity naturally holds less duration, the obvious objection is
-that this is simply a bet on shorter bonds. It is not. Measured against an equal
-weight benchmark rescaled month by month to match each strategy's own portfolio
+that this is simply a bet on shorter bonds. It is not. Measured against a
+benchmark rescaled month by month to match each strategy's own portfolio
 duration, the edge is essentially unchanged: <strong>+0.147 for hierarchical risk
 parity at p = 0.008</strong>, and +0.088 for classic risk parity at p = 0.012.</p>
+
+<p>Leverage is charged per asset rather than at one blended rate, on an
+institutional cost of funds: 3bp for Treasuries financed through repo or the
+futures basis, 50bp for investment grade through a swap, 110bp for municipals
+where no derivative exists. Blended by portfolio weight that comes to about 40bp,
+against breakevens of 90 to 294bp.</p>
 </div>
 
-<h2>Sharpe ratio, and edge against equal weight</h2>
+<h2>Sharpe ratio, and edge against the Aggregate index</h2>
 <div class="scroll">
 <table>
 <thead><tr><th>Strategy</th><th>Development<br>1987-2015</th><th>Holdout<br>2016-2026</th><th>Full sample<br>1987-2026</th></tr></thead>
 <tbody>{body}</tbody>
 </table>
 </div>
-<p class="note">Every series starts in November 1987, the first month the
-covariance-based methods can trade after their estimation window, so no strategy
-or benchmark gets a head start. p-values are one-sided, from a stationary block
-bootstrap with twelve month expected blocks.</p>
+<p class="note">Edge and p-value are against the Bloomberg Aggregate, proxied by
+Vanguard Total Bond Market, which is the benchmark a fixed income mandate is
+measured on. Equal weight across the same eleven assets is reported as a second
+reference in the phase pages. Every series starts in November 1987, the first
+month the covariance-based methods can trade after their estimation window, so
+no strategy or benchmark gets a head start. p-values are one-sided, from a
+stationary block bootstrap with twelve month expected blocks.</p>
 
 {cards}
 <footer>

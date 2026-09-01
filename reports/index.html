@@ -57,41 +57,57 @@ framework works considerably better</strong>, because it never needs an expected
 return at all.</p>
 
 <p>I built and tested both classic risk parity and Marcos Lopez de Prado's
-Hierarchical Risk Parity, and both show a clear edge over the benchmarks in
-development. Against equal weight, hierarchical risk parity delivers a
-<strong>0.933 Sharpe against 0.805</strong>, an edge of +0.150 with a 95%
-confidence interval of [+0.034, +0.271] and p = 0.009. Classic risk parity
-delivers 0.884, an edge of +0.085 at p = 0.015. Both also beat the Bloomberg
-Aggregate proxy at 0.824 and a 2s10s Treasury barbell at 0.655.</p>
+Hierarchical Risk Parity. The benchmark is the <strong>Bloomberg
+Aggregate</strong>, proxied by Vanguard Total Bond Market, because that is what a
+fixed income mandate is actually measured against. Equal weight across the same
+eleven assets is carried alongside as a second reference. The Aggregate is never
+levered: it sets the risk budget at 4.17% volatility, and the strategies are
+scaled to fit inside it.</p>
 
-<p>The results continue to perform out of sample, though not at a level I would
-call significant: hierarchical risk parity is +0.012 against equal weight over
-the holdout and classic risk parity +0.030, with confidence intervals spanning
-zero. Some of that is the environment. The holdout decade contained the worst
-bond market in forty years, with equal weight down 13.5% in 2022 and returning
-just 2.2% a year across the period at a 0.03 Sharpe. There was very little for
-anything to separate on. <strong>Over the full sample the edge is significant
-again</strong>, at +0.122 for hierarchical risk parity (p = 0.010) and +0.077 for
-classic risk parity (p = 0.006).</p>
+<p>Against the Aggregate, hierarchical risk parity delivers a <strong>0.933
+Sharpe against 0.824</strong> in development and <strong>0.659 against 0.518
+over the full sample</strong>, an edge of +0.153 with a 95% confidence interval
+of [+0.053, +0.253] and p = 0.002. Classic risk parity delivers 0.624 full
+sample, an edge of +0.108 at p = 0.007. Both also beat a 2s10s Treasury barbell
+at 0.441.</p>
+
+<p><strong>The result clears the Aggregate in all three windows, holdout
+included</strong>, at p = 0.042 for the hierarchical version and p = 0.006 for
+the classic one. That is worth one caveat rather than a victory lap. The holdout
+decade contained the worst bond market in forty years, the Aggregate returned a
+negative Sharpe of -0.072 across it, and equal weight beat the index too. So
+clearing the Aggregate out of sample is a genuine result against the benchmark a
+mandate uses, and a weaker claim about skill than it first appears. Measured
+against equal weight instead, the holdout is +0.012 with an interval spanning
+zero.</p>
 
 <p>Because risk parity naturally holds less duration, the obvious objection is
-that this is simply a bet on shorter bonds. It is not. Measured against an equal
-weight benchmark rescaled month by month to match each strategy's own portfolio
+that this is simply a bet on shorter bonds. It is not. Measured against a
+benchmark rescaled month by month to match each strategy's own portfolio
 duration, the edge is essentially unchanged: <strong>+0.147 for hierarchical risk
 parity at p = 0.008</strong>, and +0.088 for classic risk parity at p = 0.012.</p>
+
+<p>Leverage is charged per asset rather than at one blended rate, on an
+institutional cost of funds: 3bp for Treasuries financed through repo or the
+futures basis, 50bp for investment grade through a swap, 110bp for municipals
+where no derivative exists. Blended by portfolio weight that comes to about 40bp,
+against breakevens of 90 to 294bp.</p>
 </div>
 
-<h2>Sharpe ratio, and edge against equal weight</h2>
+<h2>Sharpe ratio, and edge against the Aggregate index</h2>
 <div class="scroll">
 <table>
 <thead><tr><th>Strategy</th><th>Development<br>1987-2015</th><th>Holdout<br>2016-2026</th><th>Full sample<br>1987-2026</th></tr></thead>
-<tbody><tr class="me"><th>Hierarchical RP</th><td>0.933<span class="d">+0.149 &middot; p 0.009</span></td><td>0.036<span class="d">+0.012 &middot; p 0.389</span></td><td>0.659<span class="d">+0.122 &middot; p 0.010</span></td></tr><tr class="me"><th>Risk parity (ERC)</th><td>0.884<span class="d">+0.085 &middot; p 0.015</span></td><td>0.057<span class="d">+0.030 &middot; p 0.178</span></td><td>0.624<span class="d">+0.077 &middot; p 0.006</span></td></tr><tr><th>Inverse volatility</th><td>0.874<span class="d">+0.076 &middot; p 0.009</span></td><td>0.033<span class="d">+0.006 &middot; p 0.386</span></td><td>0.609<span class="d">+0.062 &middot; p 0.009</span></td></tr><tr><th>1/N</th><td>0.805<span class="d">benchmark</span></td><td>0.026<span class="d">benchmark</span></td><td>0.552<span class="d">benchmark</span></td></tr><tr><th>Agg index (VBMFX)</th><td>0.824<span class="d">+0.028 &middot; p 0.286</span></td><td>-0.072<span class="d">-0.103 &middot; p 0.001</span></td><td>0.518<span class="d">-0.031 &middot; p 0.219</span></td></tr><tr><th>2s10s barbell 50/50</th><td>0.655<span class="d">-0.144 &middot; p 0.075</span></td><td>-0.152<span class="d">-0.170 &middot; p 0.042</span></td><td>0.440<span class="d">-0.106 &middot; p 0.083</span></td></tr></tbody>
+<tbody><tr class="me"><th>Hierarchical RP</th><td>0.933<span class="d">+0.121 &middot; p 0.036</span></td><td>0.036<span class="d">+0.115 &middot; p 0.042</span></td><td>0.659<span class="d">+0.153 &middot; p 0.002</span></td></tr><tr class="me"><th>Risk parity (ERC)</th><td>0.884<span class="d">+0.057 &middot; p 0.168</span></td><td>0.057<span class="d">+0.134 &middot; p 0.006</span></td><td>0.624<span class="d">+0.108 &middot; p 0.007</span></td></tr><tr><th>Inverse volatility</th><td>0.874<span class="d">+0.048 &middot; p 0.160</span></td><td>0.033<span class="d">+0.109 &middot; p 0.006</span></td><td>0.609<span class="d">+0.093 &middot; p 0.006</span></td></tr><tr><th>Agg index (VBMFX)</th><td>0.824<span class="d">benchmark</span></td><td>-0.072<span class="d">benchmark</span></td><td>0.518<span class="d">benchmark</span></td></tr><tr><th>1/N</th><td>0.805<span class="d">-0.028 &middot; p 0.303</span></td><td>0.026<span class="d">+0.103 &middot; p 0.003</span></td><td>0.552<span class="d">+0.031 &middot; p 0.234</span></td></tr><tr><th>2s10s barbell 50/50</th><td>0.655<span class="d">-0.172 &middot; p 0.021</span></td><td>-0.152<span class="d">-0.067 &middot; p 0.229</span></td><td>0.440<span class="d">-0.075 &middot; p 0.149</span></td></tr></tbody>
 </table>
 </div>
-<p class="note">Every series starts in November 1987, the first month the
-covariance-based methods can trade after their estimation window, so no strategy
-or benchmark gets a head start. p-values are one-sided, from a stationary block
-bootstrap with twelve month expected blocks.</p>
+<p class="note">Edge and p-value are against the Bloomberg Aggregate, proxied by
+Vanguard Total Bond Market, which is the benchmark a fixed income mandate is
+measured on. Equal weight across the same eleven assets is reported as a second
+reference in the phase pages. Every series starts in November 1987, the first
+month the covariance-based methods can trade after their estimation window, so
+no strategy or benchmark gets a head start. p-values are one-sided, from a
+stationary block bootstrap with twelve month expected blocks.</p>
 
 <a class="card" href="phase1_idea.html"><span class="num">Phase 1</span><span class="ttl">The Idea</span><span class="dsc">Predictive skill by instrument and by model family. Fixed income is more forecastable than equity, short maturities more than long, and the ordering holds across model families that share no functional form.</span></a><a class="card" href="phase2_strategies.html"><span class="num">Phase 2</span><span class="ttl">Strategies</span><span class="dsc">Nine allocation methods. Carry, momentum and regression tilts all lose to equal weight; risk parity and Lopez de Prado's hierarchical version both beat it. Why the split was predictable.</span></a><a class="card" href="phase3_results.html"><span class="num">Phase 3</span><span class="ttl">Results and Holdout</span><span class="dsc">Development, holdout and full sample against three benchmarks, matched on start date, on leverage and on duration. Turnover, costs, borrowing, and what is not proven.</span></a>
 <footer>
