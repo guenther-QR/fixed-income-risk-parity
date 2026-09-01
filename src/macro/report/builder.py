@@ -22,7 +22,9 @@ class PhaseReport:
     title: str                      # "Data Layer"
     summary: str                    # one-paragraph standfirst
     status: str = "complete"        # complete | in progress | blocked
+    project: str = "Macro_26"       # shown in the masthead rail and colophon
     _blocks: list[str] = field(default_factory=list)
+    _nav: dict = field(default_factory=dict)
 
     # ---------------------------------------------------------------- sections
 
@@ -77,6 +79,13 @@ class PhaseReport:
         )
         return self
 
+    def formula(self, body: str, caption: str | None = None) -> "PhaseReport":
+        """A display equation. `body` is trusted HTML, so it can carry entities
+        and per-term spans that tint each component to match the table below."""
+        cap = f'<span class="formula__cap">{caption}</span>' if caption else ""
+        self._blocks.append(f'<div class="formula">{body}{cap}</div>')
+        return self
+
     def figure(self, svg: str, caption: str | None = None) -> "PhaseReport":
         cap = f"<figcaption>{caption}</figcaption>" if caption else ""
         self._blocks.append(f'<figure class="chartwrap">{svg}{cap}</figure>')
@@ -111,6 +120,43 @@ class PhaseReport:
         self._blocks.append(f'<div class="findings">{"".join(cards)}</div>')
         return self
 
+    def nav(self, index: tuple[str, str] | None = None,
+            prev: tuple[str, str] | None = None,
+            next: tuple[str, str] | None = None) -> "PhaseReport":
+        """Where this page sits in the sequence. Each argument is (href, label).
+
+        A reader who lands on one phase from a search result or a shared link
+        needs a way out of it without editing the URL, so the pager is rendered
+        whether or not they arrived through the index.
+        """
+        self._nav = {"index": index, "prev": prev, "next": next}
+        return self
+
+    def _pager(self) -> str:
+        if not self._nav:
+            return ""
+        def link(key, kind, arrow_before=""):
+            item = self._nav.get(key)
+            if not item:
+                return '<span class="pager__slot"></span>'
+            href, label = item
+            return (f'<a class="pager__slot pager__slot--{kind}" href="{html.escape(href)}">'
+                    f'<span class="pager__kind">{arrow_before}</span>'
+                    f'<span class="pager__label">{html.escape(label)}</span></a>')
+        return ('<nav class="pager">'
+                + link("prev", "prev", "&larr; Previous")
+                + link("index", "index", "All phases")
+                + link("next", "next", "Next &rarr;")
+                + "</nav>")
+
+    def _crumb(self) -> str:
+        item = self._nav.get("index") if self._nav else None
+        if not item:
+            return ""
+        href, _ = item
+        return (f'<a class="crumb" href="{html.escape(href)}">'
+                f'&larr; {html.escape(self.project)}</a>')
+
     def next_up(self, phase: str, items: list[str]) -> "PhaseReport":
         lis = "".join(f"<li>{i}</li>" for i in items)
         self._blocks.append(
@@ -130,7 +176,7 @@ class PhaseReport:
 <div class="page">
   <header class="masthead">
     <div class="masthead__rail">
-      <span class="eyebrow">Macro_26</span>
+      {self._crumb()}
       <span class="chip chip--{_status_class(self.status)}">{html.escape(self.status)}</span>
     </div>
     <h1><span class="masthead__phase">{html.escape(self.phase)}</span>{html.escape(self.title)}</h1>
@@ -140,8 +186,9 @@ class PhaseReport:
   <main>
     {"".join(self._blocks)}
   </main>
+  {self._pager()}
   <footer class="colophon">
-    Gus Guenther · Macro_26 · regenerate with <code>py scripts/report_{self.phase.lower().replace(' ', '')}.py</code>
+    Gus Guenther · {html.escape(self.project)} · regenerate with <code>py scripts/build_site.py</code>
   </footer>
 </div>
 """

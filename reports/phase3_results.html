@@ -21,6 +21,8 @@
   --med:  #8a6220;  --med-bg:  #f6ecd9;
   --low:  #4a5b6b;  --low-bg:  #e6ecf1;
 
+  --t1: #4169e1;  --t2: #1f9c7a;  --t3: #cf6a1a;  --t4: #a83c66;
+
   --measure: 68ch;
   --serif: "IBM Plex Serif", Georgia, "Times New Roman", serif;
   --sans:  "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -44,6 +46,8 @@
     --high: #e08a8a;  --high-bg: #2e1c1c;
     --med:  #d9ac63;  --med-bg:  #2c2317;
     --low:  #9db2c4;  --low-bg:  #1b242c;
+
+    --t1: #8aa4f0;  --t2: #5fc9a9;  --t3: #e8a25e;  --t4: #d98aa6;
   }
 }
 
@@ -63,6 +67,8 @@
   --high: #e08a8a;  --high-bg: #2e1c1c;
   --med:  #d9ac63;  --med-bg:  #2c2317;
   --low:  #9db2c4;  --low-bg:  #1b242c;
+
+  --t1: #8aa4f0;  --t2: #5fc9a9;  --t3: #e8a25e;  --t4: #d98aa6;
 }
 
 * { box-sizing: border-box; }
@@ -216,8 +222,63 @@ figcaption {
 .nextup ul { margin: 0; padding-left: 1.1rem; }
 .nextup li { margin: .3rem 0; font-size: .93rem; }
 
+/* -------------------------------------------------------------- formula */
+
+.formula {
+  margin: 1.5rem 0; padding: 1.25rem 1rem; text-align: center;
+  border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  font-family: var(--serif, Georgia, serif); font-size: 1.25rem;
+  line-height: 1.9; color: var(--ink);
+}
+.formula .t { white-space: nowrap; font-weight: 600; }
+.formula .t1 { color: var(--t1); }
+.formula .t2 { color: var(--t2); }
+.formula .t3 { color: var(--t3); }
+.formula .t4 { color: var(--t4); }
+.formula__cap {
+  display: block; margin-top: .6rem; font-family: var(--mono);
+  font-size: .72rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+/* ------------------------------------------------------------------ nav */
+
+.crumb {
+  font-family: var(--mono); font-size: .72rem; font-weight: 500;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--ink-muted);
+  text-decoration: none; border-bottom: 1px solid transparent;
+}
+.crumb:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+.pager {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: .75rem;
+  align-items: stretch; margin-top: 3.5rem; padding-top: 1.5rem;
+  border-top: 2px solid var(--ink);
+}
+.pager__slot {
+  display: flex; flex-direction: column; gap: .2rem; padding: .85rem 1rem;
+  border: 1px solid var(--rule); border-radius: 3px; text-decoration: none;
+  color: inherit; background: var(--card, transparent);
+}
+a.pager__slot:hover { border-color: var(--accent); }
+span.pager__slot { border-color: transparent; }  /* first and last page */
+.pager__slot--next { text-align: right; }
+.pager__slot--index { justify-content: center; text-align: center; }
+.pager__kind {
+  font-family: var(--mono); font-size: .68rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--ink-muted);
+}
+.pager__label { font-weight: 600; font-size: .95rem; }
+.pager__slot--index .pager__label { display: none; }
+
+@media (max-width: 34rem) {
+  .pager { grid-template-columns: 1fr; }
+  .pager__slot--next { text-align: left; }
+  .pager__slot--index { text-align: left; justify-content: flex-start; }
+}
+
 .colophon {
-  margin-top: 3.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+  margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
   font-family: var(--mono); font-size: .75rem; color: var(--ink-muted);
 }
 
@@ -228,12 +289,12 @@ figcaption {
 <div class="page">
   <header class="masthead">
     <div class="masthead__rail">
-      <span class="eyebrow">Macro_26</span>
+      <a class="crumb" href="index.html">&larr; Fixed Income Risk Parity</a>
       <span class="chip chip--pass">complete</span>
     </div>
     <h1><span class="masthead__phase">Phase 3</span>Results, Holdout and Next Steps</h1>
     <p class="standfirst">Risk parity beats equal weight, the Bloomberg Aggregate proxy and a 2s10s barbell on the development sample, and the margin survives matching on start date, on duration, on leverage and on trading costs. It stays positive on the holdout but is not statistically significant there.</p>
-    <p class="built">Generated 01 September 2026, 16:04</p>
+    <p class="built">Generated 01 September 2026, 16:13</p>
   </header>
   <main>
     <div class="metrics"><div class="metric metric--pass"><span class="metric__value">0.933</span><span class="metric__label">hierarchical RP Sharpe, development</span></div><div class="metric"><span class="metric__value">0.805</span><span class="metric__label">equal weight Sharpe, development</span></div><div class="metric metric--pass"><span class="metric__value">+0.147</span><span class="metric__label">edge after duration matching</span></div><div class="metric metric--pass"><span class="metric__value">0.008</span><span class="metric__label">development p-value</span></div><div class="metric metric--pass"><span class="metric__value">+0.122</span><span class="metric__label">full sample edge vs equal weight</span></div></div><h2>A correction to how these were measured</h2><p class="note">Two problems with the earlier version of this table, both of which distorted the comparison for reasons unrelated to the strategies.</p><p><strong>Start dates.</strong> Equal weight and the 2s10s barbell need no covariance estimate, so they ran from November 1982. Risk parity, hierarchical risk parity and inverse volatility need one, so a sixty month estimation window pushed them to November 1987. Comparing series measured over different windows is not a comparison, whichever way the bias runs.</p><p><strong>And the bias does not run the way you would guess.</strong> Those five extra years contain the highest absolute bond returns anywhere in the sample: equal weight compounded at 11.63% a year over them, against 6.87% for the period that follows. The instinct is that dropping them should make equal weight look worse. It does the opposite.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">equal weight over</th><th class="num">return</th><th class="num">cash rate</th><th class="num">excess</th><th class="num">vol</th><th class="num">Sharpe</th></tr></thead><tbody><tr><td class="rowhead">1982-11 to 1987-10, dropped</td><td class="num">11.63%</td><td class="num">7.45%</td><td class="num">4.18%</td><td class="num">6.64%</td><td class="num">0.575</td></tr><tr><td class="rowhead">1987-11 to 2015-12, kept</td><td class="num">6.87%</td><td class="num">3.22%</td><td class="num">3.66%</td><td class="num">4.41%</td><td class="num">0.805</td></tr><tr><td class="rowhead">1982-11 to 2015-12, as first run</td><td class="num">7.58%</td><td class="num">3.85%</td><td class="num">3.72%</td><td class="num">4.82%</td><td class="num">0.744</td></tr></tbody></table></figure><p>Cash paid <strong>7.45%</strong> over those five years. An 11.63% bond return is a large number and a mediocre one at the same time: it is 4.18% of excess return, earned at 6.64% volatility in the violently unstable rate environment that followed the Volcker disinflation. That is a Sharpe of 0.575, well below the 0.805 of the period that follows. The extra window was <em>dragging equal weight's Sharpe down</em>, not lifting it.</p><p>So aligning the start dates makes the benchmark harder rather than easier, and every edge measured against it shrinks by roughly six basis points of Sharpe.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">edge as first reported</th><th class="num">edge on a common start</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">+0.190</td><td class="num">+0.129</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">+0.140</td><td class="num">+0.079</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">+0.130</td><td class="num">+0.069</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">-0.012</td><td class="num">+0.019</td></tr></tbody></table></figure><p>Everything on this page now starts in November 1987, benchmarks included. The result survives the correction but it is a third smaller than it was, and the Aggregate proxy moves from behind equal weight to slightly ahead of it. This is also a reminder that a high-rate decade flatters nominal returns and punishes Sharpe ratios, which is worth holding onto when reading any bond result that spans the early 1980s.</p><p><strong>Volatility.</strong> A growth-of-1 chart puts the lowest volatility line at the bottom, which inverts the Sharpe ranking whenever the low volatility strategy is the better one. Hierarchical risk parity runs at 2.8% volatility against equal weight's 4.7%, so comparing their cumulative returns directly compares a smaller position to a larger one rather than comparing two strategies. Every chart and headline comparison below is levered to a common volatility target, with a 50 basis point financing spread charged on the borrowed portion.</p><h2>Results against three benchmarks</h2><p class="note">Equal weight, the Bloomberg Aggregate as proxied by Vanguard Total Bond, and a 50/50 two year and ten year Treasury barbell.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">return</th><th class="num">volatility</th><th class="num">Sharpe</th><th class="num">worst drawdown</th><th class="num">vs equal weight</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.0584</td><td class="num">0.0269</td><td class="num">0.9334</td><td class="num">-0.0424</td><td class="num">0.1289</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0636</td><td class="num">0.0342</td><td class="num">0.884</td><td class="num">-0.0527</td><td class="num">0.0794</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.0633</td><td class="num">0.0343</td><td class="num">0.8736</td><td class="num">-0.0473</td><td class="num">0.0691</td></tr><tr><td class="rowhead">1/N</td><td class="num">0.0687</td><td class="num">0.0441</td><td class="num">0.8046</td><td class="num">-0.0626</td><td class="num">0.0</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">0.0644</td><td class="num">0.0377</td><td class="num">0.8239</td><td class="num">-0.0499</td><td class="num">0.0194</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">0.0626</td><td class="num">0.0454</td><td class="num">0.6551</td><td class="num">-0.0517</td><td class="num">-0.1494</td></tr></tbody></table><figcaption>Development, November 1987 to December 2015.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">return</th><th class="num">volatility</th><th class="num">Sharpe</th><th class="num">worst drawdown</th><th class="num">vs equal weight</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.0227</td><td class="num">0.0302</td><td class="num">0.0359</td><td class="num">-0.1028</td><td class="num">0.0095</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0235</td><td class="num">0.0401</td><td class="num">0.0567</td><td class="num">-0.1296</td><td class="num">0.0304</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.0226</td><td class="num">0.0404</td><td class="num">0.0329</td><td class="num">-0.1318</td><td class="num">0.0065</td></tr><tr><td class="rowhead">1/N</td><td class="num">0.0221</td><td class="num">0.0545</td><td class="num">0.0263</td><td class="num">-0.1728</td><td class="num">0.0</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">0.017</td><td class="num">0.0497</td><td class="num">-0.0715</td><td class="num">-0.1753</td><td class="num">-0.0979</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">0.015</td><td class="num">0.0428</td><td class="num">-0.1523</td><td class="num">-0.1492</td><td class="num">-0.1786</td></tr></tbody></table><figcaption>Holdout, 2016 to 2026. Nothing was fitted on this period.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">return</th><th class="num">volatility</th><th class="num">Sharpe</th><th class="num">worst drawdown</th><th class="num">vs equal weight</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.0485</td><td class="num">0.0282</td><td class="num">0.6587</td><td class="num">-0.1028</td><td class="num">0.1071</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0524</td><td class="num">0.0362</td><td class="num">0.6236</td><td class="num">-0.1296</td><td class="num">0.072</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.052</td><td class="num">0.0364</td><td class="num">0.6085</td><td class="num">-0.1318</td><td class="num">0.057</td></tr><tr><td class="rowhead">1/N</td><td class="num">0.0557</td><td class="num">0.0474</td><td class="num">0.5516</td><td class="num">-0.1728</td><td class="num">0.0</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">0.0511</td><td class="num">0.0417</td><td class="num">0.5183</td><td class="num">-0.1753</td><td class="num">-0.0333</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">0.0493</td><td class="num">0.0451</td><td class="num">0.4405</td><td class="num">-0.1492</td><td class="num">-0.1111</td></tr></tbody></table><figcaption>Full sample, November 1987 to August 2026.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">leverage</th><th class="num">return</th><th class="num">volatility</th><th class="num">Sharpe</th><th class="num">worst drawdown</th><th class="num">vs equal weight</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">1.6835</td><td class="num">0.0575</td><td class="num">0.0465</td><td class="num">0.5979</td><td class="num">-0.1764</td><td class="num">0.0463</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">1.3102</td><td class="num">0.0577</td><td class="num">0.0471</td><td class="num">0.5949</td><td class="num">-0.1708</td><td class="num">0.0433</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">1.3029</td><td class="num">0.057</td><td class="num">0.0471</td><td class="num">0.5805</td><td class="num">-0.1725</td><td class="num">0.0289</td></tr><tr><td class="rowhead">1/N</td><td class="num">1.0</td><td class="num">0.0557</td><td class="num">0.0474</td><td class="num">0.5516</td><td class="num">-0.1728</td><td class="num">0.0</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">1.1366</td><td class="num">0.0533</td><td class="num">0.0473</td><td class="num">0.5055</td><td class="num">-0.2012</td><td class="num">-0.0461</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">1.0521</td><td class="num">0.05</td><td class="num">0.0474</td><td class="num">0.4356</td><td class="num">-0.1584</td><td class="num">-0.116</td></tr></tbody></table><figcaption>Full sample, every strategy levered to equal weight's own 4.7% volatility with 50bp financing charged. This is the apples-to-apples comparison.</figcaption></figure><p>Levered to the same risk, hierarchical risk parity returns 5.75% a year against equal weight's 5.57%, at the same volatility and with a smaller drawdown. Note that leverage <em>costs</em> it: an unlevered Sharpe of 0.659 falls to 0.598 once 1.68 times leverage is financed at 50 basis points. The ranking holds anyway, which is the point of charging for it rather than assuming it away.</p><figure class="chartwrap"><svg class="chart" preserveAspectRatio="xMidYMid meet" xmlns:xlink="http://www.w3.org/1999/xlink"   viewBox="0 0 560.144219 250.886406" xmlns="http://www.w3.org/2000/svg" version="1.1">
@@ -278,16 +339,16 @@ z
      <g id="line2d_1">
       <path d="M 98.182498 228.96 
 L 98.182498 7.2 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_2">
       <defs>
-       <path id="m49bd67e571" d="M 0 0 
+       <path id="m7eb8f852fd" d="M 0 0 
 L 0 3 
 " style="stroke: var(--ink-muted); stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#m49bd67e571" x="98.182498" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m7eb8f852fd" x="98.182498" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_1">
@@ -371,11 +432,11 @@ z
      <g id="line2d_3">
       <path d="M 157.081184 228.96 
 L 157.081184 7.2 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_4">
       <g>
-       <use xlink:href="#m49bd67e571" x="157.081184" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m7eb8f852fd" x="157.081184" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_2">
@@ -419,11 +480,11 @@ z
      <g id="line2d_5">
       <path d="M 215.979869 228.96 
 L 215.979869 7.2 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_6">
       <g>
-       <use xlink:href="#m49bd67e571" x="215.979869" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m7eb8f852fd" x="215.979869" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_3">
@@ -466,11 +527,11 @@ z
      <g id="line2d_7">
       <path d="M 274.910811 228.96 
 L 274.910811 7.2 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_8">
       <g>
-       <use xlink:href="#m49bd67e571" x="274.910811" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m7eb8f852fd" x="274.910811" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_4">
@@ -487,11 +548,11 @@ L 274.910811 7.2
      <g id="line2d_9">
       <path d="M 333.809497 228.96 
 L 333.809497 7.2 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_10">
       <g>
-       <use xlink:href="#m49bd67e571" x="333.809497" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m7eb8f852fd" x="333.809497" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_5">
@@ -508,11 +569,11 @@ L 333.809497 7.2
      <g id="line2d_11">
       <path d="M 392.708183 228.96 
 L 392.708183 7.2 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_12">
       <g>
-       <use xlink:href="#m49bd67e571" x="392.708183" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m7eb8f852fd" x="392.708183" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_6">
@@ -529,11 +590,11 @@ L 392.708183 7.2
      <g id="line2d_13">
       <path d="M 451.606869 228.96 
 L 451.606869 7.2 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_14">
       <g>
-       <use xlink:href="#m49bd67e571" x="451.606869" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m7eb8f852fd" x="451.606869" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_7">
@@ -550,11 +611,11 @@ L 451.606869 7.2
      <g id="line2d_15">
       <path d="M 510.53781 228.96 
 L 510.53781 7.2 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_16">
       <g>
-       <use xlink:href="#m49bd67e571" x="510.53781" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m7eb8f852fd" x="510.53781" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_8">
@@ -573,16 +634,16 @@ L 510.53781 7.2
      <g id="line2d_17">
       <path d="M 50.744219 218.935276 
 L 552.944219 218.935276 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_18">
       <defs>
-       <path id="m85257f6fe5" d="M 0 0 
+       <path id="m9ca4408ade" d="M 0 0 
 L -3 0 
 " style="stroke: var(--ink-muted); stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#m85257f6fe5" x="50.744219" y="218.935276" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m9ca4408ade" x="50.744219" y="218.935276" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_9">
@@ -652,11 +713,11 @@ z
      <g id="line2d_19">
       <path d="M 50.744219 193.822214 
 L 552.944219 193.822214 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_20">
       <g>
-       <use xlink:href="#m85257f6fe5" x="50.744219" y="193.822214" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m9ca4408ade" x="50.744219" y="193.822214" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_10">
@@ -674,11 +735,11 @@ L 552.944219 193.822214
      <g id="line2d_21">
       <path d="M 50.744219 168.709151 
 L 552.944219 168.709151 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_22">
       <g>
-       <use xlink:href="#m85257f6fe5" x="50.744219" y="168.709151" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m9ca4408ade" x="50.744219" y="168.709151" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_11">
@@ -730,11 +791,11 @@ z
      <g id="line2d_23">
       <path d="M 50.744219 143.596089 
 L 552.944219 143.596089 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_24">
       <g>
-       <use xlink:href="#m85257f6fe5" x="50.744219" y="143.596089" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m9ca4408ade" x="50.744219" y="143.596089" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_12">
@@ -773,11 +834,11 @@ z
      <g id="line2d_25">
       <path d="M 50.744219 118.483027 
 L 552.944219 118.483027 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_26">
       <g>
-       <use xlink:href="#m85257f6fe5" x="50.744219" y="118.483027" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m9ca4408ade" x="50.744219" y="118.483027" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_13">
@@ -795,11 +856,11 @@ L 552.944219 118.483027
      <g id="line2d_27">
       <path d="M 50.744219 93.369964 
 L 552.944219 93.369964 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_28">
       <g>
-       <use xlink:href="#m85257f6fe5" x="50.744219" y="93.369964" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m9ca4408ade" x="50.744219" y="93.369964" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_14">
@@ -849,11 +910,11 @@ z
      <g id="line2d_29">
       <path d="M 50.744219 68.256902 
 L 552.944219 68.256902 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_30">
       <g>
-       <use xlink:href="#m85257f6fe5" x="50.744219" y="68.256902" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m9ca4408ade" x="50.744219" y="68.256902" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_15">
@@ -883,11 +944,11 @@ z
      <g id="line2d_31">
       <path d="M 50.744219 43.143839 
 L 552.944219 43.143839 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_32">
       <g>
-       <use xlink:href="#m85257f6fe5" x="50.744219" y="43.143839" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m9ca4408ade" x="50.744219" y="43.143839" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_16">
@@ -946,11 +1007,11 @@ z
      <g id="line2d_33">
       <path d="M 50.744219 18.030777 
 L 552.944219 18.030777 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_34">
       <g>
-       <use xlink:href="#m85257f6fe5" x="50.744219" y="18.030777" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m9ca4408ade" x="50.744219" y="18.030777" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_17">
@@ -1137,7 +1198,7 @@ z
    <g id="line2d_35">
     <path d="M 404.481469 228.96 
 L 404.481469 7.2 
-" clip-path="url(#p9363531669)" style="fill: none; stroke-dasharray: 1.2,1.98; stroke-dashoffset: 0; stroke: var(--ink-muted); stroke-width: 1.2"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke-dasharray: 1.2,1.98; stroke-dashoffset: 0; stroke: var(--ink-muted); stroke-width: 1.2"/>
    </g>
    <g id="patch_3">
     <path d="M 50.744219 228.96 
@@ -1765,7 +1826,7 @@ L 528.1171 20.090286
 L 529.117023 23.3001 
 L 530.116946 22.420191 
 L 530.116946 22.420191 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: #cf6a1a; stroke-width: 1.6; stroke-linecap: square"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke: #cf6a1a; stroke-width: 1.6; stroke-linecap: square"/>
    </g>
    <g id="line2d_37">
     <path d="M 73.571491 218.640795 
@@ -2193,9 +2254,434 @@ L 528.1171 25.794257
 L 529.117023 28.99798 
 L 530.116946 28.177918 
 L 530.116946 28.177918 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: #2f8f5b; stroke-width: 1.6; stroke-linecap: square"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke: #1f9c7a; stroke-width: 1.6; stroke-linecap: square"/>
    </g>
    <g id="line2d_38">
+    <path d="M 73.571491 218.629609 
+L 74.571414 218.238441 
+L 75.571337 217.261151 
+L 76.506749 216.909425 
+L 77.506672 217.266864 
+L 79.474262 217.50949 
+L 80.44193 216.871216 
+L 81.441853 216.96273 
+L 82.441775 216.907885 
+L 84.409366 215.790189 
+L 85.377033 216.100553 
+L 86.376956 215.922837 
+L 87.376879 215.498143 
+L 88.280035 215.69582 
+L 89.279958 215.595276 
+L 90.247625 215.035582 
+L 91.247548 214.31225 
+L 92.215216 213.442231 
+L 93.215139 212.894989 
+L 94.215062 213.315416 
+L 95.182729 213.266108 
+L 96.182652 212.702851 
+L 97.150319 212.349098 
+L 98.150242 212.267488 
+L 99.150165 212.764368 
+L 101.053244 212.651164 
+L 102.020911 212.987791 
+L 103.020834 212.039541 
+L 104.988425 211.098405 
+L 105.988348 211.798454 
+L 106.956015 211.812029 
+L 107.955938 211.486335 
+L 108.923605 210.629184 
+L 111.826607 209.323124 
+L 112.82653 209.019638 
+L 113.794198 208.51537 
+L 114.79412 208.287281 
+L 115.761788 208.311199 
+L 116.761711 207.814643 
+L 118.729301 206.211275 
+L 120.696891 205.468417 
+L 121.696814 204.138036 
+L 122.696737 204.586356 
+L 123.632149 204.351781 
+L 124.632072 204.498739 
+L 125.599739 204.273364 
+L 127.567329 202.866737 
+L 128.567252 201.693035 
+L 129.567175 201.430807 
+L 130.534843 200.95188 
+L 131.534766 201.695696 
+L 132.502433 201.375671 
+L 133.502356 200.678679 
+L 134.502279 199.78932 
+L 135.405435 198.61653 
+L 136.405358 198.53534 
+L 137.373025 198.190516 
+L 138.372948 198.10784 
+L 139.340616 197.122934 
+L 140.340538 196.880824 
+L 141.340461 195.737712 
+L 143.308052 195.10308 
+L 144.275719 195.636286 
+L 145.275642 195.265244 
+L 146.275565 194.592804 
+L 147.178721 195.65514 
+L 148.178644 197.040363 
+L 149.146311 197.39237 
+L 150.146234 197.324989 
+L 151.113902 197.48433 
+L 152.113825 196.674779 
+L 153.113747 196.556955 
+L 154.081415 197.232808 
+L 156.049005 197.690081 
+L 157.048928 197.174427 
+L 158.048851 196.228863 
+L 158.952007 195.022445 
+L 159.95193 194.655534 
+L 160.919597 194.049333 
+L 161.91952 192.001393 
+L 162.887188 191.767456 
+L 163.887111 191.797335 
+L 166.854624 189.802394 
+L 168.822214 188.098753 
+L 169.822137 187.750127 
+L 170.757549 188.728088 
+L 172.725139 189.623533 
+L 173.725062 189.726226 
+L 174.692729 189.117271 
+L 175.692652 188.913167 
+L 176.692575 188.971442 
+L 178.660165 186.85099 
+L 179.627833 185.674153 
+L 180.627756 186.193274 
+L 181.627679 186.125744 
+L 182.530835 185.881483 
+L 183.530758 186.67115 
+L 184.498425 185.87796 
+L 185.498348 185.227504 
+L 186.466015 184.464254 
+L 187.465938 182.624202 
+L 188.465861 183.255182 
+L 190.433451 181.397718 
+L 191.401119 181.083822 
+L 193.400965 179.387418 
+L 194.304121 179.44577 
+L 196.271711 179.066707 
+L 197.271634 178.286928 
+L 198.239301 177.683449 
+L 199.239224 177.580791 
+L 200.239147 176.475131 
+L 201.206815 174.781716 
+L 202.206738 175.280257 
+L 203.174405 174.739272 
+L 204.174328 174.462495 
+L 205.174251 173.896882 
+L 206.077407 175.314927 
+L 207.07733 175.020548 
+L 208.044997 174.858929 
+L 209.04492 175.59788 
+L 210.012587 176.055379 
+L 212.012433 176.290408 
+L 212.980101 175.79728 
+L 213.980024 175.922541 
+L 214.947691 175.797449 
+L 216.947537 176.460415 
+L 218.882871 174.346206 
+L 219.850539 174.681792 
+L 220.850462 174.807239 
+L 221.818129 173.333797 
+L 222.818052 172.608554 
+L 223.817975 171.525171 
+L 224.785642 171.499095 
+L 225.785565 171.163569 
+L 226.753233 170.329182 
+L 227.753156 168.759139 
+L 229.656235 166.755521 
+L 230.656158 166.553037 
+L 231.623825 167.404107 
+L 232.623748 166.874418 
+L 233.591415 166.696255 
+L 234.591338 165.002281 
+L 235.591261 163.933927 
+L 236.558928 163.70462 
+L 237.558851 161.762845 
+L 238.526519 162.852496 
+L 239.526442 163.564696 
+L 241.429521 162.35942 
+L 242.429444 163.849064 
+L 243.397111 162.250788 
+L 245.364701 161.261606 
+L 246.364624 160.352676 
+L 248.332214 156.840192 
+L 249.332137 158.143166 
+L 250.299805 158.032424 
+L 251.299728 155.998252 
+L 252.299651 156.08178 
+L 253.202807 154.720215 
+L 254.20273 154.895524 
+L 255.170397 153.959164 
+L 256.17032 151.561437 
+L 257.137987 151.919931 
+L 258.13791 155.748155 
+L 259.137833 154.874428 
+L 260.1055 152.331736 
+L 261.105423 153.18803 
+L 262.073091 152.721657 
+L 264.072937 151.049437 
+L 265.008348 149.958701 
+L 266.008271 149.31902 
+L 266.975939 152.049019 
+L 267.975862 152.406257 
+L 268.943529 151.895625 
+L 269.943452 150.884922 
+L 270.943375 148.751462 
+L 271.911042 148.31123 
+L 272.910965 147.354551 
+L 273.878632 148.3689 
+L 274.878555 147.10964 
+L 275.878478 146.131118 
+L 276.781634 146.628005 
+L 277.781557 147.332086 
+L 279.749148 144.475097 
+L 280.716815 143.573429 
+L 281.716738 144.626914 
+L 282.716661 143.174446 
+L 283.684328 144.546699 
+L 284.684251 145.464418 
+L 285.651918 144.824304 
+L 286.651841 143.668717 
+L 287.651764 143.877481 
+L 288.554921 143.21325 
+L 289.554843 144.546343 
+L 290.522511 145.142838 
+L 292.490101 145.077297 
+L 293.490024 143.746369 
+L 294.489947 141.974475 
+L 295.457614 140.91602 
+L 296.457537 140.168739 
+L 297.425205 138.819371 
+L 298.425127 139.610131 
+L 299.42505 139.814132 
+L 300.328207 137.903512 
+L 301.328129 138.238823 
+L 302.295797 137.610799 
+L 303.29572 138.514617 
+L 304.263387 139.131217 
+L 306.263233 137.288307 
+L 307.2309 136.299883 
+L 308.230823 135.44782 
+L 309.198491 133.308007 
+L 310.198414 133.306965 
+L 311.198336 131.593895 
+L 312.133748 132.305591 
+L 313.133671 131.559626 
+L 314.101338 131.890469 
+L 315.101261 132.805662 
+L 316.068929 132.714647 
+L 317.068852 132.911876 
+L 318.068775 131.698147 
+L 319.036442 133.96135 
+L 320.036365 137.729155 
+L 321.004032 134.162944 
+L 322.003955 128.874373 
+L 323.907034 131.044751 
+L 324.906957 129.703293 
+L 325.874625 129.289494 
+L 326.874547 128.275012 
+L 327.842215 127.675348 
+L 328.842138 125.427876 
+L 329.842061 123.713773 
+L 330.809728 121.089896 
+L 331.809651 121.569007 
+L 332.777318 120.206353 
+L 333.777241 122.112368 
+L 334.777164 120.372856 
+L 335.68032 119.983247 
+L 336.680243 120.192798 
+L 337.647911 118.44397 
+L 338.647834 117.158222 
+L 339.615501 114.723919 
+L 340.615424 113.347016 
+L 341.615347 109.937526 
+L 342.583014 110.015028 
+L 343.582937 110.38296 
+L 345.550527 113.697754 
+L 346.55045 114.145325 
+L 347.453606 113.123163 
+L 348.453529 113.21142 
+L 350.42112 108.961831 
+L 351.388787 109.683241 
+L 353.388633 104.216756 
+L 354.3563 101.139543 
+L 355.356223 101.094866 
+L 356.32389 101.190659 
+L 357.323813 98.678923 
+L 358.323736 96.828051 
+L 359.259148 97.044517 
+L 360.259071 98.65075 
+L 361.226738 96.333797 
+L 362.226661 93.633241 
+L 363.194329 93.667022 
+L 364.194252 90.797021 
+L 365.194174 90.907658 
+L 366.161842 90.857705 
+L 367.161765 90.548619 
+L 368.129432 89.552115 
+L 369.129355 90.372228 
+L 370.129278 91.469742 
+L 371.032434 90.462407 
+L 372.032357 90.296039 
+L 373.000024 87.955787 
+L 374.967615 95.359424 
+L 375.967538 95.401795 
+L 376.96746 96.73689 
+L 378.935051 93.371932 
+L 379.902718 94.193737 
+L 380.902641 95.260342 
+L 381.902564 91.794154 
+L 382.80572 90.587932 
+L 383.805643 90.605833 
+L 384.77331 89.121933 
+L 385.773233 87.00884 
+L 386.740901 86.870743 
+L 387.740824 87.095729 
+L 388.740747 84.500642 
+L 389.708414 85.857939 
+L 390.708337 83.860016 
+L 391.676004 82.463259 
+L 392.675927 81.72552 
+L 393.67585 76.864681 
+L 394.579006 79.230797 
+L 395.578929 78.517413 
+L 396.546596 79.595492 
+L 397.546519 80.507411 
+L 398.514187 82.595173 
+L 399.51411 80.817687 
+L 400.514033 81.211161 
+L 401.4817 80.238897 
+L 402.481623 79.828008 
+L 404.449213 80.760739 
+L 405.449136 78.195711 
+L 406.384548 76.805056 
+L 407.384471 75.053774 
+L 408.352138 74.054818 
+L 409.352061 73.829008 
+L 410.319728 69.811355 
+L 411.319651 68.24879 
+L 412.319574 68.234447 
+L 413.287242 68.564751 
+L 414.287165 70.653706 
+L 415.254832 76.125732 
+L 417.254678 74.888579 
+L 418.157834 73.447298 
+L 419.157757 73.626965 
+L 420.125424 72.152083 
+L 421.125347 70.336546 
+L 422.093014 70.275734 
+L 423.092937 69.487003 
+L 424.09286 67.611696 
+L 425.060528 68.588396 
+L 426.060451 68.466599 
+L 427.028118 68.552184 
+L 428.028041 67.344872 
+L 429.93112 71.554517 
+L 430.931043 70.294826 
+L 431.89871 71.658552 
+L 432.898633 70.257206 
+L 434.866223 70.077402 
+L 435.866146 68.998431 
+L 436.833814 70.269741 
+L 437.833737 72.101884 
+L 438.801404 70.926234 
+L 439.801327 67.940875 
+L 440.80125 65.589567 
+L 441.704406 65.520046 
+L 442.704329 61.585564 
+L 443.671996 61.571907 
+L 444.671919 57.789441 
+L 445.639587 55.406143 
+L 446.63951 54.803833 
+L 447.639432 48.35308 
+L 448.6071 49.989494 
+L 449.607023 49.68262 
+L 450.57469 49.746863 
+L 451.574613 50.316695 
+L 453.509948 41.153338 
+L 454.509871 43.512255 
+L 455.477538 41.054172 
+L 456.477461 39.081899 
+L 457.445128 37.51903 
+L 458.445051 33.056741 
+L 459.444974 35.663442 
+L 460.412641 35.658643 
+L 461.412564 37.238018 
+L 462.380232 34.344082 
+L 463.380155 33.999336 
+L 464.380078 35.694065 
+L 465.283234 39.385991 
+L 466.283157 41.691233 
+L 467.250824 39.609047 
+L 468.250747 38.748285 
+L 470.218337 33.89302 
+L 471.21826 34.269723 
+L 472.185927 36.465259 
+L 473.18585 36.041171 
+L 474.153518 34.716926 
+L 475.153441 35.389772 
+L 476.153364 40.416041 
+L 477.05652 42.176322 
+L 478.056443 47.952167 
+L 479.02411 55.86796 
+L 480.024033 54.749085 
+L 480.9917 58.596943 
+L 481.991623 53.329289 
+L 482.991546 58.713682 
+L 483.959214 67.189725 
+L 484.959136 69.506529 
+L 485.926804 62.345258 
+L 486.926727 63.615473 
+L 487.92665 57.54635 
+L 488.829806 62.295785 
+L 489.829729 57.527131 
+L 490.797396 56.585178 
+L 491.797319 58.80922 
+L 492.764986 58.723556 
+L 493.764909 58.966963 
+L 494.764832 60.332843 
+L 495.7325 65.552354 
+L 496.732423 68.47534 
+L 497.70009 59.581039 
+L 498.700013 52.385783 
+L 499.699936 53.123252 
+L 500.635348 55.081498 
+L 501.63527 53.656145 
+L 502.602938 58.266763 
+L 504.570528 53.426791 
+L 505.570451 49.644459 
+L 507.538041 44.375476 
+L 508.537964 48.954027 
+L 509.505632 46.519712 
+L 510.505554 50.316594 
+L 511.505477 49.388222 
+L 512.408634 45.290285 
+L 513.408556 45.963546 
+L 514.376224 45.667215 
+L 515.376147 47.010477 
+L 516.343814 44.037856 
+L 517.343737 44.672019 
+L 518.34366 42.61927 
+L 519.311327 39.647507 
+L 520.31125 38.165689 
+L 521.278918 36.942159 
+L 522.278841 37.657278 
+L 523.278763 37.131062 
+L 524.18192 33.578274 
+L 525.181843 37.601037 
+L 527.149433 36.297175 
+L 528.1171 35.277786 
+L 529.117023 38.739603 
+L 530.116946 37.858774 
+L 530.116946 37.858774 
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke-dasharray: 1.95,2.85; stroke-dashoffset: 0; stroke: var(--ink); stroke-width: 1.5"/>
+   </g>
+   <g id="line2d_39">
     <path d="M 73.571491 218.749186 
 L 74.571414 218.292617 
 L 75.571337 217.397228 
@@ -2622,9 +3108,9 @@ L 528.1171 52.881113
 L 529.117023 55.854478 
 L 530.116946 55.639782 
 L 530.116946 55.639782 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: #6257b8; stroke-width: 1.6; stroke-linecap: square"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke-dasharray: 7.8,3.12; stroke-dashoffset: 0; stroke: var(--ink-muted); stroke-width: 1.3"/>
    </g>
-   <g id="line2d_39">
+   <g id="line2d_40">
     <path d="M 73.571491 218.88 
 L 74.571414 218.558335 
 L 75.571337 217.720088 
@@ -3054,441 +3540,16 @@ L 528.1171 76.403782
 L 529.117023 78.1465 
 L 530.116946 76.851382 
 L 530.116946 76.851382 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: #9c7d1e; stroke-width: 1.6; stroke-linecap: square"/>
-   </g>
-   <g id="line2d_40">
-    <path d="M 73.571491 218.629609 
-L 74.571414 218.238441 
-L 75.571337 217.261151 
-L 76.506749 216.909425 
-L 77.506672 217.266864 
-L 79.474262 217.50949 
-L 80.44193 216.871216 
-L 81.441853 216.96273 
-L 82.441775 216.907885 
-L 84.409366 215.790189 
-L 85.377033 216.100553 
-L 86.376956 215.922837 
-L 87.376879 215.498143 
-L 88.280035 215.69582 
-L 89.279958 215.595276 
-L 90.247625 215.035582 
-L 91.247548 214.31225 
-L 92.215216 213.442231 
-L 93.215139 212.894989 
-L 94.215062 213.315416 
-L 95.182729 213.266108 
-L 96.182652 212.702851 
-L 97.150319 212.349098 
-L 98.150242 212.267488 
-L 99.150165 212.764368 
-L 101.053244 212.651164 
-L 102.020911 212.987791 
-L 103.020834 212.039541 
-L 104.988425 211.098405 
-L 105.988348 211.798454 
-L 106.956015 211.812029 
-L 107.955938 211.486335 
-L 108.923605 210.629184 
-L 111.826607 209.323124 
-L 112.82653 209.019638 
-L 113.794198 208.51537 
-L 114.79412 208.287281 
-L 115.761788 208.311199 
-L 116.761711 207.814643 
-L 118.729301 206.211275 
-L 120.696891 205.468417 
-L 121.696814 204.138036 
-L 122.696737 204.586356 
-L 123.632149 204.351781 
-L 124.632072 204.498739 
-L 125.599739 204.273364 
-L 127.567329 202.866737 
-L 128.567252 201.693035 
-L 129.567175 201.430807 
-L 130.534843 200.95188 
-L 131.534766 201.695696 
-L 132.502433 201.375671 
-L 133.502356 200.678679 
-L 134.502279 199.78932 
-L 135.405435 198.61653 
-L 136.405358 198.53534 
-L 137.373025 198.190516 
-L 138.372948 198.10784 
-L 139.340616 197.122934 
-L 140.340538 196.880824 
-L 141.340461 195.737712 
-L 143.308052 195.10308 
-L 144.275719 195.636286 
-L 145.275642 195.265244 
-L 146.275565 194.592804 
-L 147.178721 195.65514 
-L 148.178644 197.040363 
-L 149.146311 197.39237 
-L 150.146234 197.324989 
-L 151.113902 197.48433 
-L 152.113825 196.674779 
-L 153.113747 196.556955 
-L 154.081415 197.232808 
-L 156.049005 197.690081 
-L 157.048928 197.174427 
-L 158.048851 196.228863 
-L 158.952007 195.022445 
-L 159.95193 194.655534 
-L 160.919597 194.049333 
-L 161.91952 192.001393 
-L 162.887188 191.767456 
-L 163.887111 191.797335 
-L 166.854624 189.802394 
-L 168.822214 188.098753 
-L 169.822137 187.750127 
-L 170.757549 188.728088 
-L 172.725139 189.623533 
-L 173.725062 189.726226 
-L 174.692729 189.117271 
-L 175.692652 188.913167 
-L 176.692575 188.971442 
-L 178.660165 186.85099 
-L 179.627833 185.674153 
-L 180.627756 186.193274 
-L 181.627679 186.125744 
-L 182.530835 185.881483 
-L 183.530758 186.67115 
-L 184.498425 185.87796 
-L 185.498348 185.227504 
-L 186.466015 184.464254 
-L 187.465938 182.624202 
-L 188.465861 183.255182 
-L 190.433451 181.397718 
-L 191.401119 181.083822 
-L 193.400965 179.387418 
-L 194.304121 179.44577 
-L 196.271711 179.066707 
-L 197.271634 178.286928 
-L 198.239301 177.683449 
-L 199.239224 177.580791 
-L 200.239147 176.475131 
-L 201.206815 174.781716 
-L 202.206738 175.280257 
-L 203.174405 174.739272 
-L 204.174328 174.462495 
-L 205.174251 173.896882 
-L 206.077407 175.314927 
-L 207.07733 175.020548 
-L 208.044997 174.858929 
-L 209.04492 175.59788 
-L 210.012587 176.055379 
-L 212.012433 176.290408 
-L 212.980101 175.79728 
-L 213.980024 175.922541 
-L 214.947691 175.797449 
-L 216.947537 176.460415 
-L 218.882871 174.346206 
-L 219.850539 174.681792 
-L 220.850462 174.807239 
-L 221.818129 173.333797 
-L 222.818052 172.608554 
-L 223.817975 171.525171 
-L 224.785642 171.499095 
-L 225.785565 171.163569 
-L 226.753233 170.329182 
-L 227.753156 168.759139 
-L 229.656235 166.755521 
-L 230.656158 166.553037 
-L 231.623825 167.404107 
-L 232.623748 166.874418 
-L 233.591415 166.696255 
-L 234.591338 165.002281 
-L 235.591261 163.933927 
-L 236.558928 163.70462 
-L 237.558851 161.762845 
-L 238.526519 162.852496 
-L 239.526442 163.564696 
-L 241.429521 162.35942 
-L 242.429444 163.849064 
-L 243.397111 162.250788 
-L 245.364701 161.261606 
-L 246.364624 160.352676 
-L 248.332214 156.840192 
-L 249.332137 158.143166 
-L 250.299805 158.032424 
-L 251.299728 155.998252 
-L 252.299651 156.08178 
-L 253.202807 154.720215 
-L 254.20273 154.895524 
-L 255.170397 153.959164 
-L 256.17032 151.561437 
-L 257.137987 151.919931 
-L 258.13791 155.748155 
-L 259.137833 154.874428 
-L 260.1055 152.331736 
-L 261.105423 153.18803 
-L 262.073091 152.721657 
-L 264.072937 151.049437 
-L 265.008348 149.958701 
-L 266.008271 149.31902 
-L 266.975939 152.049019 
-L 267.975862 152.406257 
-L 268.943529 151.895625 
-L 269.943452 150.884922 
-L 270.943375 148.751462 
-L 271.911042 148.31123 
-L 272.910965 147.354551 
-L 273.878632 148.3689 
-L 274.878555 147.10964 
-L 275.878478 146.131118 
-L 276.781634 146.628005 
-L 277.781557 147.332086 
-L 279.749148 144.475097 
-L 280.716815 143.573429 
-L 281.716738 144.626914 
-L 282.716661 143.174446 
-L 283.684328 144.546699 
-L 284.684251 145.464418 
-L 285.651918 144.824304 
-L 286.651841 143.668717 
-L 287.651764 143.877481 
-L 288.554921 143.21325 
-L 289.554843 144.546343 
-L 290.522511 145.142838 
-L 292.490101 145.077297 
-L 293.490024 143.746369 
-L 294.489947 141.974475 
-L 295.457614 140.91602 
-L 296.457537 140.168739 
-L 297.425205 138.819371 
-L 298.425127 139.610131 
-L 299.42505 139.814132 
-L 300.328207 137.903512 
-L 301.328129 138.238823 
-L 302.295797 137.610799 
-L 303.29572 138.514617 
-L 304.263387 139.131217 
-L 306.263233 137.288307 
-L 307.2309 136.299883 
-L 308.230823 135.44782 
-L 309.198491 133.308007 
-L 310.198414 133.306965 
-L 311.198336 131.593895 
-L 312.133748 132.305591 
-L 313.133671 131.559626 
-L 314.101338 131.890469 
-L 315.101261 132.805662 
-L 316.068929 132.714647 
-L 317.068852 132.911876 
-L 318.068775 131.698147 
-L 319.036442 133.96135 
-L 320.036365 137.729155 
-L 321.004032 134.162944 
-L 322.003955 128.874373 
-L 323.907034 131.044751 
-L 324.906957 129.703293 
-L 325.874625 129.289494 
-L 326.874547 128.275012 
-L 327.842215 127.675348 
-L 328.842138 125.427876 
-L 329.842061 123.713773 
-L 330.809728 121.089896 
-L 331.809651 121.569007 
-L 332.777318 120.206353 
-L 333.777241 122.112368 
-L 334.777164 120.372856 
-L 335.68032 119.983247 
-L 336.680243 120.192798 
-L 337.647911 118.44397 
-L 338.647834 117.158222 
-L 339.615501 114.723919 
-L 340.615424 113.347016 
-L 341.615347 109.937526 
-L 342.583014 110.015028 
-L 343.582937 110.38296 
-L 345.550527 113.697754 
-L 346.55045 114.145325 
-L 347.453606 113.123163 
-L 348.453529 113.21142 
-L 350.42112 108.961831 
-L 351.388787 109.683241 
-L 353.388633 104.216756 
-L 354.3563 101.139543 
-L 355.356223 101.094866 
-L 356.32389 101.190659 
-L 357.323813 98.678923 
-L 358.323736 96.828051 
-L 359.259148 97.044517 
-L 360.259071 98.65075 
-L 361.226738 96.333797 
-L 362.226661 93.633241 
-L 363.194329 93.667022 
-L 364.194252 90.797021 
-L 365.194174 90.907658 
-L 366.161842 90.857705 
-L 367.161765 90.548619 
-L 368.129432 89.552115 
-L 369.129355 90.372228 
-L 370.129278 91.469742 
-L 371.032434 90.462407 
-L 372.032357 90.296039 
-L 373.000024 87.955787 
-L 374.967615 95.359424 
-L 375.967538 95.401795 
-L 376.96746 96.73689 
-L 378.935051 93.371932 
-L 379.902718 94.193737 
-L 380.902641 95.260342 
-L 381.902564 91.794154 
-L 382.80572 90.587932 
-L 383.805643 90.605833 
-L 384.77331 89.121933 
-L 385.773233 87.00884 
-L 386.740901 86.870743 
-L 387.740824 87.095729 
-L 388.740747 84.500642 
-L 389.708414 85.857939 
-L 390.708337 83.860016 
-L 391.676004 82.463259 
-L 392.675927 81.72552 
-L 393.67585 76.864681 
-L 394.579006 79.230797 
-L 395.578929 78.517413 
-L 396.546596 79.595492 
-L 397.546519 80.507411 
-L 398.514187 82.595173 
-L 399.51411 80.817687 
-L 400.514033 81.211161 
-L 401.4817 80.238897 
-L 402.481623 79.828008 
-L 404.449213 80.760739 
-L 405.449136 78.195711 
-L 406.384548 76.805056 
-L 407.384471 75.053774 
-L 408.352138 74.054818 
-L 409.352061 73.829008 
-L 410.319728 69.811355 
-L 411.319651 68.24879 
-L 412.319574 68.234447 
-L 413.287242 68.564751 
-L 414.287165 70.653706 
-L 415.254832 76.125732 
-L 417.254678 74.888579 
-L 418.157834 73.447298 
-L 419.157757 73.626965 
-L 420.125424 72.152083 
-L 421.125347 70.336546 
-L 422.093014 70.275734 
-L 423.092937 69.487003 
-L 424.09286 67.611696 
-L 425.060528 68.588396 
-L 426.060451 68.466599 
-L 427.028118 68.552184 
-L 428.028041 67.344872 
-L 429.93112 71.554517 
-L 430.931043 70.294826 
-L 431.89871 71.658552 
-L 432.898633 70.257206 
-L 434.866223 70.077402 
-L 435.866146 68.998431 
-L 436.833814 70.269741 
-L 437.833737 72.101884 
-L 438.801404 70.926234 
-L 439.801327 67.940875 
-L 440.80125 65.589567 
-L 441.704406 65.520046 
-L 442.704329 61.585564 
-L 443.671996 61.571907 
-L 444.671919 57.789441 
-L 445.639587 55.406143 
-L 446.63951 54.803833 
-L 447.639432 48.35308 
-L 448.6071 49.989494 
-L 449.607023 49.68262 
-L 450.57469 49.746863 
-L 451.574613 50.316695 
-L 453.509948 41.153338 
-L 454.509871 43.512255 
-L 455.477538 41.054172 
-L 456.477461 39.081899 
-L 457.445128 37.51903 
-L 458.445051 33.056741 
-L 459.444974 35.663442 
-L 460.412641 35.658643 
-L 461.412564 37.238018 
-L 462.380232 34.344082 
-L 463.380155 33.999336 
-L 464.380078 35.694065 
-L 465.283234 39.385991 
-L 466.283157 41.691233 
-L 467.250824 39.609047 
-L 468.250747 38.748285 
-L 470.218337 33.89302 
-L 471.21826 34.269723 
-L 472.185927 36.465259 
-L 473.18585 36.041171 
-L 474.153518 34.716926 
-L 475.153441 35.389772 
-L 476.153364 40.416041 
-L 477.05652 42.176322 
-L 478.056443 47.952167 
-L 479.02411 55.86796 
-L 480.024033 54.749085 
-L 480.9917 58.596943 
-L 481.991623 53.329289 
-L 482.991546 58.713682 
-L 483.959214 67.189725 
-L 484.959136 69.506529 
-L 485.926804 62.345258 
-L 486.926727 63.615473 
-L 487.92665 57.54635 
-L 488.829806 62.295785 
-L 489.829729 57.527131 
-L 490.797396 56.585178 
-L 491.797319 58.80922 
-L 492.764986 58.723556 
-L 493.764909 58.966963 
-L 494.764832 60.332843 
-L 495.7325 65.552354 
-L 496.732423 68.47534 
-L 497.70009 59.581039 
-L 498.700013 52.385783 
-L 499.699936 53.123252 
-L 500.635348 55.081498 
-L 501.63527 53.656145 
-L 502.602938 58.266763 
-L 504.570528 53.426791 
-L 505.570451 49.644459 
-L 507.538041 44.375476 
-L 508.537964 48.954027 
-L 509.505632 46.519712 
-L 510.505554 50.316594 
-L 511.505477 49.388222 
-L 512.408634 45.290285 
-L 513.408556 45.963546 
-L 514.376224 45.667215 
-L 515.376147 47.010477 
-L 516.343814 44.037856 
-L 517.343737 44.672019 
-L 518.34366 42.61927 
-L 519.311327 39.647507 
-L 520.31125 38.165689 
-L 521.278918 36.942159 
-L 522.278841 37.657278 
-L 523.278763 37.131062 
-L 524.18192 33.578274 
-L 525.181843 37.601037 
-L 527.149433 36.297175 
-L 528.1171 35.277786 
-L 529.117023 38.739603 
-L 530.116946 37.858774 
-L 530.116946 37.858774 
-" clip-path="url(#p9363531669)" style="fill: none; stroke-dasharray: 8.5,3.4; stroke-dashoffset: 0; stroke: #8b949e; stroke-width: 1.7"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke-dasharray: 7.8,2.6,1.69,2.6; stroke-dashoffset: 0; stroke: var(--ink-muted); stroke-width: 1.3"/>
    </g>
    <g id="legend_1">
     <g id="line2d_41">
      <path d="M 58.394219 18.333672 
 L 66.894219 18.333672 
 L 75.394219 18.333672 
-" style="fill: none; stroke: #0f7d94; stroke-width: 2.6; stroke-linecap: square"/>
+" style="fill: none; stroke: #4169e1; stroke-width: 2.6; stroke-linecap: square"/>
      <defs>
-      <path id="me71505248a" d="M 0 2.3 
+      <path id="mf653236dc2" d="M 0 2.3 
 C 0.609967 2.3 1.195034 2.057657 1.626346 1.626346 
 C 2.057657 1.195034 2.3 0.609967 2.3 0 
 C 2.3 -0.609967 2.057657 -1.195034 1.626346 -1.626346 
@@ -3501,7 +3562,7 @@ z
 " style="stroke: #000000; stroke-opacity: 0"/>
      </defs>
      <g>
-      <use xlink:href="#me71505248a" x="66.894219" y="18.333672" style="fill: #0f7d94; stroke: #000000; stroke-opacity: 0"/>
+      <use xlink:href="#mf653236dc2" x="66.894219" y="18.333672" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
      </g>
     </g>
     <g id="text_20">
@@ -3797,7 +3858,7 @@ z
      <path d="M 58.394219 43.286484 
 L 66.894219 43.286484 
 L 75.394219 43.286484 
-" style="fill: none; stroke: #2f8f5b; stroke-width: 1.6; stroke-linecap: square"/>
+" style="fill: none; stroke: #1f9c7a; stroke-width: 1.6; stroke-linecap: square"/>
     </g>
     <g id="text_22">
      <!-- Inverse volatility -->
@@ -3845,7 +3906,7 @@ z
      <path d="M 58.394219 55.762891 
 L 66.894219 55.762891 
 L 75.394219 55.762891 
-" style="fill: none; stroke-dasharray: 8.5,3.4; stroke-dashoffset: 0; stroke: #8b949e; stroke-width: 1.7"/>
+" style="fill: none; stroke-dasharray: 1.95,2.85; stroke-dashoffset: 0; stroke: var(--ink); stroke-width: 1.5"/>
     </g>
     <g id="text_23">
      <!-- 1/N -->
@@ -3881,7 +3942,7 @@ z
      <path d="M 58.394219 68.239297 
 L 66.894219 68.239297 
 L 75.394219 68.239297 
-" style="fill: none; stroke: #6257b8; stroke-width: 1.6; stroke-linecap: square"/>
+" style="fill: none; stroke-dasharray: 7.8,3.12; stroke-dashoffset: 0; stroke: var(--ink-muted); stroke-width: 1.3"/>
     </g>
     <g id="text_24">
      <!-- Agg index (VBMFX) -->
@@ -4028,7 +4089,7 @@ z
      <path d="M 58.394219 80.715703 
 L 66.894219 80.715703 
 L 75.394219 80.715703 
-" style="fill: none; stroke: #9c7d1e; stroke-width: 1.6; stroke-linecap: square"/>
+" style="fill: none; stroke-dasharray: 7.8,2.6,1.69,2.6; stroke-dashoffset: 0; stroke: var(--ink-muted); stroke-width: 1.3"/>
     </g>
     <g id="text_25">
      <!-- 2s10s barbell 50/50 -->
@@ -4485,38 +4546,39 @@ L 528.1171 22.244342
 L 529.117023 24.799267 
 L 530.116946 23.794846 
 L 530.116946 23.794846 
-" clip-path="url(#p9363531669)" style="fill: none; stroke: #0f7d94; stroke-width: 2.6; stroke-linecap: square"/>
-    <g clip-path="url(#p9363531669)">
-     <use xlink:href="#me71505248a" x="73.571491" y="218.6127" style="fill: #0f7d94; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#me71505248a" x="117.761634" y="206.093967" style="fill: #0f7d94; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#me71505248a" x="156.049005" y="194.989803" style="fill: #0f7d94; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#me71505248a" x="193.400965" y="174.468685" style="fill: #0f7d94; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#me71505248a" x="231.623825" y="160.374231" style="fill: #0f7d94; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#me71505248a" x="262.073091" y="141.52569" style="fill: #0f7d94; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#me71505248a" x="296.457537" y="131.109061" style="fill: #0f7d94; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#me71505248a" x="323.907034" y="123.181102" style="fill: #0f7d94; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#me71505248a" x="349.421197" y="93.85841" style="fill: #0f7d94; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#me71505248a" x="376.96746" y="79.923502" style="fill: #0f7d94; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#me71505248a" x="407.384471" y="58.901352" style="fill: #0f7d94; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#me71505248a" x="436.833814" y="55.51897" style="fill: #0f7d94; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#me71505248a" x="456.477461" y="25.834747" style="fill: #0f7d94; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#me71505248a" x="478.056443" y="35.993858" style="fill: #0f7d94; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#me71505248a" x="487.92665" y="45.437731" style="fill: #0f7d94; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#me71505248a" x="501.63527" y="41.89808" style="fill: #0f7d94; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#me71505248a" x="518.34366" y="27.779871" style="fill: #0f7d94; stroke: #000000; stroke-opacity: 0"/>
+" clip-path="url(#p7437e4de35)" style="fill: none; stroke: #4169e1; stroke-width: 2.6; stroke-linecap: square"/>
+    <g clip-path="url(#p7437e4de35)">
+     <use xlink:href="#mf653236dc2" x="73.571491" y="218.6127" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#mf653236dc2" x="117.761634" y="206.093967" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#mf653236dc2" x="156.049005" y="194.989803" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#mf653236dc2" x="193.400965" y="174.468685" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#mf653236dc2" x="231.623825" y="160.374231" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#mf653236dc2" x="262.073091" y="141.52569" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#mf653236dc2" x="296.457537" y="131.109061" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#mf653236dc2" x="323.907034" y="123.181102" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#mf653236dc2" x="349.421197" y="93.85841" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#mf653236dc2" x="376.96746" y="79.923502" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#mf653236dc2" x="407.384471" y="58.901352" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#mf653236dc2" x="436.833814" y="55.51897" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#mf653236dc2" x="456.477461" y="25.834747" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#mf653236dc2" x="478.056443" y="35.993858" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#mf653236dc2" x="487.92665" y="45.437731" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#mf653236dc2" x="501.63527" y="41.89808" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#mf653236dc2" x="518.34366" y="27.779871" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
     </g>
    </g>
   </g>
  </g>
  <defs>
-  <clipPath id="p9363531669">
+  <clipPath id="p7437e4de35">
    <rect x="50.744219" y="7.2" width="502.2" height="221.76"/>
   </clipPath>
  </defs>
 </svg>
-<figcaption>Growth of one dollar with every series levered to equal weight's volatility and financing charged, so vertical position corresponds to risk-adjusted performance. Marked line is hierarchical risk parity; dashed grey is equal weight.</figcaption></figure><h2>Statistical significance</h2><p class="note">Monthly returns are serially dependent, so a textbook standard error on a Sharpe ratio is too narrow. A stationary block bootstrap with twelve month expected blocks, paired so the common market move is differenced away rather than adding noise to the comparison.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">edge vs equal weight</th><th class="num">CI low</th><th class="num">CI high</th><th class="num">p</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.1495</td><td class="num">0.0338</td><td class="num">0.2712</td><td class="num">0.0094</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0854</td><td class="num">0.0192</td><td class="num">0.16</td><td class="num">0.0148</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.076</td><td class="num">0.0214</td><td class="num">0.137</td><td class="num">0.0092</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">0.028</td><td class="num">-0.0679</td><td class="num">0.1358</td><td class="num">0.2862</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">-0.1441</td><td class="num">-0.3462</td><td class="num">0.0631</td><td class="num">0.0752</td></tr></tbody></table><figcaption>Development.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">edge vs equal weight</th><th class="num">CI low</th><th class="num">CI high</th><th class="num">p</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.0116</td><td class="num">-0.0845</td><td class="num">0.1662</td><td class="num">0.3888</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0304</td><td class="num">-0.0261</td><td class="num">0.1198</td><td class="num">0.1776</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.0063</td><td class="num">-0.0427</td><td class="num">0.0857</td><td class="num">0.3856</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">-0.1031</td><td class="num">-0.1703</td><td class="num">-0.0374</td><td class="num">0.0014</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">-0.1696</td><td class="num">-0.3882</td><td class="num">0.0043</td><td class="num">0.042</td></tr></tbody></table><figcaption>Holdout.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">edge vs equal weight</th><th class="num">CI low</th><th class="num">CI high</th><th class="num">p</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.1222</td><td class="num">0.0339</td><td class="num">0.2241</td><td class="num">0.0102</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0767</td><td class="num">0.0268</td><td class="num">0.1364</td><td class="num">0.006</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.0618</td><td class="num">0.0192</td><td class="num">0.1129</td><td class="num">0.0088</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">-0.031</td><td class="num">-0.1005</td><td class="num">0.0558</td><td class="num">0.2192</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">-0.1059</td><td class="num">-0.2706</td><td class="num">0.0352</td><td class="num">0.0832</td></tr></tbody></table><figcaption>Full sample.</figcaption></figure><p>These edges differ slightly from the <em>vs equal weight</em> column in the performance tables above, by one or two basis points of Sharpe. The performance tables annualise a geometric return over volatility; the bootstrap works on arithmetic excess returns, because that is what can be resampled in paired blocks. The two conventions agree on ranking and on sign, and the bootstrap number is the one each p-value refers to.</p><p><strong>Development and full sample are significant; the holdout is not.</strong> Hierarchical risk parity is +0.150 on development with a 95% interval of [+0.034, +0.271] and p = 0.009, and +0.122 on the full sample at p = 0.010. On the holdout alone it is +0.012 with an interval of [-0.085, +0.166] and p = 0.389. Risk parity is the stronger of the two out of sample, at +0.030 with p = 0.178, and that is still not significant.</p><p>Both benchmarks go the other way with more confidence. The Aggregate proxy is significantly <em>worse</em> than equal weight over the holdout, at -0.103 with p = 0.001, and the barbell at -0.170 with p = 0.042.</p><h2>Why the holdout is hard to read</h2><p class="note">The decade the strategies were tested on contained the worst bond market in forty years.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead"></th><th class="num">equal weight</th><th class="num">Agg proxy</th><th class="num">Hierarchical RP</th><th class="num">Risk parity</th></tr></thead><tbody><tr><td class="rowhead">2021</td><td class="num">-0.66%</td><td class="num">-1.75%</td><td class="num">-0.29%</td><td class="num">-0.32%</td></tr><tr><td class="rowhead">2022</td><td class="num">-13.53%</td><td class="num">-13.24%</td><td class="num">-7.59%</td><td class="num">-9.95%</td></tr><tr><td class="rowhead">2023</td><td class="num">+6.22%</td><td class="num">+5.62%</td><td class="num">+5.63%</td><td class="num">+6.06%</td></tr><tr><td class="rowhead">2021-2023 cumulative</td><td class="num">-8.75%</td><td class="num">-9.96%</td><td class="num">-2.67%</td><td class="num">-4.80%</td></tr><tr><td class="rowhead">Holdout worst drawdown</td><td class="num">-17.3%</td><td class="num">-17.5%</td><td class="num">-10.3%</td><td class="num">-13.0%</td></tr></tbody></table></figure><p>Equal weight returned 2.2% a year over the holdout at a Sharpe of 0.026. The Aggregate proxy was negative on a risk-adjusted basis at -0.072, and the barbell at -0.152. When the benchmark itself is at zero, there is very little for a strategy to separate on. A positive but small margin is exactly what a real edge looks like under those conditions, and it is also exactly what noise looks like, which is why this page does not claim significance.</p><p>What the drawdown row does show is that the risk-based methods took materially less damage through the rate shock: -7.6% for hierarchical risk parity in 2022 against -13.5% for equal weight and -13.2% for the Aggregate proxy. Underweighting duration is the mechanism, which raises the obvious question addressed next.</p><h2>Is it just a bet on shorter bonds?</h2><p class="note">This is the objection that should kill the result if anything does. Risk parity underweights volatile assets, volatility in bonds is duration, so it naturally holds less duration than equal weight.</p><p>If that is the whole story, an investor who wants less duration can hold less duration and skip the covariance matrix entirely. So the benchmark was rebuilt: equal weight, scaled up or down month by month to match each strategy's own portfolio duration, with the difference held in cash at the risk free rate. That benchmark carries the same duration exposure as the strategy and none of its structure.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">vs plain 1/N</th><th class="num">vs duration-matched 1/N</th><th class="num">dm CI low</th><th class="num">dm CI high</th><th class="num">dm p</th><th class="num">strategy duration</th></tr></thead><tbody><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0866</td><td class="num">0.0879</td><td class="num">0.0234</td><td class="num">0.1604</td><td class="num">0.0117</td><td class="num">5.0094</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.0772</td><td class="num">0.079</td><td class="num">0.0245</td><td class="num">0.1383</td><td class="num">0.0063</td><td class="num">5.0346</td></tr><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.1507</td><td class="num">0.1473</td><td class="num">0.0345</td><td class="num">0.2631</td><td class="num">0.008</td><td class="num">3.7949</td></tr><tr><td class="rowhead">Group risk budget</td><td class="num">0.0885</td><td class="num">0.0895</td><td class="num">0.0307</td><td class="num">0.1554</td><td class="num">0.004</td><td class="num">5.0388</td></tr></tbody></table></figure><p><strong>The edge does not change.</strong> Hierarchical risk parity goes from +0.151 against plain equal weight to +0.147 against the duration matched version, at p = 0.008. Risk parity goes from +0.087 to +0.088 at p = 0.012. All intervals exclude zero. It is not a duration bet, and the group risk budget variant behaves the same way.</p><h2>Costs, turnover and borrowing</h2><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">1m Sharpe</th><th class="num">3m Sharpe</th><th class="num">6m Sharpe</th><th class="num">12m Sharpe</th><th class="num">1m turnover</th><th class="num">3m turnover</th><th class="num">6m turnover</th><th class="num">12m turnover</th></tr></thead><tbody><tr><td class="rowhead">Equal weight</td><td class="num">0.7438</td><td class="num">0.7412</td><td class="num">0.7415</td><td class="num">0.7435</td><td class="num">0.12</td><td class="num">0.08</td><td class="num">0.07</td><td class="num">0.05</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.884</td><td class="num">0.8814</td><td class="num">0.8824</td><td class="num">0.89</td><td class="num">0.09</td><td class="num">0.07</td><td class="num">0.05</td><td class="num">0.05</td></tr><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.9334</td><td class="num">0.9297</td><td class="num">0.9319</td><td class="num">0.9391</td><td class="num">0.14</td><td class="num">0.11</td><td class="num">0.08</td><td class="num">0.07</td></tr></tbody></table><figcaption>By rebalancing frequency.</figcaption></figure><p>Turnover runs 5% to 14% a year. Risk parity trades <em>less</em> than equal weight, because bond correlations are stable while equal weight has to trade back against price drift every month. Annual rebalancing is marginally best, which says the covariance estimate is stable enough that monthly re-optimization is mostly noise.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead"></th><th class="num">dev_edge</th><th class="num">oos_edge</th></tr></thead><tbody><tr><td class="rowhead">(&#x27;ewma&#x27;, &#x27;120&#x27;)</td><td class="num">0.0491</td><td class="num">-0.0331</td></tr><tr><td class="rowhead">(&#x27;ewma&#x27;, &#x27;60&#x27;)</td><td class="num">0.0429</td><td class="num">-0.0364</td></tr><tr><td class="rowhead">(&#x27;ewma&#x27;, &#x27;expanding&#x27;)</td><td class="num">0.0502</td><td class="num">-0.0286</td></tr><tr><td class="rowhead">(&#x27;ledoit_wolf&#x27;, &#x27;120&#x27;)</td><td class="num">0.0726</td><td class="num">-0.0076</td></tr><tr><td class="rowhead">(&#x27;ledoit_wolf&#x27;, &#x27;60&#x27;)</td><td class="num">0.0553</td><td class="num">-0.0297</td></tr><tr><td class="rowhead">(&#x27;ledoit_wolf&#x27;, &#x27;expanding&#x27;)</td><td class="num">0.0833</td><td class="num">0.0307</td></tr><tr><td class="rowhead">(&#x27;sample&#x27;, &#x27;120&#x27;)</td><td class="num">0.0728</td><td class="num">-0.0076</td></tr><tr><td class="rowhead">(&#x27;sample&#x27;, &#x27;60&#x27;)</td><td class="num">0.0548</td><td class="num">-0.0297</td></tr><tr><td class="rowhead">(&#x27;sample&#x27;, &#x27;expanding&#x27;)</td><td class="num">0.0834</td><td class="num">0.0307</td></tr></tbody></table><figcaption>27 combinations of covariance estimator, lookback window and rebalancing frequency, averaged.</figcaption></figure><p><strong>27 of 27 combinations are positive on development and 8 of 27 on the holdout.</strong> The pattern in the failures is informative: every expanding-window specification is positive on both, and the losses concentrate in the short sixty month lookback and the EWMA estimator, both of which discard the long history that makes the covariance estimate stable. That is the same lesson as the annual rebalancing result.</p><h2>What I would and would not claim</h2><ul class="checks"><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">Risk parity beats equal weight on this universe</span><span class="check__detail">0.933 and 0.884 against 0.805 on development, both bootstrap intervals exclude zero</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">The edge is not explained by duration</span><span class="check__detail">unchanged against a duration matched benchmark, p = 0.008 and 0.012</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">It beats a 2s10s barbell and the Aggregate proxy</span><span class="check__detail">barbell 0.655, Vanguard Total Bond 0.824, on the same window</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">It survives leverage and trading costs</span><span class="check__detail">still ahead levered to equal weight's volatility at 50bp; turnover under 15% a year</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">It holds over the full sample</span><span class="check__detail">+0.122 against equal weight from 1987 to 2026, p = 0.010</span></li><li class="check check--fail"><span class="chip chip--fail">FAIL</span><span class="check__label">It is proven out of sample</span><span class="check__detail">2016 to 2026 is positive against all three benchmarks but p = 0.389</span></li><li class="check check--fail"><span class="chip chip--fail">FAIL</span><span class="check__label">Any forecast is involved</span><span class="check__detail">the covariance matrix only, no return prediction anywhere</span></li></ul><p>The honest summary is that the development and full sample results are solid and the holdout result is directionally right but unproven. A decade in which the benchmark returned a 0.03 Sharpe is a poor environment for demonstrating anything, in either direction.</p><h2>Next steps</h2><figure class="tablewrap"><table><thead><tr><th class="rowhead">step</th><th class="">why</th></tr></thead><tbody><tr><td class="rowhead">Replace funds with indices or futures</td><td class="">The universe is mutual funds, which charge 20 to 80 basis points and carry manager decisions. High yield&#x27;s daily returns autocorrelate at 0.29 from stale pricing. Index or futures data removes both problems and would make daily work trustworthy.</td></tr><tr><td class="rowhead">Add genuinely different exposures</td><td class="">Adding more US bonds reduced independence rather than raising it. TIPS, international sovereigns, emerging market debt and bank loans are different factors, not more of the same one.</td></tr><tr><td class="rowhead">Test the result on a second market</td><td class="">If the duration and forecastability relationship is structural it should appear in gilts and bunds too. That would be much stronger evidence than another robustness check on the same data.</td></tr><tr><td class="rowhead">Cost aware optimisation</td><td class="">On the parent project, trading a fraction of the way toward the target each period instead of fully rebalancing raised Sharpe from 0.06 to 0.23 with turnover cut ninefold. Turnover is already low here, so the gain would be smaller, but the method carries over.</td></tr></tbody></table></figure><h2>Limitations</h2><figure class="tablewrap"><table><thead><tr><th class="rowhead">limitation</th><th class="">what it means</th></tr></thead><tbody><tr><td class="rowhead">Mutual funds, not indices</td><td class="">Fees of 20 to 80 basis points and manager idiosyncrasy. Daily returns autocorrelate, high yield at 0.29, because illiquid bonds are priced with a lag.</td></tr><tr><td class="rowhead">The sample starts in 1987</td><td class="">Five years of available data are discarded so every strategy and benchmark shares a start date. That is the right trade, but it costs sample size.</td></tr><tr><td class="rowhead">Out of sample is not significant</td><td class="">Positive against all three benchmarks with intervals spanning zero.</td></tr><tr><td class="rowhead">The holdout was opened once for the parent project</td><td class="">This holdout is clean of fitting but not of the author having seen that decade.</td></tr></tbody></table></figure><p>Reference: Lopez de Prado, M. (2016). Building Diversified Portfolios that Outperform Out of Sample. <em>Journal of Portfolio Management</em>, 42(4), 59-69.</p>
+<figcaption>Growth of one dollar with every series levered to equal weight's volatility and financing charged, so vertical position corresponds to risk-adjusted performance. Marked line is hierarchical risk parity; the three reference portfolios are dotted and dashed.</figcaption></figure><h2>Statistical significance</h2><p class="note">Monthly returns are serially dependent, so a textbook standard error on a Sharpe ratio is too narrow. A stationary block bootstrap with twelve month expected blocks, paired so the common market move is differenced away rather than adding noise to the comparison.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">edge vs equal weight</th><th class="num">CI low</th><th class="num">CI high</th><th class="num">p</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.1495</td><td class="num">0.0338</td><td class="num">0.2712</td><td class="num">0.0094</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0854</td><td class="num">0.0192</td><td class="num">0.16</td><td class="num">0.0148</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.076</td><td class="num">0.0214</td><td class="num">0.137</td><td class="num">0.0092</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">0.028</td><td class="num">-0.0679</td><td class="num">0.1358</td><td class="num">0.2862</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">-0.1441</td><td class="num">-0.3462</td><td class="num">0.0631</td><td class="num">0.0752</td></tr></tbody></table><figcaption>Development.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">edge vs equal weight</th><th class="num">CI low</th><th class="num">CI high</th><th class="num">p</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.0116</td><td class="num">-0.0845</td><td class="num">0.1662</td><td class="num">0.3888</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0304</td><td class="num">-0.0261</td><td class="num">0.1198</td><td class="num">0.1776</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.0063</td><td class="num">-0.0427</td><td class="num">0.0857</td><td class="num">0.3856</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">-0.1031</td><td class="num">-0.1703</td><td class="num">-0.0374</td><td class="num">0.0014</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">-0.1696</td><td class="num">-0.3882</td><td class="num">0.0043</td><td class="num">0.042</td></tr></tbody></table><figcaption>Holdout.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">edge vs equal weight</th><th class="num">CI low</th><th class="num">CI high</th><th class="num">p</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.1222</td><td class="num">0.0339</td><td class="num">0.2241</td><td class="num">0.0102</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0767</td><td class="num">0.0268</td><td class="num">0.1364</td><td class="num">0.006</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.0618</td><td class="num">0.0192</td><td class="num">0.1129</td><td class="num">0.0088</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">-0.031</td><td class="num">-0.1005</td><td class="num">0.0558</td><td class="num">0.2192</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">-0.1059</td><td class="num">-0.2706</td><td class="num">0.0352</td><td class="num">0.0832</td></tr></tbody></table><figcaption>Full sample.</figcaption></figure><p>These edges differ slightly from the <em>vs equal weight</em> column in the performance tables above, by one or two basis points of Sharpe. The performance tables annualise a geometric return over volatility; the bootstrap works on arithmetic excess returns, because that is what can be resampled in paired blocks. The two conventions agree on ranking and on sign, and the bootstrap number is the one each p-value refers to.</p><p><strong>Development and full sample are significant; the holdout is not.</strong> Hierarchical risk parity is +0.150 on development with a 95% interval of [+0.034, +0.271] and p = 0.009, and +0.122 on the full sample at p = 0.010. On the holdout alone it is +0.012 with an interval of [-0.085, +0.166] and p = 0.389. Risk parity is the stronger of the two out of sample, at +0.030 with p = 0.178, and that is still not significant.</p><p>Both benchmarks go the other way with more confidence. The Aggregate proxy is significantly <em>worse</em> than equal weight over the holdout, at -0.103 with p = 0.001, and the barbell at -0.170 with p = 0.042.</p><h2>Why the holdout is hard to read</h2><p class="note">The decade the strategies were tested on contained the worst bond market in forty years.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead"></th><th class="num">equal weight</th><th class="num">Agg proxy</th><th class="num">Hierarchical RP</th><th class="num">Risk parity</th></tr></thead><tbody><tr><td class="rowhead">2021</td><td class="num">-0.66%</td><td class="num">-1.75%</td><td class="num">-0.29%</td><td class="num">-0.32%</td></tr><tr><td class="rowhead">2022</td><td class="num">-13.53%</td><td class="num">-13.24%</td><td class="num">-7.59%</td><td class="num">-9.95%</td></tr><tr><td class="rowhead">2023</td><td class="num">+6.22%</td><td class="num">+5.62%</td><td class="num">+5.63%</td><td class="num">+6.06%</td></tr><tr><td class="rowhead">2021-2023 cumulative</td><td class="num">-8.75%</td><td class="num">-9.96%</td><td class="num">-2.67%</td><td class="num">-4.80%</td></tr><tr><td class="rowhead">Holdout worst drawdown</td><td class="num">-17.3%</td><td class="num">-17.5%</td><td class="num">-10.3%</td><td class="num">-13.0%</td></tr></tbody></table></figure><p>Equal weight returned 2.2% a year over the holdout at a Sharpe of 0.026. The Aggregate proxy was negative on a risk-adjusted basis at -0.072, and the barbell at -0.152. When the benchmark itself is at zero, there is very little for a strategy to separate on. A positive but small margin is exactly what a real edge looks like under those conditions, and it is also exactly what noise looks like, which is why this page does not claim significance.</p><p>What the drawdown row does show is that the risk-based methods took materially less damage through the rate shock: -7.6% for hierarchical risk parity in 2022 against -13.5% for equal weight and -13.2% for the Aggregate proxy. Underweighting duration is the mechanism, which raises the obvious question addressed next.</p><h2>Is it just a bet on shorter bonds?</h2><p class="note">This is the objection that should kill the result if anything does. Risk parity underweights volatile assets, volatility in bonds is duration, so it naturally holds less duration than equal weight.</p><p>If that is the whole story, an investor who wants less duration can hold less duration and skip the covariance matrix entirely. So the benchmark was rebuilt: equal weight, scaled up or down month by month to match each strategy's own portfolio duration, with the difference held in cash at the risk free rate. That benchmark carries the same duration exposure as the strategy and none of its structure.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">vs plain 1/N</th><th class="num">vs duration-matched 1/N</th><th class="num">dm CI low</th><th class="num">dm CI high</th><th class="num">dm p</th><th class="num">strategy duration</th></tr></thead><tbody><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0866</td><td class="num">0.0879</td><td class="num">0.0234</td><td class="num">0.1604</td><td class="num">0.0117</td><td class="num">5.0094</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.0772</td><td class="num">0.079</td><td class="num">0.0245</td><td class="num">0.1383</td><td class="num">0.0063</td><td class="num">5.0346</td></tr><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.1507</td><td class="num">0.1473</td><td class="num">0.0345</td><td class="num">0.2631</td><td class="num">0.008</td><td class="num">3.7949</td></tr><tr><td class="rowhead">Group risk budget</td><td class="num">0.0885</td><td class="num">0.0895</td><td class="num">0.0307</td><td class="num">0.1554</td><td class="num">0.004</td><td class="num">5.0388</td></tr></tbody></table></figure><p><strong>The edge does not change.</strong> Hierarchical risk parity goes from +0.151 against plain equal weight to +0.147 against the duration matched version, at p = 0.008. Risk parity goes from +0.087 to +0.088 at p = 0.012. All intervals exclude zero. It is not a duration bet, and the group risk budget variant behaves the same way.</p><h2>Costs, turnover and borrowing</h2><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">1m Sharpe</th><th class="num">3m Sharpe</th><th class="num">6m Sharpe</th><th class="num">12m Sharpe</th><th class="num">1m turnover</th><th class="num">3m turnover</th><th class="num">6m turnover</th><th class="num">12m turnover</th></tr></thead><tbody><tr><td class="rowhead">Equal weight</td><td class="num">0.7438</td><td class="num">0.7412</td><td class="num">0.7415</td><td class="num">0.7435</td><td class="num">0.12</td><td class="num">0.08</td><td class="num">0.07</td><td class="num">0.05</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.884</td><td class="num">0.8814</td><td class="num">0.8824</td><td class="num">0.89</td><td class="num">0.09</td><td class="num">0.07</td><td class="num">0.05</td><td class="num">0.05</td></tr><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.9334</td><td class="num">0.9297</td><td class="num">0.9319</td><td class="num">0.9391</td><td class="num">0.14</td><td class="num">0.11</td><td class="num">0.08</td><td class="num">0.07</td></tr></tbody></table><figcaption>By rebalancing frequency.</figcaption></figure><p>Turnover runs 5% to 14% a year. Risk parity trades <em>less</em> than equal weight, because bond correlations are stable while equal weight has to trade back against price drift every month. Annual rebalancing is marginally best, which says the covariance estimate is stable enough that monthly re-optimization is mostly noise.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead"></th><th class="num">dev_edge</th><th class="num">oos_edge</th></tr></thead><tbody><tr><td class="rowhead">(&#x27;ewma&#x27;, &#x27;120&#x27;)</td><td class="num">0.0491</td><td class="num">-0.0331</td></tr><tr><td class="rowhead">(&#x27;ewma&#x27;, &#x27;60&#x27;)</td><td class="num">0.0429</td><td class="num">-0.0364</td></tr><tr><td class="rowhead">(&#x27;ewma&#x27;, &#x27;expanding&#x27;)</td><td class="num">0.0502</td><td class="num">-0.0286</td></tr><tr><td class="rowhead">(&#x27;ledoit_wolf&#x27;, &#x27;120&#x27;)</td><td class="num">0.0726</td><td class="num">-0.0076</td></tr><tr><td class="rowhead">(&#x27;ledoit_wolf&#x27;, &#x27;60&#x27;)</td><td class="num">0.0553</td><td class="num">-0.0297</td></tr><tr><td class="rowhead">(&#x27;ledoit_wolf&#x27;, &#x27;expanding&#x27;)</td><td class="num">0.0833</td><td class="num">0.0307</td></tr><tr><td class="rowhead">(&#x27;sample&#x27;, &#x27;120&#x27;)</td><td class="num">0.0728</td><td class="num">-0.0076</td></tr><tr><td class="rowhead">(&#x27;sample&#x27;, &#x27;60&#x27;)</td><td class="num">0.0548</td><td class="num">-0.0297</td></tr><tr><td class="rowhead">(&#x27;sample&#x27;, &#x27;expanding&#x27;)</td><td class="num">0.0834</td><td class="num">0.0307</td></tr></tbody></table><figcaption>27 combinations of covariance estimator, lookback window and rebalancing frequency, averaged.</figcaption></figure><p><strong>27 of 27 combinations are positive on development and 8 of 27 on the holdout.</strong> The pattern in the failures is informative: every expanding-window specification is positive on both, and the losses concentrate in the short sixty month lookback and the EWMA estimator, both of which discard the long history that makes the covariance estimate stable. That is the same lesson as the annual rebalancing result.</p><h2>What I would and would not claim</h2><ul class="checks"><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">Risk parity beats equal weight on this universe</span><span class="check__detail">0.933 and 0.884 against 0.805 on development, both bootstrap intervals exclude zero</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">The edge is not explained by duration</span><span class="check__detail">unchanged against a duration matched benchmark, p = 0.008 and 0.012</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">It beats a 2s10s barbell and the Aggregate proxy</span><span class="check__detail">barbell 0.655, Vanguard Total Bond 0.824, on the same window</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">It survives leverage and trading costs</span><span class="check__detail">still ahead levered to equal weight's volatility at 50bp; turnover under 15% a year</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">It holds over the full sample</span><span class="check__detail">+0.122 against equal weight from 1987 to 2026, p = 0.010</span></li><li class="check check--fail"><span class="chip chip--fail">FAIL</span><span class="check__label">It is proven out of sample</span><span class="check__detail">2016 to 2026 is positive against all three benchmarks but p = 0.389</span></li><li class="check check--fail"><span class="chip chip--fail">FAIL</span><span class="check__label">Any forecast is involved</span><span class="check__detail">the covariance matrix only, no return prediction anywhere</span></li></ul><p>The honest summary is that the development and full sample results are solid and the holdout result is directionally right but unproven. A decade in which the benchmark returned a 0.03 Sharpe is a poor environment for demonstrating anything, in either direction.</p><h2>Next steps</h2><figure class="tablewrap"><table><thead><tr><th class="rowhead">step</th><th class="">why</th></tr></thead><tbody><tr><td class="rowhead">Replace funds with indices or futures</td><td class="">The universe is mutual funds, which charge 20 to 80 basis points and carry manager decisions. High yield&#x27;s daily returns autocorrelate at 0.29 from stale pricing. Index or futures data removes both problems and would make daily work trustworthy.</td></tr><tr><td class="rowhead">Add genuinely different exposures</td><td class="">Adding more US bonds reduced independence rather than raising it. TIPS, international sovereigns, emerging market debt and bank loans are different factors, not more of the same one.</td></tr><tr><td class="rowhead">Test the result on a second market</td><td class="">If the duration and forecastability relationship is structural it should appear in gilts and bunds too. That would be much stronger evidence than another robustness check on the same data.</td></tr><tr><td class="rowhead">Cost aware optimisation</td><td class="">On the parent project, trading a fraction of the way toward the target each period instead of fully rebalancing raised Sharpe from 0.06 to 0.23 with turnover cut ninefold. Turnover is already low here, so the gain would be smaller, but the method carries over.</td></tr></tbody></table></figure><h2>Limitations</h2><figure class="tablewrap"><table><thead><tr><th class="rowhead">limitation</th><th class="">what it means</th></tr></thead><tbody><tr><td class="rowhead">Mutual funds, not indices</td><td class="">Fees of 20 to 80 basis points and manager idiosyncrasy. Daily returns autocorrelate, high yield at 0.29, because illiquid bonds are priced with a lag.</td></tr><tr><td class="rowhead">The sample starts in 1987</td><td class="">Five years of available data are discarded so every strategy and benchmark shares a start date. That is the right trade, but it costs sample size.</td></tr><tr><td class="rowhead">Out of sample is not significant</td><td class="">Positive against all three benchmarks with intervals spanning zero.</td></tr><tr><td class="rowhead">The holdout was opened once for the parent project</td><td class="">This holdout is clean of fitting but not of the author having seen that decade.</td></tr></tbody></table></figure><p>Reference: Lopez de Prado, M. (2016). Building Diversified Portfolios that Outperform Out of Sample. <em>Journal of Portfolio Management</em>, 42(4), 59-69.</p>
   </main>
+  <nav class="pager"><a class="pager__slot pager__slot--prev" href="phase2_strategies.html"><span class="pager__kind">&larr; Previous</span><span class="pager__label">Strategies</span></a><a class="pager__slot pager__slot--index" href="index.html"><span class="pager__kind">All phases</span><span class="pager__label">All phases</span></a><span class="pager__slot"></span></nav>
   <footer class="colophon">
-    Gus Guenther &#183; Macro_26 &#183; regenerate with <code>py scripts/report_phase3.py</code>
+    Gus Guenther &#183; Fixed Income Risk Parity &#183; regenerate with <code>py scripts/build_site.py</code>
   </footer>
 </div>

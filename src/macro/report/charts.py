@@ -34,27 +34,35 @@ RULE = "#cfcfcf"
 
 # Series palette. Mid-tone and reasonably far apart in hue and in lightness, so
 # the lines stay separable on a light ground, on a dark ground, and in grey.
-ACCENT = "#0f7d94"      # deep teal, reserved for the featured series
+ROYAL = "#4169e1"       # royal blue, reserved for the featured series
 SERIES = [
-    "#0f7d94",  # teal
+    ROYAL,      # royal blue
     "#cf6a1a",  # burnt orange
-    "#2f8f5b",  # green
+    "#1f9c7a",  # teal green
     "#a83c66",  # rose
-    "#6257b8",  # violet
+    "#7a52c8",  # violet
     "#9c7d1e",  # ochre
-    "#3d6fa8",  # blue
+    "#2f8f5b",  # green
 ]
-NEUTRAL = "#8b949e"     # benchmarks: present, but not competing for attention
+NEUTRAL = "#8b949e"
+
+# Benchmarks are drawn without color: a fine dotted line in the page's own ink,
+# then progressively looser grey dashes if a chart carries more than one. The
+# point is that they read as reference lines rather than as competing series.
+BENCH = [
+    dict(color=INK, linestyle=(0, (1.3, 1.9)), linewidth=1.5),
+    dict(color=MUTED, linestyle=(0, (6, 2.4)), linewidth=1.3),
+    dict(color=MUTED, linestyle=(0, (6, 2, 1.3, 2)), linewidth=1.3),
+]
 
 # Line treatments by role. `markevery` is a fraction of the line's own path
 # length, so markers stay evenly spaced regardless of series length.
 ROLES = {
     "hero":      dict(linewidth=2.6, zorder=6, marker="o", markersize=4.6,
-                      markevery=0.09, markeredgecolor="none"),
+                      markevery=0.09, markeredgecolor="none", color=ROYAL),
     "strategy":  dict(linewidth=1.6, zorder=4),
     "secondary": dict(linewidth=1.3, zorder=3, alpha=0.9),
-    "benchmark": dict(linewidth=1.7, zorder=5, linestyle=(0, (5, 2)),
-                      color=NEUTRAL),
+    "benchmark": dict(zorder=5),
 }
 
 _SUBS = [(INK, "var(--ink)"), (MUTED, "var(--ink-muted)"), (RULE, "var(--rule)")]
@@ -99,9 +107,17 @@ def style_axes(ax) -> None:
 
 
 def style_for(role: str, index: int = 0) -> dict:
-    """Line keywords for a role. Benchmarks carry their own fixed color; every
-    other role draws the next color from the palette."""
+    """Line keywords for a role.
+
+    For "benchmark", `index` selects a dash pattern from BENCH so several
+    reference lines on one chart stay distinguishable without taking a color.
+    For every other role it selects the palette color; "hero" ignores it and
+    always draws royal blue.
+    """
     kw = dict(ROLES.get(role, ROLES["strategy"]))
+    if role == "benchmark":
+        kw.update(BENCH[index % len(BENCH)])
+        return kw
     kw.setdefault("color", SERIES[index % len(SERIES)])
     return kw
 
@@ -134,12 +150,19 @@ def growth(ax, frame, roles: dict[str, str] | None = None,
     """
     roles = roles or {}
     cols = order or list(frame.columns)
-    for i, c in enumerate(cols):
+    # Benchmarks are counted separately: their index picks a dash pattern, not
+    # a palette slot, so adding a benchmark never shifts a strategy's color.
+    colored = benched = 0
+    for c in cols:
         if c not in frame.columns:
             continue
+        role = roles.get(c, "strategy")
+        if role == "benchmark":
+            kw, benched = style_for(role, benched), benched + 1
+        else:
+            kw, colored = style_for(role, colored), colored + 1
         s = frame[c].dropna()
-        ax.plot(s.index, start * (1 + s).cumprod(),
-                label=c, **style_for(roles.get(c, "strategy"), i))
+        ax.plot(s.index, start * (1 + s).cumprod(), label=c, **kw)
     ax.set_ylabel("growth of $1")
     dollar_axis(ax)
     return ax

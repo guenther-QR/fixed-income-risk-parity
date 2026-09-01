@@ -23,6 +23,22 @@ URL_MACRO = "https://guenther-qr.github.io/macro-portfolio-rebuild/"
 START = "1987-11"
 
 
+# (file stem, phase label, short title). Drives the pager on every phase page.
+PHASES = [
+    ("phase1_idea", "Phase 1", "The Idea"),
+    ("phase2_strategies", "Phase 2", "Strategies"),
+    ("phase3_results", "Phase 3", "Results and Holdout"),
+]
+
+
+def paginate(r, stem):
+    """Attach index / previous / next links for the phase whose file is `stem`."""
+    i = [p[0] for p in PHASES].index(stem)
+    back = (f"{PHASES[i-1][0]}.html", PHASES[i-1][2]) if i > 0 else None
+    fwd = (f"{PHASES[i+1][0]}.html", PHASES[i+1][2]) if i < len(PHASES) - 1 else None
+    return r.nav(index=("index.html", "All phases"), prev=back, next=fwd)
+
+
 def get(name):
     try:
         return pd.read_parquet(P / f"{name}.parquet")
@@ -56,7 +72,7 @@ def phase1():
                  "benchmark. One relationship in that work held everywhere it "
                  "was tested, and it pointed at fixed income. This phase sets "
                  "out that evidence and the universe built on it."),
-        status="complete")
+        status="complete", project="Fixed Income Risk Parity")
 
     fipred = get("fi_predictability_risk")
     stats = get("fi_asset_stats")
@@ -210,6 +226,7 @@ def phase1():
         "Why they fail, and why the failure was predictable",
         "Risk parity, and Lopez de Prado's hierarchical extension",
     ])
+    paginate(r, "phase1_idea")
     return r.render(OUT / "phase1_idea.html")
 
 
@@ -223,7 +240,7 @@ def phase2():
                  "a covariance matrix. Every method in the first group loses to "
                  "equal weight. Almost every method in the second group beats "
                  "it."),
-        status="complete")
+        status="complete", project="Fixed Income Risk Parity")
 
     dev = get("fi_dev_table")
     oos = get("fi_oos_table")
@@ -408,6 +425,7 @@ def phase2():
         "Matched on start date, on leverage and on duration",
         "Turnover, costs, borrowing, and what is not proven",
     ])
+    paginate(r, "phase2_strategies")
     return r.render(OUT / "phase2_strategies.html")
 
 
@@ -421,7 +439,7 @@ def phase3():
                  "survives matching on start date, on duration, on leverage and "
                  "on trading costs. It stays positive on the holdout but is not "
                  "statistically significant there."),
-        status="complete")
+        status="complete", project="Fixed Income Risk Parity")
 
     T = get("fi_aligned_table")
     L = get("fi_aligned_levered")
@@ -539,7 +557,8 @@ def phase3():
             "the point of charging for it rather than assuming it away.")
 
     if C is not None:
-        roles = {c: ("benchmark" if c == "1/N" else
+        bench = {"1/N", "Agg index (VBMFX)", "2s10s barbell 50/50"}
+        roles = {c: ("benchmark" if c in bench else
                      "hero" if "Hierarchical" in c else "strategy")
                  for c in C.columns}
         fig, ax = charts.new_axes(9.0, 4.0)
@@ -554,8 +573,8 @@ def phase3():
                  "Growth of one dollar with every series levered to equal "
                  "weight's volatility and financing charged, so vertical "
                  "position corresponds to risk-adjusted performance. Marked "
-                 "line is hierarchical risk parity; dashed grey is equal "
-                 "weight.")
+                 "line is hierarchical risk parity; the three reference "
+                 "portfolios are dotted and dashed.")
 
     r.section("Statistical significance", (
         "Monthly returns are serially dependent, so a textbook standard error on "
@@ -737,6 +756,7 @@ def phase3():
         "Reference: Lopez de Prado, M. (2016). Building Diversified Portfolios "
         "that Outperform Out of Sample. <em>Journal of Portfolio Management</em>, "
         "42(4), 59-69.")
+    paginate(r, "phase3_results")
     return r.render(OUT / "phase3_results.html")
 
 
