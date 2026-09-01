@@ -50,30 +50,48 @@ P = ROOT / "data/processed"
 
 DEV_END = "2015-12-31"
 OOS_START = "2016-01-01"
-# Financing spread over the risk-free rate, in basis points.
+# Financing, charged per asset rather than as one blended rate.
 #
-# This project assumes an institutional book: a fund or bank desk with access to
-# repo, listed futures and cleared swaps, not a retail margin account. The
-# levered exposure here is mostly Treasury, and Treasury leverage is the
-# cheapest financing that exists:
+# Transaction costs in this project are already per asset, because a Treasury
+# bill and a high yield municipal do not trade at the same spread. Financing has
+# the same property and for the same reason: what it costs to lever a position
+# depends on what instrument carries it. A Treasury finances through repo or a
+# futures basis at a few basis points. A municipal bond fund has no derivative
+# and no futures contract, so it finances through a prime broker margin loan at
+# a hundred basis points or more.
 #
-#   Treasury GC repo        ~0 to 5bp over SOFR. SOFR is itself constructed from
-#                           Treasury GC repo transactions, and the GC versus
-#                           non-GC component of the fixing has averaged 3.2bp.
-#   Treasury futures        implied repo, so GC repo plus or minus the delivery
-#                           option. No separate financing leg to pay.
-#   Cleared swaps / TRS     +30 to +75bp funding on the credit sleeve, plus a
-#                           10 to 25bp fee where an agent bank is involved.
-#   Prime broker margin     +50 to +150bp. This is the retail-adjacent tier and
-#                           is not what an institution levering Treasuries pays.
+# The assumption throughout is an institutional book, a fund or bank desk with
+# access to repo, listed futures and cleared swaps, not a retail margin account.
 #
-# Four of the eleven assets are Treasuries that can be levered through futures
-# or repo at a handful of basis points. The credit and municipal sleeves are
-# funds, which need a swap or a margin loan. 25bp is a blended assumption that
-# is conservative for the Treasury exposure and optimistic for nothing.
-# SPREADS below runs the whole comparison from zero to a punitive 150bp so no
-# conclusion rests on this number.
-SPREAD_BP = 25.0
+# Sources for the ranges are in the reports. Mid-range values are used here.
+FINANCING_BP = {
+    # Treasuries: SOFR is constructed from Treasury general collateral repo, so
+    # financing them is close to definitionally flat to the reference rate. The
+    # GC versus non-GC component of the fixing has averaged about 3bp.
+    "ust2y": 3.0, "ust5y": 3.0, "ust10y": 3.0, "ust30y": 3.0,
+    # Agency mortgages fund through TBA dollar rolls and agency repo, which
+    # trade a few basis points wide of Treasury GC.
+    "mbs": 15.0,
+    # Investment grade credit: total return swap at SOFR + 30 to 75bp, plus a
+    # 10 to 25bp agent fee where one applies.
+    "ig_short": 50.0, "ig": 50.0, "ig_long": 50.0,
+    # High yield prices wider than investment grade on the same structure.
+    "hy": 65.0,
+    # Municipals are the expensive leg and the reason a blended rate misleads.
+    # There is no liquid muni derivative and no futures contract, so the only
+    # route is a margin loan against the fund: SOFR + 50 to 150bp, and the high
+    # yield sleeve sits at the wide end of that.
+    "muni": 110.0, "muni_hy": 110.0,
+}
+
+# The two benchmarks are single instruments rather than baskets, so their
+# financing is stated directly. The barbell is two Treasury holdings and
+# finances like one. The Aggregate proxy is a broad bond mutual fund, which has
+# no futures contract of its own and so needs a swap or a margin loan.
+BENCH_FINANCING_BP = {"2s10s barbell 50/50": 3.0, "Agg index (VBMFX)": 40.0}
+
+# Sensitivity grid: a flat spread applied to every asset, so the per-asset
+# result can be located against the simpler assumption.
 SPREADS = [0.0, 25.0, 50.0, 100.0, 150.0]
 BENCH = "1/N"
 
@@ -98,6 +116,54 @@ def stats_block(nets, rf, mask, tag):
     t = pd.DataFrame(rows).T
     t[f"{tag}_vs_1N"] = t[f"{tag}_sharpe"] - t.loc[BENCH, f"{tag}_sharpe"]
     return t
+
+
+# Sleeves that cannot be levered synthetically. There is no municipal futures
+# contract and no liquid municipal total return swap, so the only way to lever a
+# muni fund is a margin loan against it. A desk would not do that; it would hold
+# the muni sleeve at its cash weight and take the incremental exposure through
+# instruments that have a derivative. UNLEVERABLE names the sleeve that stays
+# flat under the overlay route below.
+UNLEVERABLE = ["muni", "muni_hy"]
+
+
+def blended_spreads():
+    """What each strategy pays to finance leverage, under two implementations.
+
+    proportional
+        Scale every position by L. Weights are preserved exactly, so the
+        incremental exposure in each asset has to be financed at that asset's
+        own rate and the cost is the plain weighted average. Conservative, and
+        the number quoted as the headline.
+
+    overlay
+        Hold the sleeves with no derivative at their cash weight and take the
+        borrowed exposure only through instruments that can be replicated
+        synthetically. The muni sleeve is then not levered at all, so it drops
+        out of the marginal cost. Closer to how a desk would actually run it.
+    """
+    try:
+        W = pd.read_parquet(P / "fi_rp_weights.parquet")
+    except Exception:
+        return None, None, None
+    W = W.drop(columns=[c for c in ["group"] if c in W.columns])
+    bp = pd.Series(FINANCING_BP).reindex(W.index)
+    if bp.isna().any():
+        print("  missing a financing rate for:", list(bp[bp.isna()].index))
+        return None, None, None
+
+    proportional = W.mul(bp, axis=0).sum()
+
+    lev = W.drop(index=[a for a in UNLEVERABLE if a in W.index])
+    lev = lev.div(lev.sum())                    # renormalise the levered sleeve
+    overlay = lev.mul(bp.reindex(lev.index), axis=0).sum()
+
+    detail = pd.DataFrame({"financing bp": bp})
+    for c in W.columns:
+        detail[c] = W[c]
+    routes = pd.DataFrame({"proportional_bp": proportional,
+                           "overlay_bp": overlay})
+    return proportional, detail, routes
 
 
 def main() -> int:
@@ -136,6 +202,28 @@ def main() -> int:
     # ------------------------------------------------ 2. common volatility
     # Target is the benchmark's own volatility over the window, so the
     # comparison is "same risk as equal weight" rather than an arbitrary number.
+    blended, detail, routes = blended_spreads()
+    if blended is not None:
+        print("Financing charged per asset, blended by each strategy's weights:")
+        print(detail.round(4).to_string())
+        print()
+        print("Cost of the borrowed portion, by implementation:")
+        print(routes.round(1).to_string())
+        print("  proportional: scale every position, finance each at its own rate")
+        print("  overlay:      leave", "/".join(UNLEVERABLE), "at cash weight,")
+        print("                lever only what has a derivative")
+        print()
+        detail.to_parquet(P / "fi_financing_detail.parquet")
+        routes.to_parquet(P / "fi_financing_routes.parquet")
+
+    def spread_for(name):
+        """A strategy pays what its own holdings cost to finance."""
+        if name in BENCH_FINANCING_BP:
+            return BENCH_FINANCING_BP[name]
+        if blended is None or name not in blended.index:
+            return 40.0
+        return float(blended[name])
+
     lev_rows, curves = {}, {}
     for tag, mask in w.items():
         target = float(A[BENCH][mask].std() * np.sqrt(12))
@@ -144,9 +232,10 @@ def main() -> int:
             vol = float(s.std() * np.sqrt(12))
             L = leverage.required_leverage(vol, target)
             ls = leverage.lever_series(s, rf.reindex(s.index), L,
-                                       spread_bp=SPREAD_BP)
+                                       spread_bp=spread_for(c))
             m = metrics.performance(ls, rf.reindex(ls.index))
             lev_rows.setdefault(c, {}).update({
+                f"{tag}_spread_bp": spread_for(c),
                 f"{tag}_leverage": L, f"{tag}_lev_cagr": m["cagr"],
                 f"{tag}_lev_vol": m["vol"], f"{tag}_lev_sharpe": m["sharpe"],
                 f"{tag}_lev_dd": m["max_drawdown"]})
@@ -161,12 +250,39 @@ def main() -> int:
     C.to_parquet(P / "fi_aligned_curves.parquet")
 
     tv = float(A[BENCH].std() * np.sqrt(12))
-    print(f"Levered to {BENCH}'s own {tv:.2%} volatility, {SPREAD_BP:.0f}bp "
-          f"financing, full sample:")
+    print(f"Levered to {BENCH}'s own {tv:.2%} volatility, per-asset financing, "
+          f"full sample:")
     for c in L.index:
         print(f"    {c:<24} x{L.loc[c, 'full_leverage']:.2f}  "
+              f"@{L.loc[c, 'full_spread_bp']:5.1f}bp  "
               f"CAGR {L.loc[c, 'full_lev_cagr']:.2%}  "
               f"Sharpe {L.loc[c, 'full_lev_sharpe']:.3f}")
+    print()
+
+    # ----------------------------------------- 2b. breakeven headroom
+    base = metrics.performance(A[BENCH], rf)["sharpe"]
+    rows = []
+    for c in A.columns:
+        if c == BENCH:
+            continue
+        sr = A[c]
+        lv = leverage.required_leverage(float(sr.std() * np.sqrt(12)), tv)
+        if lv <= 1.0:
+            continue
+        lo, hi = 0.0, 600.0
+        for _ in range(60):                     # bisect on the spread
+            mid = (lo + hi) / 2
+            sh = metrics.performance(
+                leverage.lever_series(sr, rf, lv, spread_bp=mid), rf)["sharpe"]
+            lo, hi = (mid, hi) if sh > base else (lo, mid)
+        paid = spread_for(c)
+        rows.append({"strategy": c, "leverage": lv, "pays_bp": paid,
+                     "breakeven_bp": lo, "headroom_bp": lo - paid})
+    BE = pd.DataFrame(rows).set_index("strategy")
+    BE.to_parquet(P / "fi_financing_breakeven.parquet")
+    print("Breakeven financing spread, against equal weight at "
+          f"{base:.3f}:")
+    print(BE.round(1).to_string())
     print()
 
     # ------------------------------------------------------- 3. inference

@@ -521,6 +521,9 @@ def phase3():
     TO = get("fi_paper_turnover")
     RB = get("fi_rp_robustness")
     SENS = get("fi_aligned_spread_sensitivity")
+    FDET = get("fi_financing_detail")
+    FROUTE = get("fi_financing_routes")
+    FBE = get("fi_financing_breakeven")
 
     r.metrics([
         ("0.933", "hierarchical RP Sharpe, development", "pass"),
@@ -577,73 +580,131 @@ def phase3():
 
     r.section("The financing assumption", (
         "Risk parity runs at low volatility and has to be levered to compete on "
-        "returns, so what leverage costs is not a detail. This project assumes "
-        "an institutional book: a fund or bank desk with access to repo, listed "
-        "futures and cleared swaps, not a retail margin account."))
-    r.table(pd.DataFrame([
-        ("Treasury GC repo", "SOFR + 0 to 5bp",
-         "SOFR is itself constructed from Treasury general collateral repo "
-         "transactions, so this is close to definitionally flat. The GC versus "
-         "non-GC component of the fixing has averaged about 3bp since 2018."),
-        ("Treasury futures", "implied repo",
-         "Financing is embedded in the basis rather than paid as a separate "
-         "leg, so the effective cost is GC repo plus or minus the delivery "
-         "option."),
-        ("Total return swap", "SOFR + 30 to 75bp",
-         "Plus a 10 to 25bp agent fee where one applies. This is the route for "
-         "the credit and municipal sleeves, which have no futures contract."),
-        ("Prime broker margin loan", "SOFR + 50 to 150bp",
-         "The most expensive tier, and not what an institution levering "
-         "Treasuries would pay."),
-    ], columns=["route", "cost over the risk free rate", "why"]
-    ).set_index("route"))
+        "returns, so what leverage costs is not a detail. It is charged per "
+        "asset, for the same reason transaction costs are: a Treasury and a "
+        "high yield municipal do not finance on the same terms."))
     r.prose(
-        "Four of the eleven assets are Treasuries that can be levered through "
-        "futures or repo for a handful of basis points, and they are where most "
-        "of the levered notional sits. The credit and municipal sleeves are "
-        "funds, which need a swap or a margin loan. <strong>The headline "
-        "assumption is 25 basis points</strong>, blended: conservative against "
-        "the Treasury exposure, and roughly mid-range for the rest.")
+        "The assumption throughout is an institutional book, a fund or bank desk "
+        "with access to repo, listed futures and cleared swaps, rather than a "
+        "retail margin account. What that buys differs enormously by "
+        "instrument.")
+    r.table(pd.DataFrame([
+        ("Treasuries, 2 to 30 year", "3bp", "Repo or the futures basis. SOFR is "
+         "itself constructed from Treasury general collateral repo, so this is "
+         "close to definitionally flat; the GC versus non-GC component of the "
+         "fixing has averaged about 3bp since 2018."),
+        ("Agency mortgages", "15bp", "TBA dollar rolls and agency repo, which "
+         "trade a few basis points wide of Treasury general collateral."),
+        ("Investment grade credit", "50bp", "Total return swap at SOFR + 30 to "
+         "75bp, plus a 10 to 25bp agent fee where one applies."),
+        ("High yield", "65bp", "Same structure as investment grade, priced "
+         "wider."),
+        ("Municipals", "110bp", "The expensive leg. No municipal futures "
+         "contract and no liquid municipal total return swap, so the only route "
+         "is a margin loan against the fund at SOFR + 50 to 150bp."),
+    ], columns=["holding", "over the risk free rate", "route"]).set_index(
+        "holding"), align_right=["over the risk free rate"])
+
+    r.section("Which assets actually get levered", (
+        "The natural assumption is that risk parity avoids the expensive "
+        "sleeves, since it underweights risk and the expensive sleeve here is "
+        "municipals. The weights say otherwise, and the reason is worth "
+        "following."))
+    if FDET is not None:
+        t = FDET.copy()
+        t.index.name = "asset"
+        r.table(t.round(4), align_right=list(t.columns),
+                caption="Per-asset financing rate and each strategy's average "
+                        "weight.")
+    r.prose(
+        "<strong>Municipals are not the risky assets in this universe.</strong> "
+        "Intermediate municipals run at 4.0% annualised volatility and high "
+        "yield municipals at 5.5%, which is mid-pack. The volatile assets are "
+        "the 30 year Treasury at 13.4%, long investment grade at 9.1% and the "
+        "10 year at 7.5%. Risk parity underweights <em>those</em> hard, cutting "
+        "the 30 year from 9.1% of the book to 3.6%. It barely touches "
+        "municipals, because equalising risk contributions leaves a mid-volatility "
+        "asset near its equal weight. Total municipal exposure goes from 18.2% "
+        "under equal weight to 15.7% under risk parity and 14.0% under the "
+        "hierarchical version.")
+    r.prose(
+        "So the cheap Treasury tilt does not translate into cheap financing. "
+        "Risk parity moves toward the two year Treasury, which finances at 3bp, "
+        "but it moves just as hard toward short investment grade at 50bp, and it "
+        "keeps most of the municipals. Scaling the whole book proportionally, "
+        "the blended cost of the borrowed portion lands between 39 and 42 basis "
+        "points for every method, a spread of under three basis points across "
+        "them.")
+
+    r.prose(
+        "<strong>That is the conservative implementation rather than the "
+        "realistic one.</strong> Scaling every position by the leverage factor "
+        "means margin-lending against the municipal fund, and no desk would do "
+        "that when the sleeve has no derivative. The alternative is an overlay: "
+        "hold the municipals at their cash weight, and take the borrowed "
+        "exposure only through instruments that can be replicated "
+        "synthetically.")
+    if FROUTE is not None:
+        t = FROUTE.copy()
+        t.columns = ["proportional, bp", "overlay, bp"]
+        t.index.name = "strategy"
+        r.table(t.round(1), align_right=list(t.columns),
+                caption="Cost of the borrowed portion. Proportional scales "
+                        "every position and finances each at its own rate; "
+                        "overlay leaves the municipal sleeve at cash weight and "
+                        "levers only what has a derivative.")
+    r.prose(
+        "The overlay route costs about 27 to 28 basis points against 39 to 42 "
+        "for proportional scaling. It does not fall to the 3bp Treasury rate, "
+        "because investment grade credit is the larger sleeve and it still needs "
+        "a swap. <strong>Every number on this page uses the proportional figure, "
+        "which is the more expensive of the two.</strong> The overlay is noted "
+        "because it is what an implementation would actually look like, and "
+        "because it means the financing drag reported here is an upper bound.")
+
+    r.section("What the financing assumption is worth", (
+        "Two things follow, and they should be kept separate."))
+    r.prose(
+        "<strong>The unlevered comparison does not depend on it at all.</strong> "
+        "Hierarchical risk parity scores 0.659 against equal weight's 0.552 over "
+        "the full sample holding no leverage and paying no financing, and every "
+        "significance test on this page runs on those unlevered series.")
+    r.prose(
+        "The <em>levered</em> comparison does depend on it, and it has a "
+        "breakeven: the spread at which each strategy's levered Sharpe falls to "
+        "equal weight's 0.552. Equal weight needs no leverage, so it pays "
+        "nothing regardless of what its holdings would cost to finance.")
+    if FBE is not None:
+        t = FBE[[c for c in ["leverage", "pays_bp", "breakeven_bp",
+                             "headroom_bp"] if c in FBE.columns]].copy()
+        t.columns = ["leverage", "pays, bp", "breakeven, bp", "headroom, bp"]
+        t.index.name = "strategy"
+        r.table(t.round(1), align_right=list(t.columns),
+                caption="Full sample. Negative headroom means the strategy does "
+                        "not beat equal weight even before financing.")
+    r.prose(
+        "All three risk-based methods have room. Classic risk parity pays 41 "
+        "basis points against a breakeven of 116, so <strong>financing would "
+        "have to be nearly three times more expensive than assumed before the "
+        "result reverses</strong>. Hierarchical risk parity has the least "
+        "headroom at 42 basis points, because it needs the most leverage at 1.68 "
+        "times. On the overlay implementation every headroom figure widens by "
+        "roughly another twelve basis points.")
     if SENS is not None:
         t = SENS.copy()
         t.index.name = "strategy"
         r.table(t.round(3), align_right=list(t.columns),
-                caption="Full sample Sharpe, every strategy levered to equal "
-                        "weight's volatility, by financing spread over the risk "
-                        "free rate. Equal weight needs no leverage, so its "
-                        "column is flat.")
+                caption="Levered Sharpe under a flat spread applied to every "
+                        "asset, so the per-asset result can be located against "
+                        "the simpler assumption.")
     r.prose(
-        "Two things follow, and they should be separated. <strong>The unlevered "
-        "comparison does not depend on this assumption at all.</strong> "
-        "Hierarchical risk parity scores 0.659 against equal weight's 0.552 over "
-        "the full sample holding no leverage and paying no financing, and every "
-        "significance test on this page is run on those unlevered series.")
-    r.prose(
-        "The <em>levered</em> comparison does depend on it, and it has a "
-        "breakeven. Solving for the spread at which each strategy's levered "
-        "Sharpe falls to equal weight's 0.552:")
-    r.table(pd.DataFrame([
-        ("Risk parity (ERC)", "1.31x", "116bp"),
-        ("Inverse volatility", "1.30x", "95bp"),
-        ("Hierarchical RP", "1.68x", "82bp"),
-    ], columns=["strategy", "leverage required", "breakeven financing spread"]
-    ).set_index("strategy"),
-        align_right=["leverage required", "breakeven financing spread"])
-    r.prose(
-        "At an institutional 25bp, and at a conservative 50bp, all three lead "
-        "comfortably. At 100bp only classic risk parity survives. At the 150bp "
-        "top of the prime broker range none of them do. <strong>The more "
-        "leverage a strategy needs, the more its edge belongs to whoever "
-        "finances it</strong>, which is why hierarchical risk parity, needing "
-        "the most at 1.68 times, breaks first despite having the highest "
-        "unlevered Sharpe.")
-    r.prose(
-        "That is not a weakness in the result so much as a restatement of what "
-        "produces it. Frazzini and Pedersen's account of the low beta anomaly is "
-        "that it persists <em>because</em> most investors cannot lever cheaply. "
-        "A strategy that harvests it should be expected to work for an "
-        "institution financing at repo and to stop working for someone paying "
-        "150 over, and that is what the table shows.")
+        "<strong>The more leverage a strategy needs, the more of its edge "
+        "belongs to whoever finances it.</strong> That is a restatement of what "
+        "produces the result rather than a weakness in it. Frazzini and "
+        "Pedersen's account of the low beta anomaly is that it persists "
+        "<em>because</em> most investors cannot lever cheaply, so a strategy "
+        "harvesting it should be expected to work for an institution financing "
+        "at repo and to stop working for someone paying 150 over.")
 
     r.section("Results against three benchmarks", (
         "Equal weight, the Bloomberg Aggregate as proxied by Vanguard Total "
@@ -668,14 +729,14 @@ def phase3():
              "vs equal weight"])
         r.table(t.round(4), align_right=list(t.columns),
                 caption="Full sample, every strategy levered to equal weight's "
-                        "own 4.7% volatility with 25bp financing charged. This "
+                        "own 4.7% volatility with per-asset financing charged. This "
                         "is the apples-to-apples comparison.")
         r.prose(
-            "Levered to the same risk, hierarchical risk parity returns 5.75% a "
+            "Levered to the same risk, hierarchical risk parity returns 5.83% a "
             "year against equal weight's 5.57%, at the same volatility and with "
             "a smaller drawdown. Note that leverage <em>costs</em> it: an "
-            "unlevered Sharpe of 0.659 falls to 0.635 once 1.68 times leverage "
-            "is financed at 25 basis points. The ranking holds anyway, which is "
+            "unlevered Sharpe of 0.659 falls to 0.614 once 1.68 times leverage "
+            "is financed at its 39bp blended rate. The ranking holds anyway, "
             "the point of charging for it rather than assuming it away.")
 
     if C is not None:
@@ -822,8 +883,9 @@ def phase3():
         (True, "It outperforms a 2s10s barbell and the Aggregate proxy",
          "barbell 0.655, Vanguard Total Bond 0.824, on the same window"),
         (True, "The edge survives leverage and trading costs",
-         "still ahead levered to equal weight's volatility at 25bp financing, "
-         "and at every spread up to 150bp; turnover under 15% a year"),
+         "still ahead levered to equal weight's volatility at per-asset "
+         "financing, with 42 to 75bp of headroom to the breakeven; "
+         "turnover under 15% a year"),
         (True, "The result holds over the full sample",
          "+0.122 against equal weight from 1987 to 2026, p = 0.010"),
         (False, "The result is established out of sample",
