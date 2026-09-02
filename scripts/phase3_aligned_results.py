@@ -1,36 +1,28 @@
-"""Recompute every headline comparison on a common start date, and on a
-common volatility.
+"""Put every comparison on a common start date and a common volatility.
 
-Two problems with the earlier results table, both of which flattered or
-disadvantaged strategies for reasons that have nothing to do with the strategies.
+Two conventions, both of which exist because the naive version of the comparison
+answers a different question than the one being asked.
 
-1. Start dates. Equal weight and the 2s10s barbell need no covariance estimate,
-   so they ran from 1982-11. Risk parity, hierarchical risk parity and inverse
-   volatility need one, so a 60-month burn-in pushed them to 1987-11.
+1. One start date. Equal weight and the 2s10s barbell need no covariance
+   estimate and could run from 1982-11. Risk parity and hierarchical risk parity
+   need one, so a 60-month estimation window puts their first tradeable month at
+   1987-11. Everything here starts there, benchmarks included.
 
-   The direction of that bias is not the obvious one. Those five extra years
-   hold the highest absolute bond returns in the sample, 11.63% a year for
-   equal weight against 6.87% after, so the instinct is that dropping them
-   should hurt the benchmark. It helps it. Cash paid 7.45% over the stub, so
-   11.63% is only 4.18% of excess return, earned at 6.64% volatility in the
-   unstable rate environment after the Volcker disinflation: a Sharpe of 0.575
-   against 0.805 for the period that follows. The extra window was dragging
-   equal weight's Sharpe *down*. Aligning therefore makes the benchmark harder
-   and shrinks every edge by roughly six basis points of Sharpe.
+   That window matters more than it looks, and not in the obvious direction.
+   The five years set aside hold the highest absolute bond returns in the
+   sample, 11.63% a year for equal weight against 6.87% after, so the instinct
+   is that dropping them should hurt the benchmark. It helps it. Cash paid 7.45%
+   over the stub, so 11.63% is only 4.18% of excess return, earned at 6.64%
+   volatility in the unstable rate environment after the Volcker disinflation:
+   a Sharpe of 0.575 against 0.805 for the period that follows.
 
-   The fix is to start every series, benchmarks included, on the first date the
-   slowest strategy can trade.
+2. One volatility. A growth-of-1 chart puts the lowest-volatility line at the
+   bottom, which inverts the Sharpe ranking whenever the low volatility strategy
+   is the better one. Every series is scaled to the Aggregate's own volatility,
+   with financing charged per asset on the borrowed portion.
 
-2. Volatility. A growth-of-1 chart puts the lowest-volatility line at the
-   bottom, which is the opposite of the Sharpe ranking whenever the low
-   volatility strategy is the better one. Comparing risk parity to equal weight
-   at their natural volatilities is not an apples-to-apples comparison; risk
-   parity is simply a smaller position.
-
-   The fix is to lever every series to the same volatility target, charging a
-   50bp financing spread on the borrowed portion, and to chart that. A reader
-   then sees the ranking they would actually experience if they sized the
-   strategies to the same risk.
+   The Aggregate is never levered. A mandate has a risk budget and the strategy
+   has to fit inside it, not the other way round.
 
 Writes fi_aligned_*.parquet, which the reports read.
 """
@@ -105,8 +97,12 @@ SPREADS = [0.0, 25.0, 50.0, 100.0, 150.0]
 BENCH = "Agg index (VBMFX)"
 BENCH2 = "1/N"
 
-ORDER = ["Hierarchical RP", "Risk parity (ERC)", "Inverse volatility",
+ORDER = ["Hierarchical RP", "Risk parity (ERC)",
          "Agg index (VBMFX)", "1/N", "2s10s barbell 50/50"]
+
+# The benchmarks are the yardstick, not candidates. Reporting a p-value on
+# "equal weight beat the Agg" invites reading it as a finding, which it is not.
+STRATEGIES = ["Hierarchical RP", "Risk parity (ERC)"]
 
 
 def windows(idx):
@@ -316,7 +312,7 @@ def main() -> int:
                     f"{tag}_edge": d["difference"], f"{tag}_lo": d["ci_lo"],
                     f"{tag}_hi": d["ci_hi"], f"{tag}_p": d["p_one_sided"]})
         boots[bench] = pd.DataFrame(boot).T.reindex(
-            [c for c in ORDER if c in boot])
+            [c for c in STRATEGIES if c in boot])
         boots[bench].to_parquet(P / f"{fname}.parquet")
     Bt = boots[BENCH]
 

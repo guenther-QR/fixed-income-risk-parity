@@ -37,10 +37,9 @@ to fit inside it.
 |---|---|---|---|
 | **Hierarchical Risk Parity** | **0.933** (+0.121, p 0.036) | 0.036 (+0.115, p 0.042) | **0.659** (+0.153, p 0.002) |
 | **Risk parity (ERC)** | **0.884** (+0.057, p 0.168) | 0.057 (+0.134, p 0.006) | **0.624** (+0.108, p 0.007) |
-| Inverse volatility | 0.874 (+0.048, p 0.160) | 0.033 (+0.109, p 0.006) | 0.609 (+0.093, p 0.006) |
 | Agg index (VBMFX) | 0.824 | -0.072 | 0.518 |
-| Equal weight | 0.805 (-0.028, p 0.303) | 0.026 (+0.103, p 0.003) | 0.552 (+0.031, p 0.234) |
-| 2s10s barbell, 50/50 | 0.655 (-0.172, p 0.021) | -0.152 (-0.067, p 0.229) | 0.441 (-0.075, p 0.149) |
+| Equal weight | 0.805 | 0.026 | 0.552 |
+| 2s10s barbell, 50/50 | 0.655 | -0.152 | 0.441 |
 
 Sharpe ratio, with the edge against the Aggregate and its one-sided p-value from
 a stationary block bootstrap.
@@ -59,13 +58,11 @@ Against equal weight, for completeness:
 |---|---|---|---|
 | Hierarchical Risk Parity | +0.150 (p 0.009) | +0.012 (p 0.389) | +0.122 (p 0.010) |
 | Risk parity (ERC) | +0.085 (p 0.015) | +0.030 (p 0.178) | +0.077 (p 0.006) |
-| Inverse volatility | +0.076 (p 0.009) | +0.006 (p 0.386) | +0.062 (p 0.009) |
 
 ## How these are measured
 
 **One start date for everything.** Equal weight and the barbell need no
-covariance estimate. Risk parity, hierarchical risk parity and inverse volatility
-need one, so a 60-month estimation window puts their first tradeable month at
+covariance estimate. Risk parity and hierarchical risk parity need one, so a 60-month estimation window puts their first tradeable month at
 November 1987. Every series here, benchmarks included, starts there.
 
 That window matters more than it looks. The five years before it hold the highest
@@ -123,7 +120,6 @@ derivative.
 
 | Strategy | Proportional | Overlay |
 |---|---|---|
-| Equal weight | 42.0bp | 26.9bp |
 | Risk parity (ERC) | 41.1bp | 28.3bp |
 | Hierarchical Risk Parity | 39.3bp | 27.8bp |
 
@@ -138,7 +134,6 @@ depend on it, and it has a breakeven.
 | Strategy | Leverage required | Pays | Breakeven | Headroom |
 |---|---|---|---|---|
 | Risk parity (ERC) | 1.15x | 41bp | 294bp | +252bp |
-| Inverse volatility | 1.15x | 40bp | 263bp | +224bp |
 | Hierarchical Risk Parity | 1.48x | 39bp | 129bp | +90bp |
 
 Financing would have to be seven times more expensive than assumed before classic
@@ -254,7 +249,6 @@ match each strategy's own duration, with the difference held in cash.
 |---|---|---|---|---|
 | Hierarchical Risk Parity | +0.151 | **+0.147** | [+0.035, +0.263] | 0.008 |
 | Risk parity (ERC) | +0.087 | **+0.088** | [+0.023, +0.160] | 0.012 |
-| Inverse volatility | +0.077 | +0.079 | [+0.025, +0.138] | 0.006 |
 | Group risk budget | +0.089 | +0.090 | [+0.031, +0.155] | 0.004 |
 
 The edge does not change. It is not a duration bet.
@@ -287,11 +281,42 @@ how much any result measured over it can establish.
 | Holdout worst drawdown | -17.3% | -17.5% | -10.3% | -13.0% |
 
 The Aggregate returned a Sharpe of -0.072 over the holdout and the barbell
--0.152, while equal weight managed +0.026 on 2.2% a year. Every risk-based method
-cleared the Aggregate and the margin was significant, but so did equal weight.
+-0.152, while equal weight managed +0.026 on 2.2% a year. Both risk parity methods cleared the Aggregate significantly, but so did
+equal weight.
 When the index itself is negative, clearing it is a lower bar than it looks,
 which is why the comparison against equal weight is reported alongside and why it
 is the one that does not clear.
+
+## The best of each class, on the holdout
+
+Reporting the forecast work as a group failure is fair but not informative. The
+useful question is what happened to the single model in each class that looked
+best on development.
+
+| Class | Best in class | Dev Sharpe | Dev vs Agg | Holdout Sharpe | Holdout vs Agg | p |
+|---|---|---|---|---|---|---|
+| return regression | Max Sharpe (forecast) | **0.954** | +0.146 | **-0.002** | +0.069 | 0.253 |
+| risk only | Hierarchical Risk Parity | 0.912 | +0.104 | 0.036 | +0.107 | **0.042** |
+| regime conditional | Regime covariance RP | 0.868 | +0.061 | 0.051 | +0.123 | **0.009** |
+| signal tilt | Carry tilt | 0.708 | -0.099 | -0.005 | +0.066 | 0.123 |
+
+Window is 1992-2026, shorter than elsewhere because two candidates start later.
+
+**The best development model in the whole comparison was a forecast model.** A
+long-only maximum Sharpe portfolio built on forecast means scored 0.954 on
+development, better than anything risk parity managed. On the holdout its Sharpe
+fell to -0.002. It still shows a positive edge over the Aggregate because the
+Aggregate was negative over that decade, but it is not significant and the
+strategy delivered no risk-adjusted return at all.
+
+The regime result splits cleanly. Conditioning the **covariance** on the regime
+is roughly free and survives out of sample. Conditioning the **mean** does not: a
+regime conditional maximum Sharpe scores 0.847 on development and -0.130 on the
+holdout. Second moments estimate; first moments do not.
+
+Only the risk-only and regime-covariance methods clear the Aggregate
+significantly out of sample. Every construction that needs a forecast of returns
+lands at p > 0.10 or worse, including the two that scored best on development.
 
 ## Conclusions
 

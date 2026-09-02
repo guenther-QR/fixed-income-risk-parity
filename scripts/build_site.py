@@ -53,6 +53,16 @@ def macro(name):
         return None
 
 
+DROP_ROWS = ["Inverse volatility"]
+
+
+def trim(df):
+    """Saved tables predate this project's final strategy set."""
+    if df is None:
+        return None
+    return df.drop(index=[i for i in DROP_ROWS if i in df.index], errors="ignore")
+
+
 def three_window(T, cols, labels):
     """Slice the aligned table down to one window's worth of columns."""
     keep = [c for c in cols if c in T.columns]
@@ -312,10 +322,12 @@ def phase2():
                  "it."),
         status="complete", project="Fixed Income Risk Parity")
 
-    dev = get("fi_dev_table")
-    oos = get("fi_oos_table")
-    boot = get("fi_bootstrap")
+    dev = trim(get("fi_dev_table"))
+    oos = trim(get("fi_oos_table"))
+    boot = trim(get("fi_bootstrap"))
     skill = get("fi_forecast_skill")
+    CLS = get("fi_class_summary")
+    CBEST = get("fi_class_best")
 
     r.metrics([
         ("9", "allocation methods tested", None),
@@ -369,13 +381,16 @@ def phase2():
         "specifications in sample, a multiple testing p value of 1.000, and zero "
         "of eight development winners positive on the holdout.")
     r.prose(
-        "The narrower version was tested here: condition only the "
-        "<em>covariance</em> matrix on the regime, leaving expected returns "
-        "alone. That is a much weaker claim, since a covariance matrix is far "
-        "easier to estimate than a mean. It made a risk parity book "
-        "<strong>worse by 0.11 Sharpe</strong>. Splitting the sample by regime "
-        "costs more in estimation error than the regime-specific structure is "
-        "worth.")
+        "Both versions were rebuilt here on the fixed income universe rather "
+        "than carried over, using the parent project's growth and inflation "
+        "labels. <strong>Conditioning the covariance matrix on the regime is "
+        "roughly free; conditioning the mean is not.</strong> A regime "
+        "covariance risk parity scores 0.868 on development against 0.860 for "
+        "the unconditional version, and holds up out of sample. A regime "
+        "conditional maximum Sharpe, which estimates in-regime <em>means</em>, "
+        "scores 0.847 on development and then <strong>-0.130</strong> on the "
+        "holdout. That split runs through the whole project: second moments "
+        "estimate; first moments do not.")
 
     r.section("Why the failure was predictable", (
         "Phase 1 said this would happen. Stating it explicitly matters, because "
@@ -491,6 +506,64 @@ def phase2():
                 caption="Stationary block bootstrap against equal weight, "
                         "development sample, twelve month expected blocks.")
 
+    r.section("The best of each class, on the holdout", (
+        "Reporting the forecast work as a group failure is fair but not very "
+        "informative. The more useful question is what happened to the single "
+        "model in each class that looked best on development."))
+    r.prose(
+        "Four classes, each represented by its highest scoring member on the "
+        "development sample: return regression, which forecasts a mean and then "
+        "optimises or tilts on it; signal tilts, which use carry or momentum and "
+        "need no statistical estimate; regime conditional, which splits the "
+        "sample by macro state; and risk only, which uses the covariance matrix "
+        "and nothing else. All measured against the Aggregate.")
+    if CBEST is not None:
+        t = CBEST[[c for c in ["strategy", "dev_sharpe", "dev_vs_agg",
+                               "oos_sharpe", "oos_vs_agg", "oos_p"]
+                   if c in CBEST.columns]].copy()
+        t.columns = ["best in class", "dev Sharpe", "dev vs Agg",
+                     "holdout Sharpe", "holdout vs Agg", "holdout p"]
+        t.index.name = "class"
+        r.table(t.round(4),
+                align_right=[c for c in t.columns if c != "best in class"],
+                caption="Chosen on development, evaluated on the holdout. "
+                        "Window is 1992 to 2026, shorter than elsewhere on this "
+                        "page because two of the candidates start later.")
+    r.prose(
+        "<strong>The best development model in the whole comparison was a "
+        "forecast model.</strong> A long-only maximum Sharpe portfolio built on "
+        "forecast means scored 0.954 on development, an edge of +0.146 over the "
+        "Aggregate and better than anything risk parity managed. On the holdout "
+        "its Sharpe fell to <strong>-0.002</strong>. It still shows a positive "
+        "edge over the Aggregate, at +0.069, because the Aggregate itself was "
+        "negative over that decade, but the difference is not significant at "
+        "p = 0.253 and the strategy delivered no risk-adjusted return at all.")
+    if CLS is not None:
+        t = CLS[[c for c in ["class", "dev_sharpe", "dev_vs_agg", "oos_sharpe",
+                             "oos_vs_agg", "oos_p", "decay"]
+                 if c in CLS.columns]]
+        t.index.name = "strategy"
+        r.table(t.round(4),
+                align_right=[c for c in t.columns if c != "class"],
+                caption="Every candidate, sorted by development edge over the "
+                        "Aggregate. Decay is the development edge minus the "
+                        "holdout edge.")
+    r.prose(
+        "Reading the decay column top to bottom is the clearest summary the "
+        "project has of what forecasting costs. The two constructions that "
+        "estimate expected returns most aggressively, Black-Litterman and a "
+        "utility maximiser at low risk aversion, are the two worst on "
+        "development and the two that move most between samples. The two that "
+        "use no expected return at all, hierarchical risk parity and equal risk "
+        "contribution, barely move.")
+    r.prose(
+        "<strong>Only the risk-only and regime-covariance methods clear the "
+        "Aggregate significantly out of sample.</strong> Hierarchical risk "
+        "parity at p = 0.042, regime covariance risk parity at p = 0.009 and "
+        "equal risk contribution at p = 0.008. Every construction that needed a "
+        "forecast of returns lands above p = 0.10 or worse, and the two that "
+        "scored best on development are among them.")
+
     r.next_up("Phase 3 - Results and Holdout", [
         "Development, holdout and full sample against three benchmarks",
         "Matched on start date, on leverage and on duration",
@@ -512,19 +585,19 @@ def phase3():
                  "statistically significant there."),
         status="complete", project="Fixed Income Risk Parity")
 
-    T = get("fi_aligned_table")
-    L = get("fi_aligned_levered")
-    Bt = get("fi_aligned_bootstrap")
-    Bt1 = get("fi_aligned_bootstrap_1n")
+    T = trim(get("fi_aligned_table"))
+    L = trim(get("fi_aligned_levered"))
+    Bt = trim(get("fi_aligned_bootstrap"))
+    Bt1 = trim(get("fi_aligned_bootstrap_1n"))
     C = get("fi_aligned_curves")
-    DT = get("fi_rp_duration_test")
+    DT = trim(get("fi_rp_duration_test"))
     TS = get("fi_paper_turnover_sharpe")
     TO = get("fi_paper_turnover")
     RB = get("fi_rp_robustness")
-    SENS = get("fi_aligned_spread_sensitivity")
+    SENS = trim(get("fi_aligned_spread_sensitivity"))
     FDET = get("fi_financing_detail")
-    FROUTE = get("fi_financing_routes")
-    FBE = get("fi_financing_breakeven")
+    FROUTE = trim(get("fi_financing_routes"))
+    FBE = trim(get("fi_financing_breakeven"))
 
     r.metrics([
         ("0.933", "hierarchical RP Sharpe, development", "pass"),
@@ -541,9 +614,9 @@ def phase3():
     r.prose(
         "<strong>One start date for everything.</strong> Equal weight and the "
         "2s10s barbell need no covariance estimate and could in principle run "
-        "from November 1982. Risk parity, hierarchical risk parity and inverse "
-        "volatility need one, so a sixty month estimation window puts their "
-        "first tradeable month at November 1987. Every series here, benchmarks "
+        "from November 1982. Risk parity and hierarchical risk parity need one, "
+        "so a sixty month estimation window puts their first tradeable month at "
+        "November 1987. Every series here, benchmarks "
         "included, starts there. Series measured over different windows are not "
         "comparable, and the cost of five years of sample is smaller than the "
         "cost of an answer that means nothing.")
@@ -612,7 +685,7 @@ def phase3():
         "municipals. The weights say otherwise, and the reason is worth "
         "following."))
     if FDET is not None:
-        t = FDET.copy()
+        t = FDET.drop(columns=[c for c in DROP_ROWS if c in FDET.columns])
         t.index.name = "asset"
         r.table(t.round(4), align_right=list(t.columns),
                 caption="Per-asset financing rate and each strategy's average "
@@ -685,7 +758,7 @@ def phase3():
                 caption="Full sample. Negative headroom means the strategy does "
                         "not beat equal weight even before financing.")
     r.prose(
-        "All three risk-based methods have substantial room. Classic risk parity "
+        "Both methods have substantial room. Classic risk parity "
         "pays 41 basis points against a breakeven of 294, so <strong>financing "
         "would have to be seven times more expensive than assumed before the "
         "result reverses</strong>. Hierarchical risk parity has the least "
@@ -986,8 +1059,8 @@ def phase3():
 
 
 def index():
-    T = get("fi_aligned_table")
-    Bt = get("fi_aligned_bootstrap")
+    T = trim(get("fi_aligned_table"))
+    Bt = trim(get("fi_aligned_bootstrap"))
 
     body = ""
     if T is not None:

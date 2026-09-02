@@ -294,10 +294,10 @@ span.pager__slot { border-color: transparent; }  /* first and last page */
     </div>
     <h1><span class="masthead__phase">Phase 3</span>Results, Holdout and Next Steps</h1>
     <p class="standfirst">Risk parity beats equal weight, the Bloomberg Aggregate proxy and a 2s10s barbell on the development sample, and the margin survives matching on start date, on duration, on leverage and on trading costs. It stays positive on the holdout but is not statistically significant there.</p>
-    <p class="built">Generated 01 September 2026, 16:54</p>
+    <p class="built">Generated 01 September 2026, 17:05</p>
   </header>
   <main>
-    <div class="metrics"><div class="metric metric--pass"><span class="metric__value">0.933</span><span class="metric__label">hierarchical RP Sharpe, development</span></div><div class="metric"><span class="metric__value">0.824</span><span class="metric__label">Agg index Sharpe, development</span></div><div class="metric metric--pass"><span class="metric__value">+0.153</span><span class="metric__label">full sample edge vs the Agg</span></div><div class="metric metric--pass"><span class="metric__value">0.002</span><span class="metric__label">full sample p-value</span></div><div class="metric metric--pass"><span class="metric__value">+0.147</span><span class="metric__label">edge after duration matching</span></div></div><h2>How these are measured</h2><p class="note">Two conventions govern every comparison below. Both exist because the naive version of the comparison answers a different question than the one being asked.</p><p><strong>One start date for everything.</strong> Equal weight and the 2s10s barbell need no covariance estimate and could in principle run from November 1982. Risk parity, hierarchical risk parity and inverse volatility need one, so a sixty month estimation window puts their first tradeable month at November 1987. Every series here, benchmarks included, starts there. Series measured over different windows are not comparable, and the cost of five years of sample is smaller than the cost of an answer that means nothing.</p><p>That window matters more than it looks, and not in the obvious direction. The five years being set aside hold the highest absolute bond returns anywhere in the sample: equal weight compounds at 11.63% a year over them against 6.87% for the period that follows. The instinct is that a benchmark measured without them must look weaker. The opposite is true.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">equal weight over</th><th class="num">return</th><th class="num">cash rate</th><th class="num">excess</th><th class="num">vol</th><th class="num">Sharpe</th></tr></thead><tbody><tr><td class="rowhead">1982-11 to 1987-10</td><td class="num">11.63%</td><td class="num">7.45%</td><td class="num">4.18%</td><td class="num">6.64%</td><td class="num">0.575</td></tr><tr><td class="rowhead">1987-11 to 2015-12</td><td class="num">6.87%</td><td class="num">3.22%</td><td class="num">3.66%</td><td class="num">4.41%</td><td class="num">0.805</td></tr></tbody></table></figure><p>Cash paid <strong>7.45%</strong> over the early window. An 11.63% bond return is a large number and a mediocre one at the same time: 4.18% of excess return, earned at 6.64% volatility in the violently unstable rate environment that followed the Volcker disinflation. That is a Sharpe of 0.575 against 0.805 for the period that follows. <strong>A high-rate decade flatters nominal returns and punishes risk-adjusted ones</strong>, which is worth holding onto when reading any bond result that spans the early 1980s.</p><p><strong>One volatility for everything.</strong> A growth-of-1 chart puts the lowest volatility line at the bottom, which inverts the Sharpe ranking whenever the low volatility strategy is the better one. Hierarchical risk parity runs at 2.8% volatility against equal weight's 4.7%, so comparing their cumulative returns directly compares a smaller position to a larger one rather than comparing two strategies. Every chart and headline comparison below is levered to a common volatility target, with financing charged on the borrowed portion.</p><h2>The financing assumption</h2><p class="note">Risk parity runs at low volatility and has to be levered to compete on returns, so what leverage costs is not a detail. It is charged per asset, for the same reason transaction costs are: a Treasury and a high yield municipal do not finance on the same terms.</p><p>The assumption throughout is an institutional book, a fund or bank desk with access to repo, listed futures and cleared swaps, rather than a retail margin account. What that buys differs enormously by instrument.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">holding</th><th class="num">over the risk free rate</th><th class="">route</th></tr></thead><tbody><tr><td class="rowhead">Treasuries, 2 to 30 year</td><td class="num">3bp</td><td class="">Repo or the futures basis. SOFR is itself constructed from Treasury general collateral repo, so this is close to definitionally flat; the GC versus non-GC component of the fixing has averaged about 3bp since 2018.</td></tr><tr><td class="rowhead">Agency mortgages</td><td class="num">15bp</td><td class="">TBA dollar rolls and agency repo, which trade a few basis points wide of Treasury general collateral.</td></tr><tr><td class="rowhead">Investment grade credit</td><td class="num">50bp</td><td class="">Total return swap at SOFR + 30 to 75bp, plus a 10 to 25bp agent fee where one applies.</td></tr><tr><td class="rowhead">High yield</td><td class="num">65bp</td><td class="">Same structure as investment grade, priced wider.</td></tr><tr><td class="rowhead">Municipals</td><td class="num">110bp</td><td class="">The expensive leg. No municipal futures contract and no liquid municipal total return swap, so the only route is a margin loan against the fund at SOFR + 50 to 150bp.</td></tr></tbody></table></figure><h2>Which assets actually get levered</h2><p class="note">The natural assumption is that risk parity avoids the expensive sleeves, since it underweights risk and the expensive sleeve here is municipals. The weights say otherwise, and the reason is worth following.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">asset</th><th class="num">financing bp</th><th class="num">1/N</th><th class="num">Risk parity (ERC)</th><th class="num">Inverse volatility</th><th class="num">Hierarchical RP</th><th class="num">Group risk budget</th></tr></thead><tbody><tr><td class="rowhead">ust2y</td><td class="num">3.0</td><td class="num">0.0909</td><td class="num">0.1904</td><td class="num">0.1915</td><td class="num">0.3139</td><td class="num">0.1745</td></tr><tr><td class="rowhead">ust5y</td><td class="num">3.0</td><td class="num">0.0909</td><td class="num">0.0781</td><td class="num">0.0833</td><td class="num">0.0393</td><td class="num">0.0722</td></tr><tr><td class="rowhead">ust10y</td><td class="num">3.0</td><td class="num">0.0909</td><td class="num">0.05</td><td class="num">0.0533</td><td class="num">0.0162</td><td class="num">0.0462</td></tr><tr><td class="rowhead">ust30y</td><td class="num">3.0</td><td class="num">0.0909</td><td class="num">0.0363</td><td class="num">0.0364</td><td class="num">0.0128</td><td class="num">0.0332</td></tr><tr><td class="rowhead">ig_short</td><td class="num">50.0</td><td class="num">0.0909</td><td class="num">0.1654</td><td class="num">0.1734</td><td class="num">0.2565</td><td class="num">0.163</td></tr><tr><td class="rowhead">ig</td><td class="num">50.0</td><td class="num">0.0909</td><td class="num">0.0774</td><td class="num">0.0855</td><td class="num">0.068</td><td class="num">0.0772</td></tr><tr><td class="rowhead">ig_long</td><td class="num">50.0</td><td class="num">0.0909</td><td class="num">0.0595</td><td class="num">0.0632</td><td class="num">0.0312</td><td class="num">0.0588</td></tr><tr><td class="rowhead">hy</td><td class="num">65.0</td><td class="num">0.0909</td><td class="num">0.0974</td><td class="num">0.0701</td><td class="num">0.0625</td><td class="num">0.0762</td></tr><tr><td class="rowhead">mbs</td><td class="num">15.0</td><td class="num">0.0909</td><td class="num">0.0881</td><td class="num">0.0928</td><td class="num">0.0593</td><td class="num">0.1192</td></tr><tr><td class="rowhead">muni</td><td class="num">110.0</td><td class="num">0.0909</td><td class="num">0.0886</td><td class="num">0.0847</td><td class="num">0.0903</td><td class="num">0.101</td></tr><tr><td class="rowhead">muni_hy</td><td class="num">110.0</td><td class="num">0.0909</td><td class="num">0.0687</td><td class="num">0.0659</td><td class="num">0.05</td><td class="num">0.0786</td></tr></tbody></table><figcaption>Per-asset financing rate and each strategy's average weight.</figcaption></figure><p><strong>Municipals are not the risky assets in this universe.</strong> Intermediate municipals run at 4.0% annualised volatility and high yield municipals at 5.5%, which is mid-pack. The volatile assets are the 30 year Treasury at 13.4%, long investment grade at 9.1% and the 10 year at 7.5%. Risk parity underweights <em>those</em> hard, cutting the 30 year from 9.1% of the book to 3.6%. It barely touches municipals, because equalising risk contributions leaves a mid-volatility asset near its equal weight. Total municipal exposure goes from 18.2% under equal weight to 15.7% under risk parity and 14.0% under the hierarchical version.</p><p>So the cheap Treasury tilt does not translate into cheap financing. Risk parity moves toward the two year Treasury, which finances at 3bp, but it moves just as hard toward short investment grade at 50bp, and it keeps most of the municipals. Scaling the whole book proportionally, the blended cost of the borrowed portion lands between 39 and 42 basis points for every method, a spread of under three basis points across them.</p><p><strong>That is the conservative implementation rather than the realistic one.</strong> Scaling every position by the leverage factor means margin-lending against the municipal fund, and no desk would do that when the sleeve has no derivative. The alternative is an overlay: hold the municipals at their cash weight, and take the borrowed exposure only through instruments that can be replicated synthetically.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">proportional, bp</th><th class="num">overlay, bp</th></tr></thead><tbody><tr><td class="rowhead">1/N</td><td class="num">42.0</td><td class="num">26.9</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">41.1</td><td class="num">28.3</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">39.7</td><td class="num">27.2</td></tr><tr><td class="rowhead">Hierarchical RP</td><td class="num">39.3</td><td class="num">27.8</td></tr><tr><td class="rowhead">Group risk budget</td><td class="num">42.4</td><td class="num">27.6</td></tr></tbody></table><figcaption>Cost of the borrowed portion. Proportional scales every position and finances each at its own rate; overlay leaves the municipal sleeve at cash weight and levers only what has a derivative.</figcaption></figure><p>The overlay route costs about 27 to 28 basis points against 39 to 42 for proportional scaling. It does not fall to the 3bp Treasury rate, because investment grade credit is the larger sleeve and it still needs a swap. <strong>Every number on this page uses the proportional figure, which is the more expensive of the two.</strong> The overlay is noted because it is what an implementation would actually look like, and because it means the financing drag reported here is an upper bound.</p><h2>What the financing assumption is worth</h2><p class="note">Two things follow, and they should be kept separate.</p><p><strong>The unlevered comparison does not depend on it at all.</strong> Hierarchical risk parity scores 0.659 against the Aggregate's 0.518 over the full sample holding no leverage and paying no financing, and every significance test on this page runs on those unlevered series.</p><p>The <em>levered</em> comparison does depend on it, and it has a breakeven: the spread at which each strategy's levered Sharpe falls to the Aggregate's 0.518. The Aggregate is held unlevered by construction, so it pays nothing regardless of what its holdings would cost to finance.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">leverage</th><th class="num">pays, bp</th><th class="num">breakeven, bp</th><th class="num">headroom, bp</th></tr></thead><tbody><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">1.2</td><td class="num">41.1</td><td class="num">293.5</td><td class="num">252.4</td></tr><tr><td class="rowhead">Hierarchical RP</td><td class="num">1.5</td><td class="num">39.3</td><td class="num">128.9</td><td class="num">89.6</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">1.1</td><td class="num">39.7</td><td class="num">263.4</td><td class="num">223.6</td></tr></tbody></table><figcaption>Full sample. Negative headroom means the strategy does not beat equal weight even before financing.</figcaption></figure><p>All three risk-based methods have substantial room. Classic risk parity pays 41 basis points against a breakeven of 294, so <strong>financing would have to be seven times more expensive than assumed before the result reverses</strong>. Hierarchical risk parity has the least headroom at 90 basis points, because it needs the most leverage at 1.48 times. The headroom is far wider than in an equal-weight-targeted comparison, because the Aggregate runs at 4.17% volatility against equal weight's 4.74%, so less leverage is required to reach it. On the overlay implementation every figure widens by roughly another twelve basis points.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">0bp</th><th class="num">25bp</th><th class="num">50bp</th><th class="num">100bp</th><th class="num">150bp</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.669</td><td class="num">0.64</td><td class="num">0.611</td><td class="num">0.552</td><td class="num">0.494</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.626</td><td class="num">0.617</td><td class="num">0.608</td><td class="num">0.589</td><td class="num">0.571</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.611</td><td class="num">0.602</td><td class="num">0.593</td><td class="num">0.576</td><td class="num">0.558</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">0.518</td><td class="num">0.518</td><td class="num">0.518</td><td class="num">0.518</td><td class="num">0.518</td></tr><tr><td class="rowhead">1/N</td><td class="num">0.55</td><td class="num">0.55</td><td class="num">0.55</td><td class="num">0.55</td><td class="num">0.55</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">0.439</td><td class="num">0.439</td><td class="num">0.439</td><td class="num">0.439</td><td class="num">0.439</td></tr></tbody></table><figcaption>Levered Sharpe under a flat spread applied to every asset, so the per-asset result can be located against the simpler assumption.</figcaption></figure><p><strong>The more leverage a strategy needs, the more of its edge belongs to whoever finances it.</strong> That is a restatement of what produces the result rather than a weakness in it. Frazzini and Pedersen's account of the low beta anomaly is that it persists <em>because</em> most investors cannot lever cheaply, so a strategy harvesting it should be expected to work for an institution financing at repo and to stop working for someone paying 150 over.</p><h2>Benchmarks</h2><p class="note">The Aggregate index is the primary comparison. Equal weight and a 2s10s Treasury barbell are secondary.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">benchmark</th><th class="">role</th><th class="">why</th></tr></thead><tbody><tr><td class="rowhead">Bloomberg Aggregate</td><td class="">primary</td><td class="">Proxied by Vanguard Total Bond Market. This is what a fixed income mandate is actually measured against, so it sets the risk budget and it is the benchmark every headline number reports against.</td></tr><tr><td class="rowhead">Equal weight</td><td class="">secondary</td><td class="">The naive allocation across the same eleven assets. Nobody is benchmarked to it, but any method has to beat it to justify its own complexity, so it is reported alongside throughout.</td></tr><tr><td class="rowhead">2s10s barbell, 50/50</td><td class="">secondary</td><td class="">A common rates-desk construction, included to check that the result is not simply a curve position.</td></tr></tbody></table></figure><p><strong>The Aggregate is never levered.</strong> Levering a benchmark to match a strategy inverts the question: a mandate has a risk budget and the strategy has to fit inside it, not the other way round. So the Aggregate is held as it comes, its 4.17% volatility is the target, and every strategy is scaled to that. Equal weight runs hotter than the Aggregate at 4.74%, so under this convention it is scaled <em>down</em> to 0.88 times with the balance in cash rather than levered up.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">return</th><th class="num">volatility</th><th class="num">Sharpe</th><th class="num">worst drawdown</th><th class="num">vs the Agg</th><th class="num">vs equal weight</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.0584</td><td class="num">0.0269</td><td class="num">0.9334</td><td class="num">-0.0424</td><td class="num">0.1095</td><td class="num">0.1289</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0636</td><td class="num">0.0342</td><td class="num">0.884</td><td class="num">-0.0527</td><td class="num">0.06</td><td class="num">0.0794</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.0633</td><td class="num">0.0343</td><td class="num">0.8736</td><td class="num">-0.0473</td><td class="num">0.0497</td><td class="num">0.0691</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">0.0644</td><td class="num">0.0377</td><td class="num">0.8239</td><td class="num">-0.0499</td><td class="num">0.0</td><td class="num">0.0194</td></tr><tr><td class="rowhead">1/N</td><td class="num">0.0687</td><td class="num">0.0441</td><td class="num">0.8046</td><td class="num">-0.0626</td><td class="num">-0.0194</td><td class="num">0.0</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">0.0626</td><td class="num">0.0454</td><td class="num">0.6551</td><td class="num">-0.0517</td><td class="num">-0.1688</td><td class="num">-0.1494</td></tr></tbody></table><figcaption>Development, November 1987 to December 2015.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">return</th><th class="num">volatility</th><th class="num">Sharpe</th><th class="num">worst drawdown</th><th class="num">vs the Agg</th><th class="num">vs equal weight</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.0227</td><td class="num">0.0302</td><td class="num">0.0359</td><td class="num">-0.1028</td><td class="num">0.1074</td><td class="num">0.0095</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0235</td><td class="num">0.0401</td><td class="num">0.0567</td><td class="num">-0.1296</td><td class="num">0.1282</td><td class="num">0.0304</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.0226</td><td class="num">0.0404</td><td class="num">0.0329</td><td class="num">-0.1318</td><td class="num">0.1044</td><td class="num">0.0065</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">0.017</td><td class="num">0.0497</td><td class="num">-0.0715</td><td class="num">-0.1753</td><td class="num">0.0</td><td class="num">-0.0979</td></tr><tr><td class="rowhead">1/N</td><td class="num">0.0221</td><td class="num">0.0545</td><td class="num">0.0263</td><td class="num">-0.1728</td><td class="num">0.0979</td><td class="num">0.0</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">0.015</td><td class="num">0.0428</td><td class="num">-0.1523</td><td class="num">-0.1492</td><td class="num">-0.0808</td><td class="num">-0.1786</td></tr></tbody></table><figcaption>Holdout, 2016 to 2026. Nothing was fitted on this period.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">return</th><th class="num">volatility</th><th class="num">Sharpe</th><th class="num">worst drawdown</th><th class="num">vs the Agg</th><th class="num">vs equal weight</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.0485</td><td class="num">0.0282</td><td class="num">0.6587</td><td class="num">-0.1028</td><td class="num">0.1404</td><td class="num">0.1071</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0524</td><td class="num">0.0362</td><td class="num">0.6236</td><td class="num">-0.1296</td><td class="num">0.1054</td><td class="num">0.072</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.052</td><td class="num">0.0364</td><td class="num">0.6085</td><td class="num">-0.1318</td><td class="num">0.0903</td><td class="num">0.057</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">0.0511</td><td class="num">0.0417</td><td class="num">0.5183</td><td class="num">-0.1753</td><td class="num">0.0</td><td class="num">-0.0333</td></tr><tr><td class="rowhead">1/N</td><td class="num">0.0557</td><td class="num">0.0474</td><td class="num">0.5516</td><td class="num">-0.1728</td><td class="num">0.0333</td><td class="num">0.0</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">0.0493</td><td class="num">0.0451</td><td class="num">0.4405</td><td class="num">-0.1492</td><td class="num">-0.0778</td><td class="num">-0.1111</td></tr></tbody></table><figcaption>Full sample, November 1987 to August 2026.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">leverage</th><th class="num">return</th><th class="num">volatility</th><th class="num">Sharpe</th><th class="num">worst drawdown</th><th class="num">vs the Agg</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">1.4811</td><td class="num">0.0554</td><td class="num">0.0411</td><td class="num">0.6232</td><td class="num">-0.1546</td><td class="num">0.1049</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">1.1527</td><td class="num">0.0552</td><td class="num">0.0416</td><td class="num">0.611</td><td class="num">-0.15</td><td class="num">0.0927</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">1.1463</td><td class="num">0.0545</td><td class="num">0.0416</td><td class="num">0.597</td><td class="num">-0.1515</td><td class="num">0.0787</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">1.0</td><td class="num">0.0511</td><td class="num">0.0417</td><td class="num">0.5183</td><td class="num">-0.1753</td><td class="num">0.0</td></tr><tr><td class="rowhead">1/N</td><td class="num">0.8798</td><td class="num">0.0527</td><td class="num">0.0418</td><td class="num">0.5501</td><td class="num">-0.1524</td><td class="num">0.0318</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">0.9256</td><td class="num">0.0479</td><td class="num">0.0418</td><td class="num">0.4395</td><td class="num">-0.1382</td><td class="num">-0.0788</td></tr></tbody></table><figcaption>Full sample, every strategy scaled to the Aggregate's own 4.17% volatility with per-asset financing charged. This is the apples-to-apples comparison.</figcaption></figure><p>At the Aggregate's own risk, hierarchical risk parity returns 5.54% a year against the Aggregate's 5.11%, and classic risk parity 5.52%, both at 4.17% volatility. Leverage does cost something: an unlevered Sharpe of 0.659 falls to 0.623 once 1.48 times leverage is financed at its 39bp blended rate. The ranking holds anyway, which is the point of charging for it rather than assuming it away.</p><figure class="chartwrap"><svg class="chart" preserveAspectRatio="xMidYMid meet" xmlns:xlink="http://www.w3.org/1999/xlink"   viewBox="0 0 560.144219 250.886406" xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <div class="metrics"><div class="metric metric--pass"><span class="metric__value">0.933</span><span class="metric__label">hierarchical RP Sharpe, development</span></div><div class="metric"><span class="metric__value">0.824</span><span class="metric__label">Agg index Sharpe, development</span></div><div class="metric metric--pass"><span class="metric__value">+0.153</span><span class="metric__label">full sample edge vs the Agg</span></div><div class="metric metric--pass"><span class="metric__value">0.002</span><span class="metric__label">full sample p-value</span></div><div class="metric metric--pass"><span class="metric__value">+0.147</span><span class="metric__label">edge after duration matching</span></div></div><h2>How these are measured</h2><p class="note">Two conventions govern every comparison below. Both exist because the naive version of the comparison answers a different question than the one being asked.</p><p><strong>One start date for everything.</strong> Equal weight and the 2s10s barbell need no covariance estimate and could in principle run from November 1982. Risk parity and hierarchical risk parity need one, so a sixty month estimation window puts their first tradeable month at November 1987. Every series here, benchmarks included, starts there. Series measured over different windows are not comparable, and the cost of five years of sample is smaller than the cost of an answer that means nothing.</p><p>That window matters more than it looks, and not in the obvious direction. The five years being set aside hold the highest absolute bond returns anywhere in the sample: equal weight compounds at 11.63% a year over them against 6.87% for the period that follows. The instinct is that a benchmark measured without them must look weaker. The opposite is true.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">equal weight over</th><th class="num">return</th><th class="num">cash rate</th><th class="num">excess</th><th class="num">vol</th><th class="num">Sharpe</th></tr></thead><tbody><tr><td class="rowhead">1982-11 to 1987-10</td><td class="num">11.63%</td><td class="num">7.45%</td><td class="num">4.18%</td><td class="num">6.64%</td><td class="num">0.575</td></tr><tr><td class="rowhead">1987-11 to 2015-12</td><td class="num">6.87%</td><td class="num">3.22%</td><td class="num">3.66%</td><td class="num">4.41%</td><td class="num">0.805</td></tr></tbody></table></figure><p>Cash paid <strong>7.45%</strong> over the early window. An 11.63% bond return is a large number and a mediocre one at the same time: 4.18% of excess return, earned at 6.64% volatility in the violently unstable rate environment that followed the Volcker disinflation. That is a Sharpe of 0.575 against 0.805 for the period that follows. <strong>A high-rate decade flatters nominal returns and punishes risk-adjusted ones</strong>, which is worth holding onto when reading any bond result that spans the early 1980s.</p><p><strong>One volatility for everything.</strong> A growth-of-1 chart puts the lowest volatility line at the bottom, which inverts the Sharpe ranking whenever the low volatility strategy is the better one. Hierarchical risk parity runs at 2.8% volatility against equal weight's 4.7%, so comparing their cumulative returns directly compares a smaller position to a larger one rather than comparing two strategies. Every chart and headline comparison below is levered to a common volatility target, with financing charged on the borrowed portion.</p><h2>The financing assumption</h2><p class="note">Risk parity runs at low volatility and has to be levered to compete on returns, so what leverage costs is not a detail. It is charged per asset, for the same reason transaction costs are: a Treasury and a high yield municipal do not finance on the same terms.</p><p>The assumption throughout is an institutional book, a fund or bank desk with access to repo, listed futures and cleared swaps, rather than a retail margin account. What that buys differs enormously by instrument.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">holding</th><th class="num">over the risk free rate</th><th class="">route</th></tr></thead><tbody><tr><td class="rowhead">Treasuries, 2 to 30 year</td><td class="num">3bp</td><td class="">Repo or the futures basis. SOFR is itself constructed from Treasury general collateral repo, so this is close to definitionally flat; the GC versus non-GC component of the fixing has averaged about 3bp since 2018.</td></tr><tr><td class="rowhead">Agency mortgages</td><td class="num">15bp</td><td class="">TBA dollar rolls and agency repo, which trade a few basis points wide of Treasury general collateral.</td></tr><tr><td class="rowhead">Investment grade credit</td><td class="num">50bp</td><td class="">Total return swap at SOFR + 30 to 75bp, plus a 10 to 25bp agent fee where one applies.</td></tr><tr><td class="rowhead">High yield</td><td class="num">65bp</td><td class="">Same structure as investment grade, priced wider.</td></tr><tr><td class="rowhead">Municipals</td><td class="num">110bp</td><td class="">The expensive leg. No municipal futures contract and no liquid municipal total return swap, so the only route is a margin loan against the fund at SOFR + 50 to 150bp.</td></tr></tbody></table></figure><h2>Which assets actually get levered</h2><p class="note">The natural assumption is that risk parity avoids the expensive sleeves, since it underweights risk and the expensive sleeve here is municipals. The weights say otherwise, and the reason is worth following.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">asset</th><th class="num">financing bp</th><th class="num">1/N</th><th class="num">Risk parity (ERC)</th><th class="num">Hierarchical RP</th><th class="num">Group risk budget</th></tr></thead><tbody><tr><td class="rowhead">ust2y</td><td class="num">3.0</td><td class="num">0.0909</td><td class="num">0.1904</td><td class="num">0.3139</td><td class="num">0.1745</td></tr><tr><td class="rowhead">ust5y</td><td class="num">3.0</td><td class="num">0.0909</td><td class="num">0.0781</td><td class="num">0.0393</td><td class="num">0.0722</td></tr><tr><td class="rowhead">ust10y</td><td class="num">3.0</td><td class="num">0.0909</td><td class="num">0.05</td><td class="num">0.0162</td><td class="num">0.0462</td></tr><tr><td class="rowhead">ust30y</td><td class="num">3.0</td><td class="num">0.0909</td><td class="num">0.0363</td><td class="num">0.0128</td><td class="num">0.0332</td></tr><tr><td class="rowhead">ig_short</td><td class="num">50.0</td><td class="num">0.0909</td><td class="num">0.1654</td><td class="num">0.2565</td><td class="num">0.163</td></tr><tr><td class="rowhead">ig</td><td class="num">50.0</td><td class="num">0.0909</td><td class="num">0.0774</td><td class="num">0.068</td><td class="num">0.0772</td></tr><tr><td class="rowhead">ig_long</td><td class="num">50.0</td><td class="num">0.0909</td><td class="num">0.0595</td><td class="num">0.0312</td><td class="num">0.0588</td></tr><tr><td class="rowhead">hy</td><td class="num">65.0</td><td class="num">0.0909</td><td class="num">0.0974</td><td class="num">0.0625</td><td class="num">0.0762</td></tr><tr><td class="rowhead">mbs</td><td class="num">15.0</td><td class="num">0.0909</td><td class="num">0.0881</td><td class="num">0.0593</td><td class="num">0.1192</td></tr><tr><td class="rowhead">muni</td><td class="num">110.0</td><td class="num">0.0909</td><td class="num">0.0886</td><td class="num">0.0903</td><td class="num">0.101</td></tr><tr><td class="rowhead">muni_hy</td><td class="num">110.0</td><td class="num">0.0909</td><td class="num">0.0687</td><td class="num">0.05</td><td class="num">0.0786</td></tr></tbody></table><figcaption>Per-asset financing rate and each strategy's average weight.</figcaption></figure><p><strong>Municipals are not the risky assets in this universe.</strong> Intermediate municipals run at 4.0% annualised volatility and high yield municipals at 5.5%, which is mid-pack. The volatile assets are the 30 year Treasury at 13.4%, long investment grade at 9.1% and the 10 year at 7.5%. Risk parity underweights <em>those</em> hard, cutting the 30 year from 9.1% of the book to 3.6%. It barely touches municipals, because equalising risk contributions leaves a mid-volatility asset near its equal weight. Total municipal exposure goes from 18.2% under equal weight to 15.7% under risk parity and 14.0% under the hierarchical version.</p><p>So the cheap Treasury tilt does not translate into cheap financing. Risk parity moves toward the two year Treasury, which finances at 3bp, but it moves just as hard toward short investment grade at 50bp, and it keeps most of the municipals. Scaling the whole book proportionally, the blended cost of the borrowed portion lands between 39 and 42 basis points for every method, a spread of under three basis points across them.</p><p><strong>That is the conservative implementation rather than the realistic one.</strong> Scaling every position by the leverage factor means margin-lending against the municipal fund, and no desk would do that when the sleeve has no derivative. The alternative is an overlay: hold the municipals at their cash weight, and take the borrowed exposure only through instruments that can be replicated synthetically.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">proportional, bp</th><th class="num">overlay, bp</th></tr></thead><tbody><tr><td class="rowhead">1/N</td><td class="num">42.0</td><td class="num">26.9</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">41.1</td><td class="num">28.3</td></tr><tr><td class="rowhead">Hierarchical RP</td><td class="num">39.3</td><td class="num">27.8</td></tr><tr><td class="rowhead">Group risk budget</td><td class="num">42.4</td><td class="num">27.6</td></tr></tbody></table><figcaption>Cost of the borrowed portion. Proportional scales every position and finances each at its own rate; overlay leaves the municipal sleeve at cash weight and levers only what has a derivative.</figcaption></figure><p>The overlay route costs about 27 to 28 basis points against 39 to 42 for proportional scaling. It does not fall to the 3bp Treasury rate, because investment grade credit is the larger sleeve and it still needs a swap. <strong>Every number on this page uses the proportional figure, which is the more expensive of the two.</strong> The overlay is noted because it is what an implementation would actually look like, and because it means the financing drag reported here is an upper bound.</p><h2>What the financing assumption is worth</h2><p class="note">Two things follow, and they should be kept separate.</p><p><strong>The unlevered comparison does not depend on it at all.</strong> Hierarchical risk parity scores 0.659 against the Aggregate's 0.518 over the full sample holding no leverage and paying no financing, and every significance test on this page runs on those unlevered series.</p><p>The <em>levered</em> comparison does depend on it, and it has a breakeven: the spread at which each strategy's levered Sharpe falls to the Aggregate's 0.518. The Aggregate is held unlevered by construction, so it pays nothing regardless of what its holdings would cost to finance.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">leverage</th><th class="num">pays, bp</th><th class="num">breakeven, bp</th><th class="num">headroom, bp</th></tr></thead><tbody><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">1.2</td><td class="num">41.1</td><td class="num">293.5</td><td class="num">252.4</td></tr><tr><td class="rowhead">Hierarchical RP</td><td class="num">1.5</td><td class="num">39.3</td><td class="num">128.9</td><td class="num">89.6</td></tr></tbody></table><figcaption>Full sample. Negative headroom means the strategy does not beat equal weight even before financing.</figcaption></figure><p>Both methods have substantial room. Classic risk parity pays 41 basis points against a breakeven of 294, so <strong>financing would have to be seven times more expensive than assumed before the result reverses</strong>. Hierarchical risk parity has the least headroom at 90 basis points, because it needs the most leverage at 1.48 times. The headroom is far wider than in an equal-weight-targeted comparison, because the Aggregate runs at 4.17% volatility against equal weight's 4.74%, so less leverage is required to reach it. On the overlay implementation every figure widens by roughly another twelve basis points.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">0bp</th><th class="num">25bp</th><th class="num">50bp</th><th class="num">100bp</th><th class="num">150bp</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.669</td><td class="num">0.64</td><td class="num">0.611</td><td class="num">0.552</td><td class="num">0.494</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.626</td><td class="num">0.617</td><td class="num">0.608</td><td class="num">0.589</td><td class="num">0.571</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">0.518</td><td class="num">0.518</td><td class="num">0.518</td><td class="num">0.518</td><td class="num">0.518</td></tr><tr><td class="rowhead">1/N</td><td class="num">0.55</td><td class="num">0.55</td><td class="num">0.55</td><td class="num">0.55</td><td class="num">0.55</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">0.439</td><td class="num">0.439</td><td class="num">0.439</td><td class="num">0.439</td><td class="num">0.439</td></tr></tbody></table><figcaption>Levered Sharpe under a flat spread applied to every asset, so the per-asset result can be located against the simpler assumption.</figcaption></figure><p><strong>The more leverage a strategy needs, the more of its edge belongs to whoever finances it.</strong> That is a restatement of what produces the result rather than a weakness in it. Frazzini and Pedersen's account of the low beta anomaly is that it persists <em>because</em> most investors cannot lever cheaply, so a strategy harvesting it should be expected to work for an institution financing at repo and to stop working for someone paying 150 over.</p><h2>Benchmarks</h2><p class="note">The Aggregate index is the primary comparison. Equal weight and a 2s10s Treasury barbell are secondary.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">benchmark</th><th class="">role</th><th class="">why</th></tr></thead><tbody><tr><td class="rowhead">Bloomberg Aggregate</td><td class="">primary</td><td class="">Proxied by Vanguard Total Bond Market. This is what a fixed income mandate is actually measured against, so it sets the risk budget and it is the benchmark every headline number reports against.</td></tr><tr><td class="rowhead">Equal weight</td><td class="">secondary</td><td class="">The naive allocation across the same eleven assets. Nobody is benchmarked to it, but any method has to beat it to justify its own complexity, so it is reported alongside throughout.</td></tr><tr><td class="rowhead">2s10s barbell, 50/50</td><td class="">secondary</td><td class="">A common rates-desk construction, included to check that the result is not simply a curve position.</td></tr></tbody></table></figure><p><strong>The Aggregate is never levered.</strong> Levering a benchmark to match a strategy inverts the question: a mandate has a risk budget and the strategy has to fit inside it, not the other way round. So the Aggregate is held as it comes, its 4.17% volatility is the target, and every strategy is scaled to that. Equal weight runs hotter than the Aggregate at 4.74%, so under this convention it is scaled <em>down</em> to 0.88 times with the balance in cash rather than levered up.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">return</th><th class="num">volatility</th><th class="num">Sharpe</th><th class="num">worst drawdown</th><th class="num">vs the Agg</th><th class="num">vs equal weight</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.0584</td><td class="num">0.0269</td><td class="num">0.9334</td><td class="num">-0.0424</td><td class="num">0.1095</td><td class="num">0.1289</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0636</td><td class="num">0.0342</td><td class="num">0.884</td><td class="num">-0.0527</td><td class="num">0.06</td><td class="num">0.0794</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">0.0644</td><td class="num">0.0377</td><td class="num">0.8239</td><td class="num">-0.0499</td><td class="num">0.0</td><td class="num">0.0194</td></tr><tr><td class="rowhead">1/N</td><td class="num">0.0687</td><td class="num">0.0441</td><td class="num">0.8046</td><td class="num">-0.0626</td><td class="num">-0.0194</td><td class="num">0.0</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">0.0626</td><td class="num">0.0454</td><td class="num">0.6551</td><td class="num">-0.0517</td><td class="num">-0.1688</td><td class="num">-0.1494</td></tr></tbody></table><figcaption>Development, November 1987 to December 2015.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">return</th><th class="num">volatility</th><th class="num">Sharpe</th><th class="num">worst drawdown</th><th class="num">vs the Agg</th><th class="num">vs equal weight</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.0227</td><td class="num">0.0302</td><td class="num">0.0359</td><td class="num">-0.1028</td><td class="num">0.1074</td><td class="num">0.0095</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0235</td><td class="num">0.0401</td><td class="num">0.0567</td><td class="num">-0.1296</td><td class="num">0.1282</td><td class="num">0.0304</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">0.017</td><td class="num">0.0497</td><td class="num">-0.0715</td><td class="num">-0.1753</td><td class="num">0.0</td><td class="num">-0.0979</td></tr><tr><td class="rowhead">1/N</td><td class="num">0.0221</td><td class="num">0.0545</td><td class="num">0.0263</td><td class="num">-0.1728</td><td class="num">0.0979</td><td class="num">0.0</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">0.015</td><td class="num">0.0428</td><td class="num">-0.1523</td><td class="num">-0.1492</td><td class="num">-0.0808</td><td class="num">-0.1786</td></tr></tbody></table><figcaption>Holdout, 2016 to 2026. Nothing was fitted on this period.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">return</th><th class="num">volatility</th><th class="num">Sharpe</th><th class="num">worst drawdown</th><th class="num">vs the Agg</th><th class="num">vs equal weight</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.0485</td><td class="num">0.0282</td><td class="num">0.6587</td><td class="num">-0.1028</td><td class="num">0.1404</td><td class="num">0.1071</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0524</td><td class="num">0.0362</td><td class="num">0.6236</td><td class="num">-0.1296</td><td class="num">0.1054</td><td class="num">0.072</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">0.0511</td><td class="num">0.0417</td><td class="num">0.5183</td><td class="num">-0.1753</td><td class="num">0.0</td><td class="num">-0.0333</td></tr><tr><td class="rowhead">1/N</td><td class="num">0.0557</td><td class="num">0.0474</td><td class="num">0.5516</td><td class="num">-0.1728</td><td class="num">0.0333</td><td class="num">0.0</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">0.0493</td><td class="num">0.0451</td><td class="num">0.4405</td><td class="num">-0.1492</td><td class="num">-0.0778</td><td class="num">-0.1111</td></tr></tbody></table><figcaption>Full sample, November 1987 to August 2026.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">leverage</th><th class="num">return</th><th class="num">volatility</th><th class="num">Sharpe</th><th class="num">worst drawdown</th><th class="num">vs the Agg</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">1.4811</td><td class="num">0.0554</td><td class="num">0.0411</td><td class="num">0.6232</td><td class="num">-0.1546</td><td class="num">0.1049</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">1.1527</td><td class="num">0.0552</td><td class="num">0.0416</td><td class="num">0.611</td><td class="num">-0.15</td><td class="num">0.0927</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">1.0</td><td class="num">0.0511</td><td class="num">0.0417</td><td class="num">0.5183</td><td class="num">-0.1753</td><td class="num">0.0</td></tr><tr><td class="rowhead">1/N</td><td class="num">0.8798</td><td class="num">0.0527</td><td class="num">0.0418</td><td class="num">0.5501</td><td class="num">-0.1524</td><td class="num">0.0318</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">0.9256</td><td class="num">0.0479</td><td class="num">0.0418</td><td class="num">0.4395</td><td class="num">-0.1382</td><td class="num">-0.0788</td></tr></tbody></table><figcaption>Full sample, every strategy scaled to the Aggregate's own 4.17% volatility with per-asset financing charged. This is the apples-to-apples comparison.</figcaption></figure><p>At the Aggregate's own risk, hierarchical risk parity returns 5.54% a year against the Aggregate's 5.11%, and classic risk parity 5.52%, both at 4.17% volatility. Leverage does cost something: an unlevered Sharpe of 0.659 falls to 0.623 once 1.48 times leverage is financed at its 39bp blended rate. The ranking holds anyway, which is the point of charging for it rather than assuming it away.</p><figure class="chartwrap"><svg class="chart" preserveAspectRatio="xMidYMid meet" xmlns:xlink="http://www.w3.org/1999/xlink"   viewBox="0 0 560.144219 250.886406" xmlns="http://www.w3.org/2000/svg" version="1.1">
  <metadata>
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
@@ -339,16 +339,16 @@ z
      <g id="line2d_1">
       <path d="M 98.182498 228.96 
 L 98.182498 7.2 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_2">
       <defs>
-       <path id="m7bbff6e74c" d="M 0 0 
+       <path id="m4a063559e2" d="M 0 0 
 L 0 3 
 " style="stroke: var(--ink-muted); stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#m7bbff6e74c" x="98.182498" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m4a063559e2" x="98.182498" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_1">
@@ -432,11 +432,11 @@ z
      <g id="line2d_3">
       <path d="M 157.081184 228.96 
 L 157.081184 7.2 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_4">
       <g>
-       <use xlink:href="#m7bbff6e74c" x="157.081184" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m4a063559e2" x="157.081184" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_2">
@@ -480,11 +480,11 @@ z
      <g id="line2d_5">
       <path d="M 215.979869 228.96 
 L 215.979869 7.2 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_6">
       <g>
-       <use xlink:href="#m7bbff6e74c" x="215.979869" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m4a063559e2" x="215.979869" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_3">
@@ -527,11 +527,11 @@ z
      <g id="line2d_7">
       <path d="M 274.910811 228.96 
 L 274.910811 7.2 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_8">
       <g>
-       <use xlink:href="#m7bbff6e74c" x="274.910811" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m4a063559e2" x="274.910811" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_4">
@@ -548,11 +548,11 @@ L 274.910811 7.2
      <g id="line2d_9">
       <path d="M 333.809497 228.96 
 L 333.809497 7.2 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_10">
       <g>
-       <use xlink:href="#m7bbff6e74c" x="333.809497" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m4a063559e2" x="333.809497" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_5">
@@ -569,11 +569,11 @@ L 333.809497 7.2
      <g id="line2d_11">
       <path d="M 392.708183 228.96 
 L 392.708183 7.2 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_12">
       <g>
-       <use xlink:href="#m7bbff6e74c" x="392.708183" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m4a063559e2" x="392.708183" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_6">
@@ -590,11 +590,11 @@ L 392.708183 7.2
      <g id="line2d_13">
       <path d="M 451.606869 228.96 
 L 451.606869 7.2 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_14">
       <g>
-       <use xlink:href="#m7bbff6e74c" x="451.606869" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m4a063559e2" x="451.606869" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_7">
@@ -611,11 +611,11 @@ L 451.606869 7.2
      <g id="line2d_15">
       <path d="M 510.53781 228.96 
 L 510.53781 7.2 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_16">
       <g>
-       <use xlink:href="#m7bbff6e74c" x="510.53781" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m4a063559e2" x="510.53781" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_8">
@@ -634,16 +634,16 @@ L 510.53781 7.2
      <g id="line2d_17">
       <path d="M 50.744219 218.946125 
 L 552.944219 218.946125 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_18">
       <defs>
-       <path id="m93241a1682" d="M 0 0 
+       <path id="m505279c893" d="M 0 0 
 L -3 0 
 " style="stroke: var(--ink-muted); stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#m93241a1682" x="50.744219" y="218.946125" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m505279c893" x="50.744219" y="218.946125" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_9">
@@ -713,11 +713,11 @@ z
      <g id="line2d_19">
       <path d="M 50.744219 191.119818 
 L 552.944219 191.119818 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_20">
       <g>
-       <use xlink:href="#m93241a1682" x="50.744219" y="191.119818" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m505279c893" x="50.744219" y="191.119818" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_10">
@@ -735,11 +735,11 @@ L 552.944219 191.119818
      <g id="line2d_21">
       <path d="M 50.744219 163.293512 
 L 552.944219 163.293512 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_22">
       <g>
-       <use xlink:href="#m93241a1682" x="50.744219" y="163.293512" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m505279c893" x="50.744219" y="163.293512" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_11">
@@ -791,11 +791,11 @@ z
      <g id="line2d_23">
       <path d="M 50.744219 135.467205 
 L 552.944219 135.467205 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_24">
       <g>
-       <use xlink:href="#m93241a1682" x="50.744219" y="135.467205" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m505279c893" x="50.744219" y="135.467205" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_12">
@@ -834,11 +834,11 @@ z
      <g id="line2d_25">
       <path d="M 50.744219 107.640899 
 L 552.944219 107.640899 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_26">
       <g>
-       <use xlink:href="#m93241a1682" x="50.744219" y="107.640899" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m505279c893" x="50.744219" y="107.640899" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_13">
@@ -856,11 +856,11 @@ L 552.944219 107.640899
      <g id="line2d_27">
       <path d="M 50.744219 79.814592 
 L 552.944219 79.814592 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_28">
       <g>
-       <use xlink:href="#m93241a1682" x="50.744219" y="79.814592" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m505279c893" x="50.744219" y="79.814592" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_14">
@@ -910,11 +910,11 @@ z
      <g id="line2d_29">
       <path d="M 50.744219 51.988286 
 L 552.944219 51.988286 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_30">
       <g>
-       <use xlink:href="#m93241a1682" x="50.744219" y="51.988286" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m505279c893" x="50.744219" y="51.988286" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_15">
@@ -944,11 +944,11 @@ z
      <g id="line2d_31">
       <path d="M 50.744219 24.161979 
 L 552.944219 24.161979 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_32">
       <g>
-       <use xlink:href="#m93241a1682" x="50.744219" y="24.161979" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m505279c893" x="50.744219" y="24.161979" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_16">
@@ -1176,7 +1176,7 @@ z
    <g id="line2d_33">
     <path d="M 404.481469 228.96 
 L 404.481469 7.2 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke-dasharray: 1.2,1.98; stroke-dashoffset: 0; stroke: var(--ink-muted); stroke-width: 1.2"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke-dasharray: 1.2,1.98; stroke-dashoffset: 0; stroke: var(--ink-muted); stroke-width: 1.2"/>
    </g>
    <g id="patch_3">
     <path d="M 50.744219 228.96 
@@ -1801,434 +1801,9 @@ L 528.1171 20.941308
 L 529.117023 23.690605 
 L 530.116946 22.894607 
 L 530.116946 22.894607 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke: #cf6a1a; stroke-width: 1.6; stroke-linecap: square"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke: #cf6a1a; stroke-width: 1.6; stroke-linecap: square"/>
    </g>
    <g id="line2d_35">
-    <path d="M 73.571491 218.645603 
-L 74.571414 218.234548 
-L 75.571337 217.202773 
-L 76.506749 216.795976 
-L 77.506672 217.118714 
-L 79.474262 217.36135 
-L 80.44193 216.712326 
-L 81.441853 216.784681 
-L 82.441775 216.740479 
-L 83.409443 216.100617 
-L 84.409366 215.578686 
-L 85.377033 215.899259 
-L 86.376956 215.755983 
-L 87.376879 215.307164 
-L 88.280035 215.495437 
-L 89.279958 215.410962 
-L 91.247548 214.027207 
-L 92.215216 213.099041 
-L 93.215139 212.461502 
-L 94.215062 212.960016 
-L 95.182729 212.903681 
-L 96.182652 212.295411 
-L 97.150319 211.919448 
-L 98.150242 211.831077 
-L 99.150165 212.311924 
-L 101.053244 212.184288 
-L 102.020911 212.500522 
-L 103.020834 211.500515 
-L 104.988425 210.42338 
-L 105.988348 211.087049 
-L 106.956015 211.090838 
-L 107.955938 210.748727 
-L 108.923605 209.883554 
-L 110.923451 208.897239 
-L 111.826607 208.424934 
-L 112.82653 208.069189 
-L 113.794198 207.483985 
-L 114.79412 207.202715 
-L 115.761788 207.209356 
-L 116.761711 206.657724 
-L 118.729301 204.907733 
-L 120.696891 203.95624 
-L 121.696814 202.556501 
-L 122.696737 202.98708 
-L 123.632149 202.747784 
-L 124.632072 202.9048 
-L 125.599739 202.583462 
-L 127.567329 200.97708 
-L 128.567252 199.727784 
-L 129.567175 199.372667 
-L 130.534843 198.793705 
-L 131.534766 199.636714 
-L 132.502433 199.368354 
-L 133.502356 198.608186 
-L 134.502279 197.600853 
-L 135.405435 196.393649 
-L 136.405358 196.284943 
-L 137.373025 195.864519 
-L 138.372948 195.838608 
-L 139.340616 194.833595 
-L 140.340538 194.615269 
-L 141.340461 193.505597 
-L 143.308052 192.874615 
-L 144.275719 193.343809 
-L 145.275642 192.915178 
-L 146.275565 192.19665 
-L 147.178721 193.288917 
-L 148.178644 194.706658 
-L 149.146311 195.10765 
-L 150.146234 195.02715 
-L 151.113902 195.145213 
-L 152.113825 194.289036 
-L 153.113747 194.152248 
-L 154.081415 194.824162 
-L 156.049005 195.356415 
-L 157.048928 194.891877 
-L 158.048851 193.825846 
-L 158.952007 192.49336 
-L 159.95193 192.095493 
-L 160.919597 191.406031 
-L 161.91952 189.302978 
-L 162.887188 189.037231 
-L 163.887111 188.984911 
-L 166.854624 186.963198 
-L 168.822214 185.201986 
-L 169.822137 184.725056 
-L 170.757549 185.687179 
-L 171.757472 186.229448 
-L 172.725139 186.588918 
-L 173.725062 186.701295 
-L 174.692729 186.028365 
-L 175.692652 185.78947 
-L 176.692575 185.80472 
-L 178.660165 183.541691 
-L 179.627833 182.361334 
-L 180.627756 182.853075 
-L 182.530835 182.468379 
-L 183.530758 183.257837 
-L 184.498425 182.410328 
-L 186.466015 180.890786 
-L 187.465938 179.057684 
-L 188.465861 179.619657 
-L 189.433529 178.621942 
-L 190.433451 177.757551 
-L 191.401119 177.499359 
-L 192.401042 176.667582 
-L 193.400965 175.674592 
-L 194.304121 175.744041 
-L 196.271711 175.283099 
-L 197.271634 174.507664 
-L 198.239301 173.957412 
-L 199.239224 173.764555 
-L 200.239147 172.685092 
-L 201.206815 170.958271 
-L 202.206738 171.362133 
-L 203.174405 170.905452 
-L 204.174328 170.608497 
-L 205.174251 169.98736 
-L 206.077407 171.334359 
-L 207.07733 170.913505 
-L 208.044997 170.694786 
-L 209.04492 171.472155 
-L 210.012587 171.887037 
-L 212.012433 172.102841 
-L 212.980101 171.50779 
-L 213.980024 171.579661 
-L 214.947691 171.388931 
-L 216.947537 172.071319 
-L 218.882871 170.103481 
-L 219.850539 170.458822 
-L 220.850462 170.537954 
-L 221.818129 168.904112 
-L 222.818052 168.133024 
-L 223.817975 167.021751 
-L 225.785565 166.471764 
-L 226.753233 165.564195 
-L 227.753156 163.854207 
-L 228.753078 162.429933 
-L 229.656235 161.560724 
-L 230.656158 161.171465 
-L 231.623825 161.897494 
-L 232.623748 161.250619 
-L 233.591415 161.033105 
-L 234.591338 159.196542 
-L 235.591261 158.082341 
-L 236.558928 157.532828 
-L 237.558851 155.704918 
-L 238.526519 156.735801 
-L 239.526442 157.386194 
-L 241.429521 155.992677 
-L 242.429444 157.51779 
-L 243.397111 155.786867 
-L 244.397034 155.11497 
-L 245.364701 154.616388 
-L 246.364624 153.603574 
-L 248.332214 150.163419 
-L 249.332137 151.218803 
-L 250.299805 151.230557 
-L 251.299728 149.037863 
-L 252.299651 149.127414 
-L 253.202807 147.742228 
-L 254.20273 147.754111 
-L 255.170397 146.792447 
-L 256.17032 144.588883 
-L 257.137987 144.746441 
-L 258.13791 148.306277 
-L 259.137833 147.643785 
-L 260.1055 144.975973 
-L 261.105423 145.802302 
-L 262.073091 145.394509 
-L 263.073014 144.408305 
-L 264.072937 143.633897 
-L 265.008348 142.479686 
-L 266.008271 141.852308 
-L 266.975939 144.593175 
-L 267.975862 145.012482 
-L 268.943529 144.522731 
-L 269.943452 143.502268 
-L 270.943375 141.408477 
-L 271.911042 141.047885 
-L 272.910965 140.098225 
-L 273.878632 141.144699 
-L 274.878555 140.011035 
-L 275.878478 139.299104 
-L 276.781634 139.829392 
-L 277.781557 140.570866 
-L 278.749225 139.152574 
-L 279.749148 137.885244 
-L 280.716815 137.117048 
-L 281.716738 138.08397 
-L 282.716661 136.694582 
-L 283.684328 137.902277 
-L 284.684251 138.721151 
-L 285.651918 138.114173 
-L 286.651841 137.028855 
-L 287.651764 137.084168 
-L 288.554921 136.602605 
-L 289.554843 137.632309 
-L 290.522511 137.980622 
-L 292.490101 137.991389 
-L 293.490024 136.604307 
-L 294.489947 134.853549 
-L 295.457614 133.816947 
-L 296.457537 133.075514 
-L 297.425205 131.794795 
-L 298.425127 132.407265 
-L 299.42505 132.543464 
-L 300.328207 130.67195 
-L 301.328129 130.807402 
-L 302.295797 130.187146 
-L 303.29572 131.068383 
-L 304.263387 131.57232 
-L 305.26331 130.72344 
-L 306.263233 129.695034 
-L 307.2309 128.527979 
-L 308.230823 127.706842 
-L 309.198491 125.462487 
-L 310.198414 125.420787 
-L 311.198336 123.288643 
-L 312.133748 123.809939 
-L 313.133671 123.292192 
-L 314.101338 123.705721 
-L 315.101261 124.469767 
-L 317.068852 124.694541 
-L 318.068775 123.567961 
-L 319.036442 126.307323 
-L 320.036365 130.192173 
-L 321.004032 127.440611 
-L 322.003955 123.130685 
-L 323.003878 122.958426 
-L 323.907034 123.747986 
-L 326.874547 119.65305 
-L 327.842215 119.121083 
-L 328.842138 116.765838 
-L 329.842061 114.924748 
-L 330.809728 112.36066 
-L 331.809651 112.480892 
-L 332.777318 110.881701 
-L 333.777241 112.58619 
-L 334.777164 110.625932 
-L 335.68032 110.094734 
-L 336.680243 110.193406 
-L 337.647911 108.577685 
-L 338.647834 107.500269 
-L 339.615501 105.371803 
-L 340.615424 103.751764 
-L 341.615347 100.969401 
-L 343.582937 100.570844 
-L 345.550527 103.689875 
-L 346.55045 103.748566 
-L 347.453606 102.907721 
-L 348.453529 103.027452 
-L 350.42112 98.804575 
-L 351.388787 99.277943 
-L 352.38871 96.851971 
-L 354.3563 93.070124 
-L 355.356223 92.682852 
-L 356.32389 92.86163 
-L 358.323736 88.708813 
-L 359.259148 88.740128 
-L 360.259071 89.805004 
-L 362.226661 86.124103 
-L 363.194329 86.038642 
-L 364.194252 83.580616 
-L 365.194174 83.396043 
-L 366.161842 83.018307 
-L 367.161765 82.781933 
-L 368.129432 81.827687 
-L 370.129278 83.091056 
-L 371.032434 82.226353 
-L 372.032357 82.073701 
-L 373.000024 80.239497 
-L 373.999947 83.248815 
-L 374.967615 86.577789 
-L 375.967538 86.422849 
-L 376.96746 87.687604 
-L 377.935128 85.719448 
-L 378.935051 84.22219 
-L 379.902718 84.699349 
-L 380.902641 85.668335 
-L 381.902564 82.7418 
-L 382.80572 81.591023 
-L 383.805643 81.791114 
-L 384.77331 80.421393 
-L 385.773233 78.522213 
-L 386.740901 78.419675 
-L 387.740824 78.748399 
-L 388.740747 76.640834 
-L 389.708414 77.709266 
-L 390.708337 75.973474 
-L 391.676004 74.909725 
-L 392.675927 74.665368 
-L 393.67585 70.890512 
-L 394.579006 72.557951 
-L 395.578929 71.834739 
-L 397.546519 72.981491 
-L 398.514187 74.541251 
-L 399.51411 73.224136 
-L 400.514033 73.570823 
-L 401.4817 72.612161 
-L 402.481623 72.237986 
-L 404.449213 73.139809 
-L 405.449136 70.836674 
-L 406.384548 69.843348 
-L 407.384471 68.076609 
-L 408.352138 67.048784 
-L 409.352061 66.934666 
-L 410.319728 63.587173 
-L 411.319651 62.460736 
-L 413.287242 62.487915 
-L 414.287165 63.939481 
-L 415.254832 68.609935 
-L 416.254755 68.058246 
-L 417.254678 67.378673 
-L 418.157834 66.172542 
-L 419.157757 66.211165 
-L 420.125424 64.894449 
-L 421.125347 63.317237 
-L 422.093014 63.456043 
-L 423.092937 62.530686 
-L 424.09286 61.02508 
-L 425.060528 61.835654 
-L 426.060451 61.763851 
-L 427.028118 62.151652 
-L 428.028041 61.305159 
-L 429.027964 63.342362 
-L 429.93112 64.815036 
-L 430.931043 63.88524 
-L 431.89871 65.067911 
-L 432.898633 63.739979 
-L 434.866223 63.586248 
-L 435.866146 62.553241 
-L 436.833814 63.59735 
-L 437.833737 64.961681 
-L 438.801404 63.864145 
-L 439.801327 61.163188 
-L 440.80125 58.970431 
-L 441.704406 58.697245 
-L 442.704329 55.315598 
-L 443.671996 55.03732 
-L 444.671919 51.888407 
-L 445.639587 49.658184 
-L 446.63951 49.176476 
-L 447.639432 44.311848 
-L 448.6071 45.51697 
-L 449.607023 44.983169 
-L 451.574613 45.06634 
-L 453.509948 37.733024 
-L 454.509871 40.567728 
-L 456.477461 35.723814 
-L 457.445128 34.106319 
-L 458.445051 30.760341 
-L 459.444974 32.174557 
-L 460.412641 32.247622 
-L 461.412564 33.141767 
-L 462.380232 30.80883 
-L 463.380155 30.158637 
-L 464.380078 30.979187 
-L 465.283234 33.634149 
-L 466.283157 35.137982 
-L 467.250824 33.437948 
-L 468.250747 32.730892 
-L 469.218414 31.484843 
-L 470.218337 29.471006 
-L 471.21826 29.783635 
-L 472.185927 31.458161 
-L 473.18585 31.798737 
-L 474.153518 31.024861 
-L 475.153441 31.5066 
-L 476.153364 36.067769 
-L 477.05652 37.809443 
-L 478.056443 43.671312 
-L 479.02411 50.305279 
-L 480.024033 48.666756 
-L 480.9917 52.455791 
-L 481.991623 47.518573 
-L 482.991546 52.649909 
-L 483.959214 60.611546 
-L 484.959136 62.38479 
-L 485.926804 55.874726 
-L 486.926727 56.759849 
-L 487.92665 51.254578 
-L 488.829806 55.894979 
-L 489.829729 51.113811 
-L 490.797396 50.140222 
-L 491.797319 52.229355 
-L 492.764986 52.658846 
-L 493.764909 52.499712 
-L 494.764832 53.481265 
-L 495.7325 57.830236 
-L 496.732423 60.196087 
-L 497.70009 51.95103 
-L 498.700013 45.422445 
-L 499.699936 45.775061 
-L 500.635348 47.735082 
-L 501.63527 46.370629 
-L 502.602938 50.440779 
-L 504.570528 45.826708 
-L 505.570451 41.939656 
-L 507.538041 36.656539 
-L 508.537964 40.991208 
-L 509.505632 38.766514 
-L 510.505554 41.656099 
-L 511.505477 40.567831 
-L 512.408634 36.894182 
-L 513.408556 37.214842 
-L 514.376224 36.445684 
-L 515.376147 37.532269 
-L 516.343814 34.706795 
-L 517.343737 35.326135 
-L 519.311327 30.309321 
-L 521.278918 27.620227 
-L 522.278841 27.897994 
-L 523.278763 27.264554 
-L 524.18192 24.045521 
-L 525.181843 27.97399 
-L 526.14951 27.212978 
-L 527.149433 26.63296 
-L 528.1171 25.882687 
-L 529.117023 28.638914 
-L 530.116946 27.893434 
-L 530.116946 27.893434 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke: #1f9c7a; stroke-width: 1.6; stroke-linecap: square"/>
-   </g>
-   <g id="line2d_36">
     <path d="M 73.571491 218.751615 
 L 74.571414 218.292182 
 L 75.571337 217.409751 
@@ -2653,9 +2228,9 @@ L 528.1171 51.330999
 L 529.117023 53.922567 
 L 530.116946 53.719349 
 L 530.116946 53.719349 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke-dasharray: 1.95,2.85; stroke-dashoffset: 0; stroke: var(--ink); stroke-width: 1.5"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke-dasharray: 1.95,2.85; stroke-dashoffset: 0; stroke: var(--ink); stroke-width: 1.5"/>
    </g>
-   <g id="line2d_37">
+   <g id="line2d_36">
     <path d="M 73.571491 218.636442 
 L 74.571414 218.242321 
 L 75.571337 217.281956 
@@ -3076,9 +2651,9 @@ L 528.1171 40.397863
 L 529.117023 43.331425 
 L 530.116946 42.563539 
 L 530.116946 42.563539 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke-dasharray: 7.8,3.12; stroke-dashoffset: 0; stroke: var(--ink-muted); stroke-width: 1.3"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke-dasharray: 7.8,3.12; stroke-dashoffset: 0; stroke: var(--ink-muted); stroke-width: 1.3"/>
    </g>
-   <g id="line2d_38">
+   <g id="line2d_37">
     <path d="M 73.571491 218.88 
 L 74.571414 218.552766 
 L 75.571337 217.725943 
@@ -3506,16 +3081,16 @@ L 528.1171 75.136105
 L 529.117023 76.638404 
 L 530.116946 75.466672 
 L 530.116946 75.466672 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke-dasharray: 7.8,2.6,1.69,2.6; stroke-dashoffset: 0; stroke: var(--ink-muted); stroke-width: 1.3"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke-dasharray: 7.8,2.6,1.69,2.6; stroke-dashoffset: 0; stroke: var(--ink-muted); stroke-width: 1.3"/>
    </g>
    <g id="legend_1">
-    <g id="line2d_39">
+    <g id="line2d_38">
      <path d="M 58.394219 18.333672 
 L 66.894219 18.333672 
 L 75.394219 18.333672 
 " style="fill: none; stroke: #4169e1; stroke-width: 2.6; stroke-linecap: square"/>
      <defs>
-      <path id="m3a265d17a6" d="M 0 2.3 
+      <path id="me43b39b4d9" d="M 0 2.3 
 C 0.609967 2.3 1.195034 2.057657 1.626346 1.626346 
 C 2.057657 1.195034 2.3 0.609967 2.3 0 
 C 2.3 -0.609967 2.057657 -1.195034 1.626346 -1.626346 
@@ -3528,7 +3103,7 @@ z
 " style="stroke: #000000; stroke-opacity: 0"/>
      </defs>
      <g>
-      <use xlink:href="#m3a265d17a6" x="66.894219" y="18.333672" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+      <use xlink:href="#me43b39b4d9" x="66.894219" y="18.333672" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
      </g>
     </g>
     <g id="text_19">
@@ -3671,7 +3246,7 @@ z
       <use xlink:href="#DejaVuSans-50" transform="translate(697.212891 0)"/>
      </g>
     </g>
-    <g id="line2d_40">
+    <g id="line2d_39">
      <path d="M 58.394219 30.810078 
 L 66.894219 30.810078 
 L 75.394219 30.810078 
@@ -3820,63 +3395,15 @@ z
       <use xlink:href="#DejaVuSans-29" transform="translate(799.394531 0)"/>
      </g>
     </g>
-    <g id="line2d_41">
+    <g id="line2d_40">
      <path d="M 58.394219 43.286484 
 L 66.894219 43.286484 
 L 75.394219 43.286484 
-" style="fill: none; stroke: #1f9c7a; stroke-width: 1.6; stroke-linecap: square"/>
-    </g>
-    <g id="text_21">
-     <!-- Inverse volatility -->
-     <g style="fill: var(--ink)" transform="translate(82.194219 46.261484) scale(0.085 -0.085)">
-      <defs>
-       <path id="DejaVuSans-49" d="M 628 4666 
-L 1259 4666 
-L 1259 0 
-L 628 0 
-L 628 4666 
-z
-" transform="scale(0.015625)"/>
-       <path id="DejaVuSans-76" d="M 191 3500 
-L 800 3500 
-L 1894 563 
-L 2988 3500 
-L 3597 3500 
-L 2284 0 
-L 1503 0 
-L 191 3500 
-z
-" transform="scale(0.015625)"/>
-      </defs>
-      <use xlink:href="#DejaVuSans-49"/>
-      <use xlink:href="#DejaVuSans-6e" transform="translate(29.492188 0)"/>
-      <use xlink:href="#DejaVuSans-76" transform="translate(92.871094 0)"/>
-      <use xlink:href="#DejaVuSans-65" transform="translate(152.050781 0)"/>
-      <use xlink:href="#DejaVuSans-72" transform="translate(213.574219 0)"/>
-      <use xlink:href="#DejaVuSans-73" transform="translate(254.6875 0)"/>
-      <use xlink:href="#DejaVuSans-65" transform="translate(306.787109 0)"/>
-      <use xlink:href="#DejaVuSans-20" transform="translate(368.310547 0)"/>
-      <use xlink:href="#DejaVuSans-76" transform="translate(400.097656 0)"/>
-      <use xlink:href="#DejaVuSans-6f" transform="translate(459.277344 0)"/>
-      <use xlink:href="#DejaVuSans-6c" transform="translate(520.458984 0)"/>
-      <use xlink:href="#DejaVuSans-61" transform="translate(548.242188 0)"/>
-      <use xlink:href="#DejaVuSans-74" transform="translate(609.521484 0)"/>
-      <use xlink:href="#DejaVuSans-69" transform="translate(648.730469 0)"/>
-      <use xlink:href="#DejaVuSans-6c" transform="translate(676.513672 0)"/>
-      <use xlink:href="#DejaVuSans-69" transform="translate(704.296875 0)"/>
-      <use xlink:href="#DejaVuSans-74" transform="translate(732.080078 0)"/>
-      <use xlink:href="#DejaVuSans-79" transform="translate(771.289062 0)"/>
-     </g>
-    </g>
-    <g id="line2d_42">
-     <path d="M 58.394219 55.762891 
-L 66.894219 55.762891 
-L 75.394219 55.762891 
 " style="fill: none; stroke-dasharray: 1.95,2.85; stroke-dashoffset: 0; stroke: var(--ink); stroke-width: 1.5"/>
     </g>
-    <g id="text_22">
+    <g id="text_21">
      <!-- Agg index (VBMFX) -->
-     <g style="fill: var(--ink)" transform="translate(82.194219 58.737891) scale(0.085 -0.085)">
+     <g style="fill: var(--ink)" transform="translate(82.194219 46.261484) scale(0.085 -0.085)">
       <defs>
        <path id="DejaVuSans-41" d="M 2188 4044 
 L 1331 1722 
@@ -4015,15 +3542,15 @@ z
       <use xlink:href="#DejaVuSans-29" transform="translate(920.857422 0)"/>
      </g>
     </g>
-    <g id="line2d_43">
-     <path d="M 58.394219 68.239297 
-L 66.894219 68.239297 
-L 75.394219 68.239297 
+    <g id="line2d_41">
+     <path d="M 58.394219 55.762891 
+L 66.894219 55.762891 
+L 75.394219 55.762891 
 " style="fill: none; stroke-dasharray: 7.8,3.12; stroke-dashoffset: 0; stroke: var(--ink-muted); stroke-width: 1.3"/>
     </g>
-    <g id="text_23">
+    <g id="text_22">
      <!-- 1/N -->
-     <g style="fill: var(--ink)" transform="translate(82.194219 71.214297) scale(0.085 -0.085)">
+     <g style="fill: var(--ink)" transform="translate(82.194219 58.737891) scale(0.085 -0.085)">
       <defs>
        <path id="DejaVuSans-2f" d="M 1625 4666 
 L 2156 4666 
@@ -4051,15 +3578,15 @@ z
       <use xlink:href="#DejaVuSans-4e" transform="translate(97.314453 0)"/>
      </g>
     </g>
-    <g id="line2d_44">
-     <path d="M 58.394219 80.715703 
-L 66.894219 80.715703 
-L 75.394219 80.715703 
+    <g id="line2d_42">
+     <path d="M 58.394219 68.239297 
+L 66.894219 68.239297 
+L 75.394219 68.239297 
 " style="fill: none; stroke-dasharray: 7.8,2.6,1.69,2.6; stroke-dashoffset: 0; stroke: var(--ink-muted); stroke-width: 1.3"/>
     </g>
-    <g id="text_24">
+    <g id="text_23">
      <!-- 2s10s barbell 50/50 -->
-     <g style="fill: var(--ink)" transform="translate(82.194219 83.690703) scale(0.085 -0.085)">
+     <g style="fill: var(--ink)" transform="translate(82.194219 71.214297) scale(0.085 -0.085)">
       <use xlink:href="#DejaVuSans-32"/>
       <use xlink:href="#DejaVuSans-73" transform="translate(63.623047 0)"/>
       <use xlink:href="#DejaVuSans-31" transform="translate(115.722656 0)"/>
@@ -4082,7 +3609,7 @@ L 75.394219 80.715703
      </g>
     </g>
    </g>
-   <g id="line2d_45">
+   <g id="line2d_43">
     <path d="M 73.571491 218.617373 
 L 74.571414 218.193183 
 L 75.571337 217.140155 
@@ -4511,35 +4038,35 @@ L 528.1171 19.591112
 L 529.117023 21.787367 
 L 530.116946 20.85967 
 L 530.116946 20.85967 
-" clip-path="url(#p08599d297e)" style="fill: none; stroke: #4169e1; stroke-width: 2.6; stroke-linecap: square"/>
-    <g clip-path="url(#p08599d297e)">
-     <use xlink:href="#m3a265d17a6" x="73.571491" y="218.617373" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m3a265d17a6" x="117.761634" y="205.269911" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m3a265d17a6" x="157.048928" y="193.460123" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m3a265d17a6" x="194.304121" y="173.177846" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m3a265d17a6" x="233.591415" y="156.945725" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m3a265d17a6" x="264.072937" y="137.839342" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m3a265d17a6" x="300.328207" y="126.162768" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m3a265d17a6" x="327.842215" y="113.58303" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m3a265d17a6" x="355.356223" y="85.872835" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m3a265d17a6" x="384.77331" y="72.175357" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m3a265d17a6" x="415.254832" y="60.763993" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m3a265d17a6" x="445.639587" y="42.362871" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m3a265d17a6" x="470.218337" y="21.365079" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m3a265d17a6" x="483.959214" y="54.629918" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m3a265d17a6" x="497.70009" y="45.607219" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m3a265d17a6" x="515.376147" y="30.282834" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+" clip-path="url(#pdcce1ff0ac)" style="fill: none; stroke: #4169e1; stroke-width: 2.6; stroke-linecap: square"/>
+    <g clip-path="url(#pdcce1ff0ac)">
+     <use xlink:href="#me43b39b4d9" x="73.571491" y="218.617373" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#me43b39b4d9" x="117.761634" y="205.269911" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#me43b39b4d9" x="157.048928" y="193.460123" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#me43b39b4d9" x="194.304121" y="173.177846" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#me43b39b4d9" x="233.591415" y="156.945725" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#me43b39b4d9" x="264.072937" y="137.839342" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#me43b39b4d9" x="300.328207" y="126.162768" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#me43b39b4d9" x="327.842215" y="113.58303" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#me43b39b4d9" x="355.356223" y="85.872835" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#me43b39b4d9" x="384.77331" y="72.175357" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#me43b39b4d9" x="415.254832" y="60.763993" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#me43b39b4d9" x="445.639587" y="42.362871" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#me43b39b4d9" x="470.218337" y="21.365079" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#me43b39b4d9" x="483.959214" y="54.629918" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#me43b39b4d9" x="497.70009" y="45.607219" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#me43b39b4d9" x="515.376147" y="30.282834" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
     </g>
    </g>
   </g>
  </g>
  <defs>
-  <clipPath id="p08599d297e">
+  <clipPath id="pdcce1ff0ac">
    <rect x="50.744219" y="7.2" width="502.2" height="221.76"/>
   </clipPath>
  </defs>
 </svg>
-<figcaption>Growth of one dollar with every series levered to equal weight's volatility and financing charged, so vertical position corresponds to risk-adjusted performance. Marked line is hierarchical risk parity; the three reference portfolios are dotted and dashed.</figcaption></figure><h2>Statistical significance</h2><p class="note">Monthly returns are serially dependent, so a textbook standard error on a Sharpe ratio is too narrow. A stationary block bootstrap with twelve month expected blocks, paired so the common market move is differenced away rather than adding noise to the comparison.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">edge vs the Agg</th><th class="num">CI low</th><th class="num">CI high</th><th class="num">p</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.1215</td><td class="num">-0.0088</td><td class="num">0.2535</td><td class="num">0.0358</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0574</td><td class="num">-0.0597</td><td class="num">0.1709</td><td class="num">0.1682</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.048</td><td class="num">-0.0463</td><td class="num">0.1396</td><td class="num">0.16</td></tr><tr><td class="rowhead">1/N</td><td class="num">-0.028</td><td class="num">-0.1358</td><td class="num">0.0679</td><td class="num">0.3032</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">-0.1721</td><td class="num">-0.3671</td><td class="num">-0.0096</td><td class="num">0.021</td></tr></tbody></table><figcaption>Development, against the Agg.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">edge vs the Agg</th><th class="num">CI low</th><th class="num">CI high</th><th class="num">p</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.1147</td><td class="num">0.0292</td><td class="num">0.2635</td><td class="num">0.042</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.1335</td><td class="num">0.0657</td><td class="num">0.2366</td><td class="num">0.0058</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.1094</td><td class="num">0.0559</td><td class="num">0.1933</td><td class="num">0.0062</td></tr><tr><td class="rowhead">1/N</td><td class="num">0.1031</td><td class="num">0.0374</td><td class="num">0.1703</td><td class="num">0.0026</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">-0.0665</td><td class="num">-0.2664</td><td class="num">0.0904</td><td class="num">0.2288</td></tr></tbody></table><figcaption>Holdout, against the Agg.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">edge vs the Agg</th><th class="num">CI low</th><th class="num">CI high</th><th class="num">p</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.1532</td><td class="num">0.0526</td><td class="num">0.2525</td><td class="num">0.0018</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.1077</td><td class="num">0.0134</td><td class="num">0.1935</td><td class="num">0.007</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.0928</td><td class="num">0.0145</td><td class="num">0.1635</td><td class="num">0.0056</td></tr><tr><td class="rowhead">1/N</td><td class="num">0.031</td><td class="num">-0.0558</td><td class="num">0.1005</td><td class="num">0.2338</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">-0.0749</td><td class="num">-0.2453</td><td class="num">0.0485</td><td class="num">0.1486</td></tr></tbody></table><figcaption>Full sample, against the Agg.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">edge vs equal weight</th><th class="num">CI low</th><th class="num">CI high</th><th class="num">p</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.1495</td><td class="num">0.0338</td><td class="num">0.2712</td><td class="num">0.0094</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0854</td><td class="num">0.0192</td><td class="num">0.16</td><td class="num">0.0148</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.076</td><td class="num">0.0214</td><td class="num">0.137</td><td class="num">0.0092</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">0.028</td><td class="num">-0.0679</td><td class="num">0.1358</td><td class="num">0.2862</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">-0.1441</td><td class="num">-0.3462</td><td class="num">0.0631</td><td class="num">0.0752</td></tr></tbody></table><figcaption>Development, against equal weight.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">edge vs equal weight</th><th class="num">CI low</th><th class="num">CI high</th><th class="num">p</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.0116</td><td class="num">-0.0845</td><td class="num">0.1662</td><td class="num">0.3888</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0304</td><td class="num">-0.0261</td><td class="num">0.1198</td><td class="num">0.1776</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.0063</td><td class="num">-0.0427</td><td class="num">0.0857</td><td class="num">0.3856</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">-0.1031</td><td class="num">-0.1703</td><td class="num">-0.0374</td><td class="num">0.0014</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">-0.1696</td><td class="num">-0.3882</td><td class="num">0.0043</td><td class="num">0.042</td></tr></tbody></table><figcaption>Holdout, against equal weight.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">edge vs equal weight</th><th class="num">CI low</th><th class="num">CI high</th><th class="num">p</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.1222</td><td class="num">0.0339</td><td class="num">0.2241</td><td class="num">0.0102</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0767</td><td class="num">0.0268</td><td class="num">0.1364</td><td class="num">0.006</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.0618</td><td class="num">0.0192</td><td class="num">0.1129</td><td class="num">0.0088</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">-0.031</td><td class="num">-0.1005</td><td class="num">0.0558</td><td class="num">0.2192</td></tr><tr><td class="rowhead">2s10s barbell 50/50</td><td class="num">-0.1059</td><td class="num">-0.2706</td><td class="num">0.0352</td><td class="num">0.0832</td></tr></tbody></table><figcaption>Full sample, against equal weight.</figcaption></figure><p>These edges differ slightly from the <em>vs equal weight</em> column in the performance tables above, by one or two basis points of Sharpe. The performance tables annualise a geometric return over volatility; the bootstrap works on arithmetic excess returns, because that is what can be resampled in paired blocks. The two conventions agree on ranking and on sign, and the bootstrap number is the one each p-value refers to.</p><p><strong>Against the Aggregate the result is significant in all three windows.</strong> Hierarchical risk parity is +0.122 on development at p = 0.036, +0.115 on the holdout at p = 0.042, and +0.153 on the full sample at p = 0.002. Classic risk parity is not significant on development at p = 0.168 but is on both the holdout and the full sample, at p = 0.006 and p = 0.007.</p><p><strong>Against equal weight the holdout does not clear.</strong> Hierarchical risk parity is +0.150 on development at p = 0.009 and +0.122 on the full sample at p = 0.010, but only +0.012 on the holdout with an interval of [-0.085, +0.166] and p = 0.389.</p><p>The gap between those two paragraphs is the honest centre of this page, and it is worth stating rather than picking whichever benchmark reads better. <strong>Equal weight itself beat the Aggregate over the holdout by +0.103 at p = 0.003.</strong> Over that decade almost any diversified bond book beat the index, so clearing the Aggregate out of sample is a real result against the benchmark a mandate uses, and a weaker claim about skill than clearing equal weight would have been. Both numbers are reported above for that reason.</p><h2>Interpreting the holdout period</h2><p class="note">The decade the strategies were tested on contained the worst bond market in forty years, which constrains how much any result measured over it can establish.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead"></th><th class="num">equal weight</th><th class="num">Agg proxy</th><th class="num">Hierarchical RP</th><th class="num">Risk parity</th></tr></thead><tbody><tr><td class="rowhead">2021</td><td class="num">-0.66%</td><td class="num">-1.75%</td><td class="num">-0.29%</td><td class="num">-0.32%</td></tr><tr><td class="rowhead">2022</td><td class="num">-13.53%</td><td class="num">-13.24%</td><td class="num">-7.59%</td><td class="num">-9.95%</td></tr><tr><td class="rowhead">2023</td><td class="num">+6.22%</td><td class="num">+5.62%</td><td class="num">+5.63%</td><td class="num">+6.06%</td></tr><tr><td class="rowhead">2021-2023 cumulative</td><td class="num">-8.75%</td><td class="num">-9.96%</td><td class="num">-2.67%</td><td class="num">-4.80%</td></tr><tr><td class="rowhead">Holdout worst drawdown</td><td class="num">-17.3%</td><td class="num">-17.5%</td><td class="num">-10.3%</td><td class="num">-13.0%</td></tr></tbody></table></figure><p>The Aggregate returned a Sharpe of -0.072 over the holdout and the barbell -0.152, while equal weight managed +0.026 on 2.2% a year. Every risk-based method cleared the Aggregate and the margin was significant, but so did equal weight. When the index itself is negative, clearing it is a lower bar than it looks, which is why the comparison against equal weight is reported alongside and why it is the one that does not clear.</p><p>What the drawdown row does show is that the risk-based methods took materially less damage through the rate shock: -7.6% for hierarchical risk parity in 2022 against -13.5% for equal weight and -13.2% for the Aggregate proxy. Underweighting duration is the mechanism, which raises the obvious question addressed next.</p><h2>Is it just a bet on shorter bonds?</h2><p class="note">This is the objection that should kill the result if anything does. Risk parity underweights volatile assets, volatility in bonds is duration, so it naturally holds less duration than equal weight.</p><p>If that is the whole story, an investor who wants less duration can hold less duration and skip the covariance matrix entirely. So the benchmark was rebuilt: equal weight, scaled up or down month by month to match each strategy's own portfolio duration, with the difference held in cash at the risk free rate. That benchmark carries the same duration exposure as the strategy and none of its structure.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">vs plain 1/N</th><th class="num">vs duration-matched 1/N</th><th class="num">dm CI low</th><th class="num">dm CI high</th><th class="num">dm p</th><th class="num">strategy duration</th></tr></thead><tbody><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0866</td><td class="num">0.0879</td><td class="num">0.0234</td><td class="num">0.1604</td><td class="num">0.0117</td><td class="num">5.0094</td></tr><tr><td class="rowhead">Inverse volatility</td><td class="num">0.0772</td><td class="num">0.079</td><td class="num">0.0245</td><td class="num">0.1383</td><td class="num">0.0063</td><td class="num">5.0346</td></tr><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.1507</td><td class="num">0.1473</td><td class="num">0.0345</td><td class="num">0.2631</td><td class="num">0.008</td><td class="num">3.7949</td></tr><tr><td class="rowhead">Group risk budget</td><td class="num">0.0885</td><td class="num">0.0895</td><td class="num">0.0307</td><td class="num">0.1554</td><td class="num">0.004</td><td class="num">5.0388</td></tr></tbody></table></figure><p><strong>The edge does not change.</strong> Hierarchical risk parity goes from +0.151 against plain equal weight to +0.147 against the duration matched version, at p = 0.008. Risk parity goes from +0.087 to +0.088 at p = 0.012. All intervals exclude zero. It is not a duration bet, and the group risk budget variant behaves the same way.</p><h2>Costs, turnover and borrowing</h2><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">1m Sharpe</th><th class="num">3m Sharpe</th><th class="num">6m Sharpe</th><th class="num">12m Sharpe</th><th class="num">1m turnover</th><th class="num">3m turnover</th><th class="num">6m turnover</th><th class="num">12m turnover</th></tr></thead><tbody><tr><td class="rowhead">Equal weight</td><td class="num">0.7438</td><td class="num">0.7412</td><td class="num">0.7415</td><td class="num">0.7435</td><td class="num">0.12</td><td class="num">0.08</td><td class="num">0.07</td><td class="num">0.05</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.884</td><td class="num">0.8814</td><td class="num">0.8824</td><td class="num">0.89</td><td class="num">0.09</td><td class="num">0.07</td><td class="num">0.05</td><td class="num">0.05</td></tr><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.9334</td><td class="num">0.9297</td><td class="num">0.9319</td><td class="num">0.9391</td><td class="num">0.14</td><td class="num">0.11</td><td class="num">0.08</td><td class="num">0.07</td></tr></tbody></table><figcaption>By rebalancing frequency.</figcaption></figure><p>Turnover runs 5% to 14% a year. Risk parity trades <em>less</em> than equal weight, because bond correlations are stable while equal weight has to trade back against price drift every month. Annual rebalancing is marginally best, which says the covariance estimate is stable enough that monthly re-optimization is mostly noise.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead"></th><th class="num">dev_edge</th><th class="num">oos_edge</th></tr></thead><tbody><tr><td class="rowhead">(&#x27;ewma&#x27;, &#x27;120&#x27;)</td><td class="num">0.0491</td><td class="num">-0.0331</td></tr><tr><td class="rowhead">(&#x27;ewma&#x27;, &#x27;60&#x27;)</td><td class="num">0.0429</td><td class="num">-0.0364</td></tr><tr><td class="rowhead">(&#x27;ewma&#x27;, &#x27;expanding&#x27;)</td><td class="num">0.0502</td><td class="num">-0.0286</td></tr><tr><td class="rowhead">(&#x27;ledoit_wolf&#x27;, &#x27;120&#x27;)</td><td class="num">0.0726</td><td class="num">-0.0076</td></tr><tr><td class="rowhead">(&#x27;ledoit_wolf&#x27;, &#x27;60&#x27;)</td><td class="num">0.0553</td><td class="num">-0.0297</td></tr><tr><td class="rowhead">(&#x27;ledoit_wolf&#x27;, &#x27;expanding&#x27;)</td><td class="num">0.0833</td><td class="num">0.0307</td></tr><tr><td class="rowhead">(&#x27;sample&#x27;, &#x27;120&#x27;)</td><td class="num">0.0728</td><td class="num">-0.0076</td></tr><tr><td class="rowhead">(&#x27;sample&#x27;, &#x27;60&#x27;)</td><td class="num">0.0548</td><td class="num">-0.0297</td></tr><tr><td class="rowhead">(&#x27;sample&#x27;, &#x27;expanding&#x27;)</td><td class="num">0.0834</td><td class="num">0.0307</td></tr></tbody></table><figcaption>27 combinations of covariance estimator, lookback window and rebalancing frequency, averaged.</figcaption></figure><p><strong>27 of 27 combinations are positive on development and 8 of 27 on the holdout.</strong> The pattern in the failures is informative: every expanding-window specification is positive on both, and the losses concentrate in the short sixty month lookback and the EWMA estimator, both of which discard the long history that makes the covariance estimate stable. That is the same lesson as the annual rebalancing result.</p><h2>Conclusions</h2><p class="note">What the evidence supports, and what it does not.</p><ul class="checks"><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">Risk parity outperforms the Aggregate index</span><span class="check__detail">0.933 and 0.884 against 0.824 on development; significant in all three windows, full sample p = 0.002 and 0.007</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">It also outperforms equal weight in sample</span><span class="check__detail">0.933 and 0.884 against 0.805 on development, both bootstrap intervals exclude zero</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">The edge is not explained by duration</span><span class="check__detail">unchanged against a duration matched benchmark, p = 0.008 and 0.012</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">It outperforms a 2s10s Treasury barbell</span><span class="check__detail">barbell 0.655 on development, negative against every method</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">The edge survives leverage and trading costs</span><span class="check__detail">still ahead at the Agg's own risk with per-asset financing, and 90 to 252bp of headroom to the breakeven; turnover under 15% a year</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">The result holds over the full sample</span><span class="check__detail">+0.122 against equal weight from 1987 to 2026, p = 0.010</span></li><li class="check check--fail"><span class="chip chip--fail">FAIL</span><span class="check__label">The out of sample result establishes skill</span><span class="check__detail">it clears the Agg at p = 0.042, but equal weight cleared the Agg too, and against equal weight the holdout is +0.012 at p = 0.389</span></li><li class="check check--fail"><span class="chip chip--fail">FAIL</span><span class="check__label">Any return forecast is involved</span><span class="check__detail">the covariance matrix only, no return prediction anywhere</span></li></ul><p>In short: against the Aggregate the result holds in every window and survives duration matching, per-asset financing and trading costs. Against equal weight it holds in sample and over the full sample but not on the holdout alone. A decade in which the index returned a negative Sharpe is a poor environment for separating skill from diversification, in either direction.</p><h2>Next steps</h2><figure class="tablewrap"><table><thead><tr><th class="rowhead">step</th><th class="">why</th></tr></thead><tbody><tr><td class="rowhead">Replace funds with indices or futures</td><td class="">The universe is mutual funds, which charge 20 to 80 basis points and carry manager decisions. High yield&#x27;s daily returns autocorrelate at 0.29 from stale pricing. Index or futures data removes both problems and would make daily work trustworthy.</td></tr><tr><td class="rowhead">Add genuinely different exposures</td><td class="">Adding more US bonds reduced independence rather than raising it. TIPS, international sovereigns, emerging market debt and bank loans are different factors, not more of the same one.</td></tr><tr><td class="rowhead">Test the result on a second market</td><td class="">If the duration and forecastability relationship is structural it should appear in gilts and bunds too. That would be much stronger evidence than another robustness check on the same data.</td></tr><tr><td class="rowhead">Cost aware optimisation</td><td class="">On the parent project, trading a fraction of the way toward the target each period instead of fully rebalancing raised Sharpe from 0.06 to 0.23 with turnover cut ninefold. Turnover is already low here, so the gain would be smaller, but the method carries over.</td></tr></tbody></table></figure><h2>Limitations</h2><figure class="tablewrap"><table><thead><tr><th class="rowhead">limitation</th><th class="">what it means</th></tr></thead><tbody><tr><td class="rowhead">Mutual funds, not indices</td><td class="">Fees of 20 to 80 basis points and manager idiosyncrasy. Daily returns autocorrelate, high yield at 0.29, because illiquid bonds are priced with a lag.</td></tr><tr><td class="rowhead">Out of sample is not significant</td><td class="">Positive against all three benchmarks with intervals spanning zero.</td></tr><tr><td class="rowhead">The holdout period was opened once on the parent project</td><td class="">It is clean of any model being fitted to it, but not of having been seen once before this project began.</td></tr></tbody></table></figure><p>Reference: Lopez de Prado, M. (2016). Building Diversified Portfolios that Outperform Out of Sample. <em>Journal of Portfolio Management</em>, 42(4), 59-69.</p>
+<figcaption>Growth of one dollar with every series levered to equal weight's volatility and financing charged, so vertical position corresponds to risk-adjusted performance. Marked line is hierarchical risk parity; the three reference portfolios are dotted and dashed.</figcaption></figure><h2>Statistical significance</h2><p class="note">Monthly returns are serially dependent, so a textbook standard error on a Sharpe ratio is too narrow. A stationary block bootstrap with twelve month expected blocks, paired so the common market move is differenced away rather than adding noise to the comparison.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">edge vs the Agg</th><th class="num">CI low</th><th class="num">CI high</th><th class="num">p</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.1215</td><td class="num">-0.0088</td><td class="num">0.2535</td><td class="num">0.0358</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0574</td><td class="num">-0.0597</td><td class="num">0.1709</td><td class="num">0.1682</td></tr></tbody></table><figcaption>Development, against the Agg.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">edge vs the Agg</th><th class="num">CI low</th><th class="num">CI high</th><th class="num">p</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.1147</td><td class="num">0.0292</td><td class="num">0.2635</td><td class="num">0.042</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.1335</td><td class="num">0.0657</td><td class="num">0.2366</td><td class="num">0.0058</td></tr></tbody></table><figcaption>Holdout, against the Agg.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">edge vs the Agg</th><th class="num">CI low</th><th class="num">CI high</th><th class="num">p</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.1532</td><td class="num">0.0526</td><td class="num">0.2525</td><td class="num">0.0018</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.1077</td><td class="num">0.0134</td><td class="num">0.1935</td><td class="num">0.007</td></tr></tbody></table><figcaption>Full sample, against the Agg.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">edge vs equal weight</th><th class="num">CI low</th><th class="num">CI high</th><th class="num">p</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.1495</td><td class="num">0.0338</td><td class="num">0.2712</td><td class="num">0.0094</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0854</td><td class="num">0.0192</td><td class="num">0.16</td><td class="num">0.0148</td></tr></tbody></table><figcaption>Development, against equal weight.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">edge vs equal weight</th><th class="num">CI low</th><th class="num">CI high</th><th class="num">p</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.0116</td><td class="num">-0.0845</td><td class="num">0.1662</td><td class="num">0.3888</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0304</td><td class="num">-0.0261</td><td class="num">0.1198</td><td class="num">0.1776</td></tr></tbody></table><figcaption>Holdout, against equal weight.</figcaption></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">edge vs equal weight</th><th class="num">CI low</th><th class="num">CI high</th><th class="num">p</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.1222</td><td class="num">0.0339</td><td class="num">0.2241</td><td class="num">0.0102</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0767</td><td class="num">0.0268</td><td class="num">0.1364</td><td class="num">0.006</td></tr></tbody></table><figcaption>Full sample, against equal weight.</figcaption></figure><p>These edges differ slightly from the <em>vs equal weight</em> column in the performance tables above, by one or two basis points of Sharpe. The performance tables annualise a geometric return over volatility; the bootstrap works on arithmetic excess returns, because that is what can be resampled in paired blocks. The two conventions agree on ranking and on sign, and the bootstrap number is the one each p-value refers to.</p><p><strong>Against the Aggregate the result is significant in all three windows.</strong> Hierarchical risk parity is +0.122 on development at p = 0.036, +0.115 on the holdout at p = 0.042, and +0.153 on the full sample at p = 0.002. Classic risk parity is not significant on development at p = 0.168 but is on both the holdout and the full sample, at p = 0.006 and p = 0.007.</p><p><strong>Against equal weight the holdout does not clear.</strong> Hierarchical risk parity is +0.150 on development at p = 0.009 and +0.122 on the full sample at p = 0.010, but only +0.012 on the holdout with an interval of [-0.085, +0.166] and p = 0.389.</p><p>The gap between those two paragraphs is the honest centre of this page, and it is worth stating rather than picking whichever benchmark reads better. <strong>Equal weight itself beat the Aggregate over the holdout by +0.103 at p = 0.003.</strong> Over that decade almost any diversified bond book beat the index, so clearing the Aggregate out of sample is a real result against the benchmark a mandate uses, and a weaker claim about skill than clearing equal weight would have been. Both numbers are reported above for that reason.</p><h2>Interpreting the holdout period</h2><p class="note">The decade the strategies were tested on contained the worst bond market in forty years, which constrains how much any result measured over it can establish.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead"></th><th class="num">equal weight</th><th class="num">Agg proxy</th><th class="num">Hierarchical RP</th><th class="num">Risk parity</th></tr></thead><tbody><tr><td class="rowhead">2021</td><td class="num">-0.66%</td><td class="num">-1.75%</td><td class="num">-0.29%</td><td class="num">-0.32%</td></tr><tr><td class="rowhead">2022</td><td class="num">-13.53%</td><td class="num">-13.24%</td><td class="num">-7.59%</td><td class="num">-9.95%</td></tr><tr><td class="rowhead">2023</td><td class="num">+6.22%</td><td class="num">+5.62%</td><td class="num">+5.63%</td><td class="num">+6.06%</td></tr><tr><td class="rowhead">2021-2023 cumulative</td><td class="num">-8.75%</td><td class="num">-9.96%</td><td class="num">-2.67%</td><td class="num">-4.80%</td></tr><tr><td class="rowhead">Holdout worst drawdown</td><td class="num">-17.3%</td><td class="num">-17.5%</td><td class="num">-10.3%</td><td class="num">-13.0%</td></tr></tbody></table></figure><p>The Aggregate returned a Sharpe of -0.072 over the holdout and the barbell -0.152, while equal weight managed +0.026 on 2.2% a year. Every risk-based method cleared the Aggregate and the margin was significant, but so did equal weight. When the index itself is negative, clearing it is a lower bar than it looks, which is why the comparison against equal weight is reported alongside and why it is the one that does not clear.</p><p>What the drawdown row does show is that the risk-based methods took materially less damage through the rate shock: -7.6% for hierarchical risk parity in 2022 against -13.5% for equal weight and -13.2% for the Aggregate proxy. Underweighting duration is the mechanism, which raises the obvious question addressed next.</p><h2>Is it just a bet on shorter bonds?</h2><p class="note">This is the objection that should kill the result if anything does. Risk parity underweights volatile assets, volatility in bonds is duration, so it naturally holds less duration than equal weight.</p><p>If that is the whole story, an investor who wants less duration can hold less duration and skip the covariance matrix entirely. So the benchmark was rebuilt: equal weight, scaled up or down month by month to match each strategy's own portfolio duration, with the difference held in cash at the risk free rate. That benchmark carries the same duration exposure as the strategy and none of its structure.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">vs plain 1/N</th><th class="num">vs duration-matched 1/N</th><th class="num">dm CI low</th><th class="num">dm CI high</th><th class="num">dm p</th><th class="num">strategy duration</th></tr></thead><tbody><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0866</td><td class="num">0.0879</td><td class="num">0.0234</td><td class="num">0.1604</td><td class="num">0.0117</td><td class="num">5.0094</td></tr><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.1507</td><td class="num">0.1473</td><td class="num">0.0345</td><td class="num">0.2631</td><td class="num">0.008</td><td class="num">3.7949</td></tr><tr><td class="rowhead">Group risk budget</td><td class="num">0.0885</td><td class="num">0.0895</td><td class="num">0.0307</td><td class="num">0.1554</td><td class="num">0.004</td><td class="num">5.0388</td></tr></tbody></table></figure><p><strong>The edge does not change.</strong> Hierarchical risk parity goes from +0.151 against plain equal weight to +0.147 against the duration matched version, at p = 0.008. Risk parity goes from +0.087 to +0.088 at p = 0.012. All intervals exclude zero. It is not a duration bet, and the group risk budget variant behaves the same way.</p><h2>Costs, turnover and borrowing</h2><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">1m Sharpe</th><th class="num">3m Sharpe</th><th class="num">6m Sharpe</th><th class="num">12m Sharpe</th><th class="num">1m turnover</th><th class="num">3m turnover</th><th class="num">6m turnover</th><th class="num">12m turnover</th></tr></thead><tbody><tr><td class="rowhead">Equal weight</td><td class="num">0.7438</td><td class="num">0.7412</td><td class="num">0.7415</td><td class="num">0.7435</td><td class="num">0.12</td><td class="num">0.08</td><td class="num">0.07</td><td class="num">0.05</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.884</td><td class="num">0.8814</td><td class="num">0.8824</td><td class="num">0.89</td><td class="num">0.09</td><td class="num">0.07</td><td class="num">0.05</td><td class="num">0.05</td></tr><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.9334</td><td class="num">0.9297</td><td class="num">0.9319</td><td class="num">0.9391</td><td class="num">0.14</td><td class="num">0.11</td><td class="num">0.08</td><td class="num">0.07</td></tr></tbody></table><figcaption>By rebalancing frequency.</figcaption></figure><p>Turnover runs 5% to 14% a year. Risk parity trades <em>less</em> than equal weight, because bond correlations are stable while equal weight has to trade back against price drift every month. Annual rebalancing is marginally best, which says the covariance estimate is stable enough that monthly re-optimization is mostly noise.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead"></th><th class="num">dev_edge</th><th class="num">oos_edge</th></tr></thead><tbody><tr><td class="rowhead">(&#x27;ewma&#x27;, &#x27;120&#x27;)</td><td class="num">0.0491</td><td class="num">-0.0331</td></tr><tr><td class="rowhead">(&#x27;ewma&#x27;, &#x27;60&#x27;)</td><td class="num">0.0429</td><td class="num">-0.0364</td></tr><tr><td class="rowhead">(&#x27;ewma&#x27;, &#x27;expanding&#x27;)</td><td class="num">0.0502</td><td class="num">-0.0286</td></tr><tr><td class="rowhead">(&#x27;ledoit_wolf&#x27;, &#x27;120&#x27;)</td><td class="num">0.0726</td><td class="num">-0.0076</td></tr><tr><td class="rowhead">(&#x27;ledoit_wolf&#x27;, &#x27;60&#x27;)</td><td class="num">0.0553</td><td class="num">-0.0297</td></tr><tr><td class="rowhead">(&#x27;ledoit_wolf&#x27;, &#x27;expanding&#x27;)</td><td class="num">0.0833</td><td class="num">0.0307</td></tr><tr><td class="rowhead">(&#x27;sample&#x27;, &#x27;120&#x27;)</td><td class="num">0.0728</td><td class="num">-0.0076</td></tr><tr><td class="rowhead">(&#x27;sample&#x27;, &#x27;60&#x27;)</td><td class="num">0.0548</td><td class="num">-0.0297</td></tr><tr><td class="rowhead">(&#x27;sample&#x27;, &#x27;expanding&#x27;)</td><td class="num">0.0834</td><td class="num">0.0307</td></tr></tbody></table><figcaption>27 combinations of covariance estimator, lookback window and rebalancing frequency, averaged.</figcaption></figure><p><strong>27 of 27 combinations are positive on development and 8 of 27 on the holdout.</strong> The pattern in the failures is informative: every expanding-window specification is positive on both, and the losses concentrate in the short sixty month lookback and the EWMA estimator, both of which discard the long history that makes the covariance estimate stable. That is the same lesson as the annual rebalancing result.</p><h2>Conclusions</h2><p class="note">What the evidence supports, and what it does not.</p><ul class="checks"><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">Risk parity outperforms the Aggregate index</span><span class="check__detail">0.933 and 0.884 against 0.824 on development; significant in all three windows, full sample p = 0.002 and 0.007</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">It also outperforms equal weight in sample</span><span class="check__detail">0.933 and 0.884 against 0.805 on development, both bootstrap intervals exclude zero</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">The edge is not explained by duration</span><span class="check__detail">unchanged against a duration matched benchmark, p = 0.008 and 0.012</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">It outperforms a 2s10s Treasury barbell</span><span class="check__detail">barbell 0.655 on development, negative against every method</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">The edge survives leverage and trading costs</span><span class="check__detail">still ahead at the Agg's own risk with per-asset financing, and 90 to 252bp of headroom to the breakeven; turnover under 15% a year</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">The result holds over the full sample</span><span class="check__detail">+0.122 against equal weight from 1987 to 2026, p = 0.010</span></li><li class="check check--fail"><span class="chip chip--fail">FAIL</span><span class="check__label">The out of sample result establishes skill</span><span class="check__detail">it clears the Agg at p = 0.042, but equal weight cleared the Agg too, and against equal weight the holdout is +0.012 at p = 0.389</span></li><li class="check check--fail"><span class="chip chip--fail">FAIL</span><span class="check__label">Any return forecast is involved</span><span class="check__detail">the covariance matrix only, no return prediction anywhere</span></li></ul><p>In short: against the Aggregate the result holds in every window and survives duration matching, per-asset financing and trading costs. Against equal weight it holds in sample and over the full sample but not on the holdout alone. A decade in which the index returned a negative Sharpe is a poor environment for separating skill from diversification, in either direction.</p><h2>Next steps</h2><figure class="tablewrap"><table><thead><tr><th class="rowhead">step</th><th class="">why</th></tr></thead><tbody><tr><td class="rowhead">Replace funds with indices or futures</td><td class="">The universe is mutual funds, which charge 20 to 80 basis points and carry manager decisions. High yield&#x27;s daily returns autocorrelate at 0.29 from stale pricing. Index or futures data removes both problems and would make daily work trustworthy.</td></tr><tr><td class="rowhead">Add genuinely different exposures</td><td class="">Adding more US bonds reduced independence rather than raising it. TIPS, international sovereigns, emerging market debt and bank loans are different factors, not more of the same one.</td></tr><tr><td class="rowhead">Test the result on a second market</td><td class="">If the duration and forecastability relationship is structural it should appear in gilts and bunds too. That would be much stronger evidence than another robustness check on the same data.</td></tr><tr><td class="rowhead">Cost aware optimisation</td><td class="">On the parent project, trading a fraction of the way toward the target each period instead of fully rebalancing raised Sharpe from 0.06 to 0.23 with turnover cut ninefold. Turnover is already low here, so the gain would be smaller, but the method carries over.</td></tr></tbody></table></figure><h2>Limitations</h2><figure class="tablewrap"><table><thead><tr><th class="rowhead">limitation</th><th class="">what it means</th></tr></thead><tbody><tr><td class="rowhead">Mutual funds, not indices</td><td class="">Fees of 20 to 80 basis points and manager idiosyncrasy. Daily returns autocorrelate, high yield at 0.29, because illiquid bonds are priced with a lag.</td></tr><tr><td class="rowhead">Out of sample is not significant</td><td class="">Positive against all three benchmarks with intervals spanning zero.</td></tr><tr><td class="rowhead">The holdout period was opened once on the parent project</td><td class="">It is clean of any model being fitted to it, but not of having been seen once before this project began.</td></tr></tbody></table></figure><p>Reference: Lopez de Prado, M. (2016). Building Diversified Portfolios that Outperform Out of Sample. <em>Journal of Portfolio Management</em>, 42(4), 59-69.</p>
   </main>
   <nav class="pager"><a class="pager__slot pager__slot--prev" href="phase2_strategies.html"><span class="pager__kind">&larr; Previous</span><span class="pager__label">Strategies</span></a><a class="pager__slot pager__slot--index" href="index.html"><span class="pager__kind">All phases</span><span class="pager__label">All phases</span></a><span class="pager__slot"></span></nav>
   <footer class="colophon">
