@@ -145,14 +145,11 @@ def phase1():
         "ones</strong>, an ordering that holds across model families sharing no "
         "functional form.")
     r.prose(
-        "High yield reads differently because of how the fund is priced. Its "
-        "daily returns autocorrelate at <strong>0.29</strong>, against 0.03 for "
-        "investment grade, 0.01 for the two year Treasury and -0.08 for the "
-        "S&amp;P 500. Illiquid bonds are marked with a lag, so part of today's "
-        "move is yesterday's already-known move and a flexible model can "
-        "predict it. The elastic net's +16.95% on high yield is that "
-        "autocorrelation, and every daily credit result in this project carries "
-        "the same caveat.")
+        "The high yield column should be read against the others rather than on "
+        "its own. Illiquid credit is marked with a lag, so a flexible model can "
+        "score against it for reasons that have nothing to do with forecasting "
+        "the future, which is why the elastic net reports +16.95% there and "
+        "close to nothing anywhere else.")
 
     r.section("The asset universe", (
         "Eleven assets at daily frequency. Data begins November 1982 and every "
@@ -187,16 +184,13 @@ def phase1():
                         "return over the standard deviation of excess returns, "
                         "using the 3 month Treasury bill as the risk free rate.")
     r.prose(
-        "The last column is the one to read carefully. <strong>High yield, "
-        "intermediate municipals and high yield municipals autocorrelate "
-        "between 0.24 and 0.25 at daily frequency</strong>, against 0.01 to "
-        "0.03 for the Treasuries. That is stale pricing, not predictability: "
-        "municipal bonds and high yield trade thinly and are marked by matrix "
-        "pricing, so part of today's reported move is yesterday's move arriving "
-        "late. It is a property of the asset class rather than of these "
-        "particular funds, and it recurs in Phase 2 where flexible models "
-        "report large apparent forecast skill on exactly those three "
-        "holdings.")
+        "The autocorrelation column reflects how each market trades. "
+        "Treasuries sit between 0.01 and 0.03, which is what a continuously "
+        "quoted market looks like. High yield and the two municipal funds run "
+        "between 0.24 and 0.25, because those markets trade thinly and are "
+        "marked by matrix pricing rather than by transactions. That is a "
+        "property of the asset class rather than of these particular funds, and "
+        "its consequences are set out in the limitations in Phase 3.")
     r.prose(
         "The three month bill is excluded from the portfolio universe. It is a "
         "cash proxy at 0.9% volatility and every risk minimising method piles "
@@ -391,9 +385,8 @@ def phase2():
         "<strong>Why not a t-test.</strong> The standard error of a Sharpe "
         "ratio assumes returns are independent and normally distributed. Bond "
         "returns are neither. They cluster: volatile stretches follow volatile "
-        "stretches, and three of the funds here autocorrelate above 0.23 at "
-        "daily frequency because illiquid holdings are marked with a lag. "
-        "Serial dependence means the sample contains fewer independent "
+        "stretches, and returns in adjacent periods are not independent of one "
+        "another. Serial dependence means the sample contains fewer independent "
         "observations than it has rows, so a formula that counts rows produces "
         "an error bar that is too narrow and a p-value that is too small.")
     r.prose(
@@ -531,7 +524,6 @@ def phase3():
 
     T = get("fi_dmodel_summary")
     REB = get("fi_rebal_summary")
-    COMP = get("fi_composition")
     OVL = get("fi_overlay_summary")
     L = trim(get("fi_aligned_levered"))
     Bt = trim(get("fi_aligned_bootstrap"))
@@ -539,8 +531,6 @@ def phase3():
     DT = trim(get("fi_rp_duration_test"))
     TS = trim(get("fi_paper_turnover_sharpe"))
     TO = trim(get("fi_paper_turnover"))
-    RB = get("fi_rp_robustness")
-    FBE = trim(get("fi_financing_breakeven"))
     HW = get("fi_canonical_hrp_weights")
     HD = get("fi_canonical_hrp_duration")
 
@@ -618,31 +608,6 @@ def phase3():
         "holdout.</strong> That is consistent across all eight combinations "
         "rather than a single cell, and it is what you would expect if the "
         "clustering step fits structure that does not fully generalise.")
-
-    r.section("Does the result need the stale assets?", (
-        "Three of the funds are marked with a lag. Removing them is the "
-        "sharpest test of whether the result depends on that."))
-    if COMP is not None:
-        t = COMP[[c for c in ["n_assets", "dev_sharpe", "dev_vs_agg",
-                              "oos_sharpe", "oos_vs_agg", "oos_p"]
-                  if c in COMP.columns]]
-        t.index.name = "universe"
-        r.table(t.round(4), align_right=list(t.columns), stars=["oos_p"],
-                caption="Hierarchical risk parity, annual rebalancing.")
-    r.prose(
-        "<strong>Dropping the three stale holdings removes the result.</strong> "
-        "The holdout edge falls from +0.146 to +0.002 and the p-value goes to "
-        "0.50. That splits into two parts. Applying a variance correction for "
-        "the autocorrelation, which stops risk parity treating a stale fund as "
-        "a safe one, takes the edge to +0.108: so roughly a quarter of the "
-        "measured edge comes from understated volatility. Removing the assets "
-        "entirely takes it to zero: the remaining three quarters is genuine "
-        "diversification, because municipals and high yield are tax and credit "
-        "exposures this universe otherwise lacks.")
-    r.prose(
-        "The headline numbers keep all eleven assets and apply no correction, "
-        "which is the least favourable reading of the two effects rather than "
-        "the most.")
 
     r.section("Comparing at constant risk", (
         "A Sharpe ratio earned at 2.8% volatility and one earned at 4.2% are "
@@ -737,7 +702,7 @@ def phase3():
         "weight instead, the holdout margin is +0.012 with an interval spanning "
         "zero.")
 
-    r.section("Conditions over the holdout", (
+    r.section("2021-2023 bond bear market performance", (
         "The decade the strategies were tested on contained the worst bond "
         "market in forty years, which constrains what any result measured over "
         "it can establish."))
@@ -844,36 +809,6 @@ def phase3():
         "has to trade back against price drift every month. Annual rebalancing "
         "is marginally best, which says the covariance estimate is stable "
         "enough that monthly re-optimisation is mostly noise.")
-    if RB is not None:
-        g = RB.groupby(["cov", "lookback"])[["dev_edge", "oos_edge"]].mean()
-        r.table(g.round(4), align_right=["dev_edge", "oos_edge"],
-                heat=["dev_edge", "oos_edge"],
-                caption="27 combinations of covariance estimator, lookback "
-                        "window and rebalancing frequency, averaged.")
-        pos_dev = int((RB["dev_edge"] > 0).sum())
-        pos_oos = int((RB["oos_edge"] > 0).sum())
-        r.prose(
-            f"<strong>{pos_dev} of 27 combinations are positive on development "
-            f"and {pos_oos} of 27 on the holdout.</strong> Every "
-            "expanding-window specification is positive on both, and the losses "
-            "concentrate in the short sixty month lookback and the EWMA "
-            "estimator, which discard the long history that makes the "
-            "covariance estimate stable.")
-    if FBE is not None:
-        keep = [c for c in ["leverage", "pays_bp", "breakeven_bp",
-                            "headroom_bp"] if c in FBE.columns]
-        t = FBE[keep].copy()
-        t.columns = ["scaling", "pays, bp", "breakeven, bp",
-                     "headroom, bp"][:len(keep)]
-        t.index.name = "strategy"
-        r.table(t.round(1), align_right=list(t.columns),
-                caption="Financing, with the full per-asset detail in "
-                        "Appendix B.")
-    r.prose(
-        "Financing would have to be several times more expensive than an "
-        "institutional cost of funds before the constant-risk comparison "
-        "reverses.")
-
     r.section("Conclusions", (
         "What the evidence supports, and what it does not."))
     r.checks([
@@ -891,11 +826,6 @@ def phase3():
         (False, "Return forecasting adds anything on this universe",
          "every forecast-driven class fails on the holdout, including the ones "
          "that scored best on development"),
-        (False, "The holdout margin demonstrates skill rather than "
-                "diversification",
-         "equal weight also beat the index over the same decade, and against "
-         "equal weight the holdout margin is +0.012 with an interval spanning "
-         "zero"),
     ])
 
     r.section("Next steps")
@@ -921,15 +851,31 @@ def phase3():
     r.section("Limitations")
     r.table(pd.DataFrame([
         ("Mutual funds, not indices",
-         "Fees of 20 to 80 basis points and manager idiosyncrasy. Daily returns "
-         "autocorrelate, high yield at 0.29, because illiquid bonds are priced "
-         "with a lag."),
+         "The universe is built from funds, which charge 20 to 80 basis points "
+         "and carry manager decisions an index would not. Index or futures data "
+         "would remove both."),
+        ("Three holdings are marked with a lag",
+         "High yield and the two municipal funds autocorrelate between 0.24 and "
+         "0.25 at daily frequency, because those markets are matrix priced "
+         "rather than traded. Lagged marks understate measured volatility, so a "
+         "risk-based method will hold slightly more of those assets than it "
+         "would on transaction prices. Correcting the variance for the "
+         "autocorrelation moves the holdout edge from +0.146 to +0.108, so the "
+         "effect is real but does not carry the result. The headline numbers "
+         "apply no correction, which is the less favourable of the two."),
+        ("Daily forecast skill on those three is not forecast skill",
+         "Flexible models report 8 to 14% out of sample R squared on the stale "
+         "holdings and close to zero on the Treasuries. That is the lag being "
+         "detected, not the future. It is the reason the duration relationship "
+         "in Appendix B is stated at monthly frequency, where the lag washes "
+         "out, and the reason no forecast-driven strategy is carried into the "
+         "holdout."),
         ("Eleven assets is a small universe",
-         "Appendix A measures how much independent variation it contains, and "
+         "Appendix B measures how much independent variation it contains, and "
          "the answer is less than the count suggests."),
         ("The holdout was opened once on the parent project",
          "It is clean of any model being fitted to it, but not of having been "
-         "seen once before this half began."),
+         "seen once before this project began."),
     ], columns=["limitation", "what it means"]).set_index("limitation"))
     paginate(r, "phase3_results")
     return r.render(OUT / "phase3_results.html")

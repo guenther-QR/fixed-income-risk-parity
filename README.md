@@ -380,17 +380,27 @@ committed so you can read the results without running anything.
 
 ## Limitations
 
-- The bond universe is built from **mutual funds**, not indices. They charge 20
-  to 80 basis points and carry manager decisions an index would not. Their daily
-  returns also autocorrelate, high yield at 0.29, because illiquid bonds get
-  priced with a lag. Any daily result involving credit is affected by this.
-- The out of sample result is **positive but not statistically significant**.
-- The effective breadth figure is a descriptive statistic about the covariance
-  structure, not a test, and it depends on the sample window used to estimate the
-  correlation matrix.
-- The holdout period was opened once on the first half of this project. It is
-  clean of any model being fitted to it, but not of having been seen once before
-  this half began.
+- The universe is built from **mutual funds**, not indices. They charge 20 to 80
+  basis points and carry manager decisions an index would not.
+- **Three holdings are marked with a lag.** High yield and the two municipal
+  funds autocorrelate between 0.24 and 0.25 at daily frequency, because those
+  markets are matrix priced rather than traded. Lagged marks understate measured
+  volatility, so a risk-based method holds slightly more of them than it would
+  on transaction prices. Correcting the variance moves the holdout edge from
+  +0.146 to +0.108: real, but it does not carry the result. The headline numbers
+  apply no correction.
+- **Daily forecast skill on those three is not forecast skill.** Flexible models
+  report 8 to 14% out of sample R squared on the lagged holdings and close to
+  zero on the Treasuries. That is the lag being detected, not the future. It is
+  why the duration relationship is stated at monthly frequency, where the lag
+  washes out, and why no forecast-driven strategy is carried into the holdout.
+- **Eleven assets is a small universe.** The first principal component holds
+  70.4% of the variance and the average pairwise correlation is 0.66.
+- The **out of sample result is positive but not significant** for HRP
+  (p = 0.126); ERC clears at p = 0.060.
+- The holdout was opened once on the parent project. It is clean of any model
+  being fitted to it, but not of having been seen once before this project
+  began.
 
 ## Reference
 
