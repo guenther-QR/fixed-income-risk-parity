@@ -107,6 +107,55 @@ def sharpe_difference(strategy: pd.Series, benchmark: pd.Series,
     }
 
 
+def difference_t_test(strategy: pd.Series, benchmark: pd.Series,
+                      rf: pd.Series | None = None, ppy: int = 12) -> dict:
+    """
+    Paired t-test on the difference in excess returns.
+
+    The plainest test available, and the one a reader expects. Form the
+    per-period difference between the strategy's excess return and the
+    benchmark's, then ask whether its mean is above zero:
+
+        t = mean(d) / (sd(d) / sqrt(n)),   d_i = strategy_i - benchmark_i
+
+    with n - 1 degrees of freedom and a one-sided p-value from the t
+    distribution. Pairing matters: differencing first removes the common market
+    move, so the test is on relative performance rather than on two noisy
+    absolute series.
+
+    Note what this tests. It is a statement about mean *return* difference, not
+    about the Sharpe difference, and the two only coincide when the series are
+    held at the same volatility. Where a comparison is made at constant risk -
+    which is the convention for every headline number in this project - they do
+    coincide. `sharpe_difference` bootstraps the Sharpe gap directly and is
+    reported alongside as a check.
+    """
+    d = pd.concat([strategy.rename("s"), benchmark.rename("b")], axis=1).dropna()
+    if rf is not None:
+        r = rf.reindex(d.index).fillna(0.0)
+        d = d.sub(r, axis=0)
+    diff = (d["s"] - d["b"]).to_numpy()
+    n = len(diff)
+    if n < 3:
+        return {}
+    sd = diff.std(ddof=1)
+    if sd <= 0:
+        return {}
+    se = sd / np.sqrt(n)
+    t = float(diff.mean() / se)
+    p = float(st.t.sf(t, df=n - 1))          # one-sided: strategy is better
+    crit = float(st.t.ppf(0.975, df=n - 1))
+    return {
+        "mean_difference": float(diff.mean() * ppy),
+        "se": float(se * ppy),
+        "t_stat": t,
+        "p_one_sided": p,
+        "ci_lo": float((diff.mean() - crit * se) * ppy),
+        "ci_hi": float((diff.mean() + crit * se) * ppy),
+        "n_obs": n,
+    }
+
+
 def reality_check(losses: pd.DataFrame, n_boot: int = 5000,
                   mean_block: float = 12.0, seed: int = 20260830) -> dict:
     """

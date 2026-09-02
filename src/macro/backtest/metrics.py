@@ -76,8 +76,16 @@ def performance(returns: pd.Series, rf: pd.Series | None = None,
     }
 
     if rf is not None:
+        # Textbook Sharpe: mean excess return over the standard deviation of
+        # *excess* returns, not of total returns. The two agree to within a
+        # basis point or two on anything volatile, and disagree enormously on
+        # an asset that is itself close to the risk-free rate - a Treasury bill
+        # scores 1.10 one way and 0.22 the other. The bootstrap in
+        # stats/inference.py and the asset statistics both use this definition,
+        # so this is the one the whole project uses.
         ex = (r - rf.reindex(r.index)).dropna()
-        out["sharpe"] = float(ex.mean() * periods_per_year / vol) if vol > 0 else np.nan
+        ex_vol = ex.std() * np.sqrt(periods_per_year)
+        out["sharpe"] = float(ex.mean() * periods_per_year / ex_vol) if ex_vol > 0 else np.nan
         out["excess_return"] = float(ex.mean() * periods_per_year)
     else:
         out["sharpe"] = float(r.mean() * periods_per_year / vol) if vol > 0 else np.nan

@@ -1,8 +1,8 @@
 # Fixed Income Risk Parity
 
-Gus Guenther, UCLA Anderson MFE
+Gus Guenther
 
-A bond-only portfolio that tries to beat its benchmark, built after a macro
+A fixed-income-only portfolio that tries to beat its benchmark, built after a macro
 allocation study showed how hard equity returns are to predict but also turned up
 real evidence that fixed income returns are predictable.
 
@@ -33,63 +33,58 @@ weight across the same eleven assets is carried as a second reference. The
 Aggregate is never levered: it sets the risk budget and the strategies are scaled
 to fit inside it.
 
-| Strategy | Development<br>1987-2015 | Holdout<br>2016-2026 | Full sample<br>1987-2026 |
-|---|---|---|---|
-| **Hierarchical Risk Parity** | **0.933** (+0.121, p 0.036) | 0.036 (+0.115, p 0.042) | **0.659** (+0.153, p 0.002) |
-| **Risk parity (ERC)** | **0.884** (+0.057, p 0.168) | 0.057 (+0.134, p 0.006) | **0.624** (+0.108, p 0.007) |
-| Agg index (VBMFX) | 0.824 | -0.072 | 0.518 |
-| Equal weight | 0.805 | 0.026 | 0.552 |
-| 2s10s barbell, 50/50 | 0.655 | -0.152 | 0.441 |
+| Strategy | Development<br>1987-2015 | Holdout<br>2016-2026 |
+|---|---|---|
+| **Hierarchical Risk Parity** | **1.024** (+0.304, p 0.000) | 0.065 (+0.146, p 0.126) |
+| **Risk parity (ERC)** | **0.940** (+0.220, p 0.002) | 0.094 (+0.175, p 0.060) |
+| Best forecast model (RF tilt) | 0.809 (+0.088, p 0.084) | 0.027 (+0.108, p 0.078) |
+| Equal weight | 0.794 (+0.073, p 0.104) | 0.025 (+0.106, p 0.052) |
+| Agg index (VBMFX) | 0.720 | -0.081 |
 
 Sharpe ratio, with the edge against the Aggregate and its one-sided p-value from
-a stationary block bootstrap.
+a stationary block bootstrap. Annual rebalancing, expanding covariance window,
+all eleven assets, daily data.
 
-**The result clears the Aggregate in all three windows, holdout included.** That
-deserves one caveat. The holdout decade contained the worst bond market in forty
-years, the Aggregate returned a negative Sharpe across it, and equal weight beat
-the index too (+0.103, p 0.003). So clearing the Aggregate out of sample is a
-real result against the benchmark a mandate uses, and a weaker claim about skill
-than it first looks. Against equal weight the holdout is +0.012 with an interval
-spanning zero.
-
-Against equal weight, for completeness:
-
-| Strategy | Development | Holdout | Full sample |
-|---|---|---|---|
-| Hierarchical Risk Parity | +0.150 (p 0.009) | +0.012 (p 0.389) | +0.122 (p 0.010) |
-| Risk parity (ERC) | +0.085 (p 0.015) | +0.030 (p 0.178) | +0.077 (p 0.006) |
+Risk parity dominates development by a wide margin and does it at **2% turnover
+against 20-70%** for every forecast-driven method.
 
 ## How these are measured
 
-**One start date for everything.** Equal weight and the barbell need no
-covariance estimate. Risk parity and hierarchical risk parity need one, so a 60-month estimation window puts their first tradeable month at
-November 1987. Every series here, benchmarks included, starts there.
+**Daily data throughout.** Both sources are daily: the constant maturity
+Treasury holdings come from a bootstrapped zero curve, and the funds report a
+daily NAV. That is **10,944 daily observations against 526 month-ends**. The
+difference matters most for the covariance matrix, which is what the risk-based
+strategies are built from: an eleven asset matrix has 66 free parameters, and a
+five-year burn-in gives 60 monthly observations against roughly 1,260 daily ones.
 
-That window matters more than it looks. The five years before it hold the highest
-absolute bond returns in the sample, but cash paid 7.45% over them, so an 11.63%
-bond return was only 4.18% of excess return earned at 6.64% volatility in the
-unstable rate environment after the Volcker disinflation.
+**Expanding covariance window.** A rolling five-year window fails out of sample:
+HRP scores -0.057 on the holdout with it, and +0.065 with an expanding window.
+That single choice is worth more than anything else tested, and it has nothing to
+do with frequency.
 
-| Equal weight over | Return | Cash rate | Excess | Vol | Sharpe |
-|---|---|---|---|---|---|
-| 1982-11 to 1987-10 | 11.63% | 7.45% | 4.18% | 6.64% | 0.575 |
-| 1987-11 to 2015-12 | 6.87% | 3.22% | 3.66% | 4.41% | 0.805 |
+**One burn-in.** Five years from the first day of data, so every model forms its
+first weight in November 1987.
 
-A high-rate decade flatters nominal returns and punishes risk-adjusted ones,
-worth holding onto when reading any bond result spanning the early 1980s.
+**Constant risk.** A Sharpe earned at 2.5% volatility and one earned at 4.3% are
+not comparable claims, so every headline comparison scales the strategy to the
+benchmark's own volatility and charges for the borrowing.
 
-**One volatility for everything.** A growth-of-1 chart puts the lowest volatility
-line at the bottom, which inverts the Sharpe ranking whenever the low volatility
-strategy is the better one. Hierarchical risk parity runs at 2.8% volatility
-against the Aggregate's 4.17%. Every chart and headline comparison is scaled to
-the Aggregate's own volatility with financing charged.
+## Rebalancing frequency
 
-The Aggregate is never levered. Levering a benchmark to match a strategy inverts
-the question: a mandate has a risk budget and the strategy has to fit inside it.
-Equal weight runs hotter than the Aggregate at 4.74%, so under this convention it
-is scaled *down* to 0.88x with the balance in cash rather than levered up.
+Daily data separates estimating the covariance from trading on it.
 
-## The financing assumption
+| Rebalance | HRP dev | HRP holdout | HRP turnover | ERC dev | ERC holdout | ERC turnover |
+|---|---|---|---|---|---|---|
+| Daily | 0.994 | 0.046 | 15.1% | 0.913 | 0.077 | 17.2% |
+| Weekly | 1.002 | 0.058 | 8.4% | 0.925 | 0.089 | 8.2% |
+| Quarterly | 1.008 | 0.060 | 3.2% | 0.930 | 0.091 | 2.3% |
+| **Annual** | **1.024** | **0.065** | **2.1%** | **0.940** | **0.094** | **1.5%** |
+
+Less trading is better at every step, for both methods and in both windows.
+Annual rebalancing gives the highest Sharpe and the lowest turnover
+simultaneously, at 39 trades in thirty-eight years.
+
+## Leverage costs
 
 Risk parity has to be levered to compete on returns, so what leverage costs is
 not a detail. This assumes an institutional book with access to repo, listed
@@ -145,7 +140,7 @@ it persists because most investors cannot lever cheaply.
 
 ## The universe
 
-Eleven assets, monthly, November 1987 to August 2026.
+Eleven assets, daily, November 1987 to August 2026.
 
 - Four Treasury maturities (2, 5, 10, 30 year), built from a bootstrapped zero
   curve so they differ only in maturity
