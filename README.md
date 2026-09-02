@@ -331,15 +331,17 @@ diversification. It clears the Aggregate at p = 0.042, but equal weight cleared
 the Aggregate too, and against equal weight the holdout is +0.012 with an
 interval spanning zero.
 
-## The three phases
+## Sections
 
-| Phase | Report | Scripts |
+| Section | Report | Scripts |
 |---|---|---|
 | 1. The Idea | `reports/phase1_idea.html` | `phase1_build_universe.py`, `phase1_wide_universe.py`, `phase1_evidence.py` |
-| 2. Strategies | `reports/phase2_strategies.html` | `phase2_allocators.py`, `phase2_forecast_tilts.py`, `phase2_risk_parity.py` |
-| 3. Results and Holdout | `reports/phase3_results.html` | `phase3_predictability.py`, `phase3_aligned_results.py`, `phase3_shorting.py` |
+| 2. Strategies | `reports/phase2_strategies.html` | `phase2_allocators.py`, `phase2_forecast_tilts.py`, `phase2_risk_parity.py`, `phase2_model_classes.py` |
+| 3. Results | `reports/phase3_results.html` | `phase3_predictability.py`, `phase3_aligned_results.py`, `phase3_shorting.py` |
+| A. Universe Structure | `reports/appendix_universe.html` | `phase1_evidence.py` |
+| B. Implementation | `reports/appendix_method.html` | `phase3_aligned_results.py` |
 
-`reports/index.html` summarizes all three and links to each one.
+`reports/index.html` summarizes all five and links to each one.
 
 ## Repo layout
 

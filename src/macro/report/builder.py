@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from .style import CSS
@@ -52,9 +53,28 @@ class PhaseReport:
 
     def table(self, df: pd.DataFrame, index: bool = True,
               align_right: list[str] | None = None,
-              caption: str | None = None) -> "PhaseReport":
+              caption: str | None = None,
+              heat: list[str] | None = None,
+              row_class: dict | None = None,
+              stars: list[str] | None = None) -> "PhaseReport":
+        """Render a frame.
+
+        heat        columns to shade by value, green positive, red negative,
+                    opacity scaled to the largest magnitude in that column.
+        row_class   index label -> css class, for grouping rows by kind.
+        stars       p-value columns to mark: *** below .01, ** below .05,
+                    * below .10.
+        """
         right = set(align_right or [])
+        heat = [c for c in (heat or []) if c in df.columns]
+        stars = [c for c in (stars or []) if c in df.columns]
+        row_class = row_class or {}
         cols = list(df.columns)
+
+        scale = {}
+        for c in heat:
+            v = pd.to_numeric(df[c], errors="coerce").abs().max()
+            scale[c] = float(v) if v and np.isfinite(v) and v > 0 else 1.0
 
         head = "".join(
             f'<th class="{"num" if c in right else ""}">{html.escape(str(c))}</th>'
@@ -65,12 +85,28 @@ class PhaseReport:
 
         body = []
         for idx, row in df.iterrows():
-            cells = "".join(
-                f'<td class="{"num" if c in right else ""}">{_cell(row[c])}</td>' for c in cols
-            )
+            cells = ""
+            for c in cols:
+                cls = "num" if c in right else ""
+                style = ""
+                text = _cell(row[c])
+                if c in heat:
+                    v = pd.to_numeric(pd.Series([row[c]]), errors="coerce").iloc[0]
+                    if pd.notna(v):
+                        a = min(abs(float(v)) / scale[c], 1.0) * 0.42
+                        rgb = "46,125,90" if v > 0 else "160,58,58"
+                        style = f' style="background:rgba({rgb},{a:.3f})"'
+                if c in stars:
+                    v = pd.to_numeric(pd.Series([row[c]]), errors="coerce").iloc[0]
+                    if pd.notna(v):
+                        m = "***" if v < .01 else "**" if v < .05 else "*" if v < .10 else ""
+                        if m:
+                            text = f'<strong>{text}</strong><span class="star">{m}</span>'
+                cells += f'<td class="{cls}"{style}>{text}</td>'
             if index:
                 cells = f'<td class="rowhead">{_cell(idx)}</td>' + cells
-            body.append(f"<tr>{cells}</tr>")
+            rc = row_class.get(idx, "")
+            body.append(f'<tr class="{rc}">{cells}</tr>' if rc else f"<tr>{cells}</tr>")
 
         cap = f"<figcaption>{caption}</figcaption>" if caption else ""
         self._blocks.append(
