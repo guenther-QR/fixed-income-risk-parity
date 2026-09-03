@@ -229,14 +229,21 @@ figcaption {
 
 .star { font-size: .7em; vertical-align: super; color: var(--pass); margin-left: 1px; }
 tr.k-risk    td.rowhead { border-left: 3px solid var(--t1); padding-left: .55rem; }
+tr.k-reg     td.rowhead { border-left: 3px solid var(--t2); padding-left: .55rem; }
+tr.k-ml      td.rowhead { border-left: 3px solid var(--t3); padding-left: .55rem; }
+tr.k-tech    td.rowhead { border-left: 3px solid var(--t4); padding-left: .55rem; }
 tr.k-return  td.rowhead { border-left: 3px solid var(--t3); padding-left: .55rem; }
 tr.k-bench   td.rowhead { border-left: 3px solid var(--ink-muted); padding-left: .55rem; }
 tr.k-bench   td { color: var(--ink-muted); }
+tr.k-reg     td.rowhead, tr.k-risk td.rowhead { font-weight: 600; }
 .legend { display: flex; flex-wrap: wrap; gap: 1.1rem; margin: .5rem 0 0;
           font-size: .78rem; color: var(--ink-muted); }
 .legend span::before { content: ""; display: inline-block; width: 10px;
           height: 3px; margin-right: .4rem; vertical-align: middle; }
 .legend .l-risk::before   { background: var(--t1); }
+.legend .l-reg::before    { background: var(--t2); }
+.legend .l-ml::before     { background: var(--t3); }
+.legend .l-tech::before   { background: var(--t4); }
 .legend .l-return::before { background: var(--t3); }
 .legend .l-bench::before  { background: var(--ink-muted); }
 
