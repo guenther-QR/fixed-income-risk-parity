@@ -221,7 +221,6 @@ class PhaseReport:
   <header class="masthead">
     <div class="masthead__rail">
       {self._crumb()}
-      <span class="chip chip--{_status_class(self.status)}">{html.escape(self.status)}</span>
     </div>
     <h1><span class="masthead__phase">{html.escape(self.phase)}</span>{html.escape(self.title)}</h1>
     <p class="standfirst">{self.summary}</p>

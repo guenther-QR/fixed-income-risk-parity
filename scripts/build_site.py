@@ -31,7 +31,7 @@ PAGES = [
     ("appendix_eval", "Appendix C", "Evaluating Results"),
 ]
 
-DROP_ROWS = ["Inverse volatility"]
+DROP_ROWS = ["Inverse volatility", "2s10s barbell 50/50"]
 
 
 def get(name):
@@ -133,9 +133,13 @@ def phase1():
         r.table(t.round(3), align_right=list(t.columns),
                 heat=["out of sample R squared, %"], stars=["Clark-West p"],
                 caption="Monthly forecasts from the parent project's univariate "
-                        "combination across 152 signals, 1980 to 2015. The "
-                        "Clark-West test is the standard one for comparing a "
-                        "forecast against a nested benchmark.")
+                        "combination across 152 signals, 1980 to 2015. "
+                        "P-values are from the Clark-West test, used because "
+                        "the rolling-mean benchmark is nested inside the "
+                        "forecast: the larger model adds parameters whose true "
+                        "value may be zero, which injects estimation noise and "
+                        "biases a conventional test against it. Clark and West "
+                        "(2007) correct for that bias.")
     r.prose(
         "<strong>The two year Treasury is the most forecastable asset at +2.1%, "
         "and the S&amp;P 500 is the least at zero.</strong> Every fixed income "
@@ -190,6 +194,7 @@ def phase1():
         t.columns = ["group", "annualized return", "annualized volatility",
                      "Sharpe", "autocorrelation"][:len(cols)]
         r.table(t.round(4), align_right=[c for c in t.columns if c != "group"],
+                heat=["autocorrelation"],
                 caption="Daily asset statistics, November 1982 to August 2026, "
                         "annualized. Return is the arithmetic mean times 252. "
                         "Sharpe is mean excess return divided by the standard "
@@ -613,8 +618,8 @@ def phase3():
                 caption="Full sample, every series at the Aggregate's own 4.17% "
                         "volatility, financing charged.")
     if C is not None:
-        roles = {c: ("benchmark" if c in ("1/N", "Agg index (VBMFX)",
-                                          "2s10s barbell 50/50")
+        C = C.drop(columns=[c for c in DROP_ROWS if c in C.columns])
+        roles = {c: ("benchmark" if c in ("1/N", "Agg index (VBMFX)")
                      else "hero" if "Hierarchical" in c else "strategy")
                  for c in C.columns}
         fig, ax = charts.new_axes(9.0, 4.0)
@@ -1232,6 +1237,11 @@ def appendix_method():
         "<span class=\"note\">The benchmark for what counts as an "
         "economically meaningful out of sample R squared, cited in Phase 1."
         "</span>")
+    r.prose(
+        "Clark, T. E. and West, K. D. (2007). Approximately Normal Tests for "
+        "Equal Predictive Accuracy in Nested Models. <em>Journal of "
+        "Econometrics</em>, 138(1), 291-311. <span class=\"note\">The test "
+        "behind the p-values on the forecast skill table in Phase 1.</span>")
     r.prose(
         "Cochrane, J. H. and Piazzesi, M. (2005). Bond Risk Premia. "
         "<em>American Economic Review</em>, 95(1), 138-160. "
