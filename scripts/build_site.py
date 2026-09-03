@@ -284,7 +284,8 @@ def phase2():
     UNI = get("fi_dmodel_regression_skill")
     RANK = get("fi_regressor_ranks")
     FAM = get("fi_regressor_families")
-    MULT = get("fi_regressor_multiplicity")
+    TOP3 = get("fi_regressor_top3")
+    FAMB = get("fi_regressor_families_both")
     UNI_M = get("fi_uni_regression_skill")
     MLS_M = get("fi_uni_ml_skill")
     REB = get("fi_rebal_summary")
@@ -337,95 +338,85 @@ def phase2():
          "development by the magnitude of their standardised slope."),
     ], columns=["choice", "what was done"]).set_index("choice"))
     if UNI is not None:
-        t = (UNI * 100).copy()
-        t.columns = ["daily, development", "daily, holdout"]
+        t = (UNI * 100)[["dev_r2"]].copy()
+        t.columns = ["daily"]
         if UNI_M is not None:
-            m = (UNI_M * 100).reindex(t.index)
-            t["monthly, development"] = m["dev_r2"]
-            t["monthly, holdout"] = m["oos_r2"]
-            t = t[["daily, development", "monthly, development",
-                   "daily, holdout", "monthly, holdout"]]
+            t["monthly"] = (UNI_M * 100)["dev_r2"].reindex(t.index)
         t.index.name = "asset"
         r.table(t.round(3), align_right=list(t.columns), heat=list(t.columns),
-                caption="Out of sample R squared, percent, at both frequencies. "
-                        "The comparison is against a rolling mean forecast: at "
-                        "each date, predict the average return so far and see "
-                        "whether the model beats it. Zero means the model added "
-                        "nothing over that; negative means it was worse than "
+                caption="Development sample only, out of sample R squared in "
+                        "percent. The comparison is against a rolling mean "
+                        "forecast: at each date, predict the average return so "
+                        "far and see whether the model beats it. Zero means the "
+                        "model added nothing; negative means it did worse than "
                         "assuming the future looks like the past.")
         r.prose(
-            "<strong>Monthly returns are far more forecastable than daily "
-            "ones.</strong> The two year Treasury scores 1.08% on development "
-            "monthly against 0.08% daily, a factor of roughly fourteen, and the "
-            "pattern holds across the universe. That is not a defect of the "
-            "daily data. A day of bond returns is almost entirely noise from "
-            "flow and quoting, while a month accumulates enough of the "
-            "underlying drivers - carry, curve movement, spread direction - for "
-            "a signal to attach to. Predictability lives at the horizon where "
-            "the economics operate.")
+            "<strong>Monthly returns are more forecastable than daily "
+            "ones.</strong> The two year Treasury scores 1.08% monthly against "
+            "0.08% daily, and the ordering holds across the universe. A single "
+            "day of bond returns is mostly quoting and flow noise. A month "
+            "accumulates enough carry, curve movement and spread change for a "
+            "signal to attach to.")
 
     r.section("Which signals do the work", (
-        "The combination averages every signal, which is deliberate but hides "
-        "what is driving it. Each signal was also scored on its own, by giving "
-        "it a single expanding-window regression per asset and measuring out of "
-        "sample R squared on the development sample."))
+        "The combination averages every signal, so it is worth seeing what "
+        "sits underneath it. Each signal was scored on its own, one "
+        "expanding-window regression per signal per asset, on the development "
+        "sample."))
     r.prose(
-        "<strong>Ranking on R squared alone would be meaningless here.</strong> "
-        "With 256 signals against eleven assets there are almost three thousand "
-        "signal-asset pairs, and the best of three thousand coin flips looks "
-        "impressive whether or not anything is real. So each pair also gets a "
-        "Clark-West statistic, and the useful question is how many clear a "
-        "threshold against how many would clear it by chance.")
-    if MULT is not None:
-        m = MULT.iloc[0]
-        r.table(pd.DataFrame([
-            ("Signal-asset pairs tested", f"{int(m['pairs']):,}"),
-            ("Clearing Clark-West at 5%, one sided",
-             f"{int(m['significant']):,}  ({m['significant'] / m['pairs']:.1%})"),
-            ("Expected by chance if nothing predicts",
-             f"{m['expected_by_chance']:,.0f}  (5.0%)"),
-            ("Ratio", f"{m['ratio']:.2f}x"),
-        ], columns=["", "value"]).set_index(""), align_right=["value"])
-    if RANK is not None:
-        t = (RANK.head(12).assign(mean_r2=lambda d: d["mean_r2"] * 100)
-             .rename(columns={"mean_r2": "mean R squared, %",
-                              "mean_t": "mean Clark-West t",
-                              "n_sig": "assets significant",
-                              "n_positive": "assets positive",
-                              "n_assets": "assets"}))
-        t.index.name = "signal"
+        "Ranking 256 signals by R squared alone would produce a leaderboard "
+        "whether or not anything predicts, so the more useful view is the top "
+        "three signals for each asset. Signals that recur across assets are the "
+        "ones worth attention.")
+    if TOP3 is not None:
+        t = TOP3.copy()
+        t["r2"] = t["r2"] * 100
+        t = t.rename(columns={"r2": "R squared, %"})
+        t = t.reset_index().set_index("asset")
         r.table(t.round(3),
-                align_right=[c for c in t.columns if c != "family"],
-                heat=["mean R squared, %", "mean Clark-West t"],
-                caption="Top twelve individual signals by development R "
-                        "squared, with the significance columns alongside. "
-                        "A signal with a high R squared but few significant "
-                        "assets is a signal that got lucky on one of them.")
-    if FAM is not None:
-        t = (FAM.assign(mean_r2=lambda d: d["mean_r2"] * 100,
-                        best_r2=lambda d: d["best_r2"] * 100)
-             .rename(columns={"signals": "signals in family",
-                              "mean_r2": "family mean, %",
-                              "best_r2": "best in family, %"}))
+                align_right=["rank", "R squared, %"],
+                heat=["R squared, %"],
+                caption="Top three signals per asset, daily data, development "
+                        "sample.")
+        fam_counts = TOP3["family"].value_counts()
+        c = pd.DataFrame({"appearances in the top three": fam_counts})
+        c.index.name = "family"
+        r.table(c, align_right=["appearances in the top three"])
+    r.prose(
+        "Two signals recur. <strong>The five day change in the VIX appears in "
+        "the top three for six of the eleven assets</strong>, including every "
+        "credit sleeve and the long Treasuries, which makes it the closest "
+        "thing here to a cross-asset predictor. <strong>Short-term reversal "
+        "appears eleven times</strong>, and almost entirely on the three "
+        "holdings that are marked with a lag. Reversal picking up a delayed "
+        "mark is not the same as reversal picking up a real overreaction, and "
+        "the limitations in Phase 3 cover the difference.")
+    r.prose(
+        "The magnitudes separate the same way. The clean holdings top out "
+        "around 0.2% for the Treasuries and 1.5% for long credit. High yield "
+        "reaches 7.5% and intermediate municipals 6.3%, which is the mark lag "
+        "again rather than six times the forecastability.")
+    if FAMB is not None:
+        t = FAMB.copy()
+        for c2 in t.columns:
+            if c2 != "signals":
+                t[c2] = t[c2] * 100
+        t.columns = [c2.replace("mean_r2_", "mean, ").replace("best_r2_", "best, ")
+                     .replace("signals", "signals in family") for c2 in t.columns]
         t.index.name = "family"
         r.table(t.round(3), align_right=list(t.columns),
-                heat=["best in family, %"],
-                caption="By signal family.")
+                heat=[c2 for c2 in t.columns if c2 != "signals in family"],
+                caption="By family, both frequencies, development sample. R "
+                        "squared in percent. A blank means the family has no "
+                        "counterpart in that library: short-term reversal is a "
+                        "daily construction, and valuation and term premium are "
+                        "monthly.")
     r.prose(
-        "<strong>Short-term reversal dominates.</strong> Twenty-four reversal "
-        "signals average +0.30% on their own, an order of magnitude better than "
-        "any other family, and eight of the top twelve individual signals are "
-        "reversals. The single best is a five day change in the VIX at +1.07%, "
-        "positive on ten of eleven assets, which is the one genuinely "
-        "cross-asset signal in the set.")
-    r.prose(
-        "Two things about that are worth stating plainly. Reversal working best "
-        "at daily frequency is partly a real effect and partly the mark lag "
-        "described in the limitations, since a fund that reports late will look "
-        "like it mean-reverts. And the families a fixed income desk would reach "
-        "for first do worse: carry and rolldown, the Cochrane-Piazzesi factor "
-        "and credit spreads all sit near or below zero as standalone "
-        "predictors. Momentum averages negative across ninety-six variants.")
+        "The monthly means are negative in every family while the monthly best "
+        "values are the highest anywhere in the table, reaching 2.3% for macro "
+        "signals and 2.3% for the term premium. Individual monthly signals are "
+        "noisy, and most of them lose to a rolling mean. That is the case for "
+        "combining them rather than picking one.")
 
     r.section("Machine learning, and how it was tuned", (
         "Four families from scikit-learn on the same signal panel: elastic "
@@ -433,72 +424,72 @@ def phase2():
         "grid of hyperparameters, the configuration with the best development "
         "R squared is selected, and only that one is scored. The holdout is "
         "never consulted in the choice."))
-    if ML is not None:
-        t = ML.copy()
-        t.index.name = "family"
-        if "dev_r2" in t.columns:
-            t["dev_r2"] = pd.to_numeric(t["dev_r2"], errors="coerce") * 100
-        t = t.rename(columns={"params": "chosen setting",
-                              "dev_r2": "development R squared, %"})
-        r.table(t.round(3),
-                align_right=[c for c in t.columns if c != "chosen setting"],
-                caption="The hyperparameters selected, and the development "
-                        "score they were selected on. Grids covered "
-                        "regularization strength and mix for the linear models, "
-                        "depth for the forest, and depth and learning rate for "
-                        "the boosted trees.")
-    r.prose(
-        "<strong>What the single R squared per family means.</strong> Every "
-        "model is fitted separately for each of the eleven assets: there is no "
-        "one model predicting the whole universe. The number above is the "
-        "average of the eleven per-asset R squared values, used as one score so "
-        "the grid search has something to rank. A family wins the search by "
-        "being useful across the universe rather than excellent on one holding, "
-        "which is deliberate. The per-asset detail is the table that follows.")
     if MLS is not None:
-        t = (MLS * 100).groupby(level=0).mean()
-        t.columns = ["daily, development", "daily, holdout"]
-        if MLS_M is not None:
-            m = (MLS_M * 100).groupby(level=0).mean().reindex(t.index)
-            t["monthly, development"] = m["dev_r2"]
-            t["monthly, holdout"] = m["oos_r2"]
-            t = t[["daily, development", "monthly, development",
-                   "daily, holdout", "monthly, holdout"]]
+        t = (MLS * 100)["dev_r2"].unstack()
         t.index.name = "family"
-        r.table(t.round(3), align_right=list(t.columns), heat=list(t.columns),
-                caption="Out of sample R squared for the tuned model in each "
-                        "family, averaged across the eleven assets, at both "
-                        "frequencies.")
+        stale = [c for c in ["hy", "muni", "muni_hy"] if c in t.columns]
+        clean = [c for c in t.columns if c not in stale]
+        t = t[clean + stale]
+        r.table(t.round(2), align_right=list(t.columns), heat=list(t.columns),
+                caption="Development out of sample R squared by asset, percent, "
+                        "for the tuned model in each family. The three "
+                        "right-hand columns are the holdings marked with a lag.")
+    if ML is not None:
+        picked = ", ".join(
+            f"{i.replace('_', ' ')}: {row['params']}"
+            for i, row in ML.iterrows()) if "params" in ML.columns else ""
         r.prose(
-            "The same frequency gap appears here and it is wider. At monthly "
-            "frequency the flexible models find something; at daily frequency "
-            "most of them are negative, meaning they do worse than predicting "
-            "the average. More observations did not help them, because what "
-            "daily data adds is mostly noise and a flexible model will fit "
-            "noise given the chance. <strong>The regression, which cannot "
-            "overfit in that way because each signal enters on its own, is the "
-            "only approach that stays positive at both frequencies.</strong>")
+            f"<span class=\"note\">Hyperparameters selected on development: "
+            f"{picked}.</span>")
     r.prose(
-        "The pattern that matters is the same one Phase 1 found: <strong>skill "
-        "concentrates in the short end</strong>. Across every family and the "
-        "univariate regression alike, the two year Treasury and short "
-        "investment grade score positive while the 30 year and long credit sit "
-        "at or below zero. That ordering is what a risk-based portfolio ends up "
-        "exploiting without forecasting anything, and Appendix B measures it "
-        "directly.")
+        "<strong>The per-asset view explains the aggregate.</strong> Averaged "
+        "across all eleven assets the families look mildly positive, at +2.0% "
+        "for the elastic net and +1.9% for the random forest. Split the "
+        "universe and that reverses: on the eight cleanly priced holdings every "
+        "family is negative, and on the three marked with a lag every family is "
+        "strongly positive.")
+    r.table(pd.DataFrame([
+        ("Elastic net", "+2.03", "+7.67", "-0.09"),
+        ("Random forest", "+1.90", "+7.83", "-0.33"),
+        ("Ridge", "+1.60", "+8.39", "-0.95"),
+        ("Gradient boosting", "+1.13", "+4.46", "-0.12"),
+    ], columns=["family", "all 11 assets", "the 3 lagged", "the other 8"]
+    ).set_index("family"),
+        align_right=["all 11 assets", "the 3 lagged", "the other 8"],
+        caption="Development out of sample R squared, percent, daily data.")
+    r.prose(
+        "This also answers why the daily numbers look better than the monthly "
+        "ones for these models. It is not that daily returns are easier to "
+        "forecast. Monthly aggregation averages the lag away, so a monthly "
+        "series carries almost none of it, while a daily series carries all of "
+        "it and a flexible model finds it immediately. <strong>The daily "
+        "advantage here is the lag, not skill.</strong>")
+    r.prose(
+        "The regression does not show the same pattern, because averaging 256 "
+        "univariate fits dilutes any single artefact rather than concentrating "
+        "on it. That is the practical case for the combination approach.")
 
     r.section("Two ways of turning a forecast into a portfolio", (
         "A return forecast can guide all of the allocation or only part of it. "
         "Both are tested."))
     r.prose(
-        "<strong>Tilt.</strong> Start from equal weight, deviate in proportion "
-        "to the cross-sectionally standardised forecast, and cap the deviation "
-        "per asset:")
+        "<strong>Tilt.</strong> Start from equal weight and move away from it "
+        "in proportion to the forecast, with a cap on how far any single "
+        "position can go. The forecast is standardised across assets first, so "
+        "what drives the tilt is which assets look good relative to the others "
+        "rather than the level of the forecast:")
     r.formula(
         "w &nbsp;=&nbsp; clip( <span class='t t1'>w<sub>eq</sub></span> "
         "&nbsp;+&nbsp; <span class='t t2'>&Lambda;</span> &middot; "
         "<span class='t t3'>z</span> , &nbsp;bounds )",
         "bounded tilt, lambda = 0.5, cap 15 points per asset")
+    r.prose(
+        "With eleven assets equal weight is 9.1% each. A lambda of 0.5 means an "
+        "asset one standard deviation above the cross-sectional average gets "
+        "roughly 13.6% and one a standard deviation below gets 4.5%, before the "
+        "15 point cap binds. So <em>Regression, tilt</em> in the results below "
+        "is equal weight moved by the combined regression forecast, not a fixed "
+        "blend of two portfolios.")
     r.prose(
         "<strong>Base.</strong> The signal alone sets the weights, long only "
         "and normalized to sum to one, with no base allocation underneath.")
@@ -568,6 +559,12 @@ def phase2():
         t = window(T, "dev", ["sharpe", "vol", "vs_agg", "p"],
                    ["Sharpe", "volatility", "vs the Agg", "p"])
         t.insert(0, "class", T["class"])
+        bench_sharpe = float((T["dev_sharpe"] - T["dev_vs_agg"]).median())
+        r.table(pd.DataFrame([
+            ("Aggregate index", round(bench_sharpe, 4)),
+        ], columns=["benchmark", "development Sharpe"]).set_index("benchmark"),
+            align_right=["development Sharpe"],
+            caption="Every edge below is measured against this.")
         r.table(t.round(4),
                 align_right=[c for c in t.columns if c != "class"],
                 stars=["p"], row_class=row_kinds(T),
@@ -597,20 +594,18 @@ def phase2():
         "<strong>Equal risk contribution and hierarchical risk parity, both on "
         "the Ledoit-Wolf covariance.</strong> Neither uses a return forecast.")
     r.prose(
-        "The regime-conditional variants are not carried, on the evidence "
-        "rather than on principle. Conditioning the covariance on the regime "
-        "takes hierarchical risk parity from 0.932 to 0.909 and equal risk "
-        "contribution from 0.884 to 0.888: worse on one, a rounding error on "
-        "the other. The hierarchical version already clusters the correlation "
-        "matrix, so cutting its estimation window into four states costs "
-        "estimation precision without adding structure it did not have.")
+        "Two variants were tested and neither is carried forward. Estimating "
+        "the covariance within each macro regime moves hierarchical risk parity "
+        "from 0.932 to 0.909 and equal risk contribution from 0.884 to 0.888. "
+        "Splitting the sample into four states leaves each estimate with a "
+        "quarter of the data, and on a matrix this correlated that costs more "
+        "precision than the regime structure adds.")
     r.prose(
-        "DCC-GARCH is not carried either, for the mirror reason. It takes "
-        "hierarchical risk parity from 0.932 to 0.800 and equal risk "
-        "contribution from 0.884 to 0.865. A time-varying correlation estimator "
-        "picks up variation that Ledoit-Wolf shrinkage deliberately suppresses, "
-        "and on eleven highly correlated bond funds that variation is mostly "
-        "noise.")
+        "DCC-GARCH fares worse, taking hierarchical risk parity to 0.800 and "
+        "equal risk contribution to 0.865. It lets correlations move over time, "
+        "which is what Ledoit-Wolf shrinkage is designed to damp. On eleven "
+        "bond funds that share one dominant factor, most of that movement is "
+        "estimation noise.")
     r.prose(
         "Nothing from the return-forecasting side is carried. Out of sample R "
         "squared near one percent is real but too small to size a position on, "

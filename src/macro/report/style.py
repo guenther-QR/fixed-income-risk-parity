@@ -236,6 +236,16 @@ tr.k-return  td.rowhead { border-left: 3px solid var(--t3); padding-left: .55rem
 tr.k-bench   td.rowhead { border-left: 3px solid var(--ink-muted); padding-left: .55rem; }
 tr.k-bench   td { color: var(--ink-muted); }
 tr.k-reg     td.rowhead, tr.k-risk td.rowhead { font-weight: 600; }
+
+/* Light background per family, so a row's kind reads at a glance rather than
+   from a 3px rail alone. Kept faint so heat shading on numeric cells wins. */
+tr.k-risk  td, tr.k-risk  th { background: color-mix(in srgb, var(--t1) 7%, transparent); }
+tr.k-reg   td, tr.k-reg   th { background: color-mix(in srgb, var(--t2) 7%, transparent); }
+tr.k-ml    td, tr.k-ml    th { background: color-mix(in srgb, var(--t3) 7%, transparent); }
+tr.k-tech  td, tr.k-tech  th { background: color-mix(in srgb, var(--t4) 7%, transparent); }
+tr.k-bench td, tr.k-bench th { background: color-mix(in srgb, var(--ink-muted) 7%, transparent); }
+tr.k-risk td[style], tr.k-reg td[style], tr.k-ml td[style],
+tr.k-tech td[style], tr.k-bench td[style] { background-blend-mode: multiply; }
 .legend { display: flex; flex-wrap: wrap; gap: 1.1rem; margin: .5rem 0 0;
           font-size: .78rem; color: var(--ink-muted); }
 .legend span::before { content: ""; display: inline-block; width: 10px;
