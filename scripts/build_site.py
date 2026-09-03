@@ -270,6 +270,8 @@ def phase2():
     ML = get("fi_dmodel_ml_chosen")
     MLS = get("fi_dmodel_ml_skill")
     UNI = get("fi_dmodel_regression_skill")
+    RANK = get("fi_regressor_ranks")
+    FAM = get("fi_regressor_families")
     REB = get("fi_rebal_summary")
 
     bd = None
@@ -284,25 +286,6 @@ def phase2():
         ("60", "month burn-in, every model", None),
         ("development", "this page only", None),
     ])
-
-    r.section("What each class has to estimate", (
-        "The classes are grouped by what a model needs to get right, because "
-        "that determines how it fails."))
-    r.table(pd.DataFrame([
-        ("Technical", "Nothing", "Carry is the yield plus rolldown implied by "
-         "today's curve. Momentum is the trailing twelve month return skipping "
-         "the most recent month. Both are arithmetic on observed data, with no "
-         "fitted parameter to overfit."),
-        ("Regression", "A conditional mean", "One expanding-window univariate "
-         "least squares fit per signal per asset, averaged across signals."),
-        ("Machine learning", "A conditional mean, flexibly", "Elastic net, "
-         "ridge, random forest and gradient boosting on the same panel, each "
-         "tuned on development before being scored."),
-        ("Regime conditional", "A mean or a covariance, within state", "The "
-         "sample is split by macro regime and the estimate formed inside it."),
-        ("Risk based", "A covariance matrix", "Equal risk contribution and "
-         "hierarchical risk parity. No expected return enters the objective."),
-    ], columns=["class", "what it estimates", "how"]).set_index("class"))
 
     r.section("The regression, in detail", (
         "This is the workhorse of the return-forecasting side, so it is worth "
@@ -344,18 +327,61 @@ def phase2():
         t.index.name = "asset"
         t.columns = [c.replace("_r2", " R squared, %") for c in t.columns]
         r.table(t.round(3), align_right=list(t.columns), heat=list(t.columns),
-                caption="Out of sample R squared from the combined regression, "
-                        "against a rolling mean forecast.")
+                caption="Out of sample R squared. The comparison is against "
+                        "a rolling mean forecast: at each date, predict the "
+                        "average return so far and see whether the model beats "
+                        "it. Zero means the model added nothing over that; "
+                        "negative means it was worse than assuming the future "
+                        "looks like the past.")
+
+    r.section("Which signals do the work", (
+        "The combination averages every signal, which is deliberate but hides "
+        "what is driving it. Each signal was also scored on its own, by giving "
+        "it a single expanding-window regression per asset and measuring out of "
+        "sample R squared on the development sample."))
+    if RANK is not None:
+        t = (RANK.head(12).assign(mean_r2=lambda d: d["mean_r2"] * 100)
+             .rename(columns={"mean_r2": "mean R squared, %",
+                              "n_positive": "assets positive",
+                              "n_assets": "assets"}))
+        t.index.name = "signal"
+        r.table(t.round(3),
+                align_right=[c for c in t.columns if c != "family"],
+                heat=["mean R squared, %"],
+                caption="Top twelve individual signals, development sample, "
+                        "averaged across the eleven assets.")
+    if FAM is not None:
+        t = (FAM.assign(mean_r2=lambda d: d["mean_r2"] * 100,
+                        best_r2=lambda d: d["best_r2"] * 100)
+             .rename(columns={"signals": "signals in family",
+                              "mean_r2": "family mean, %",
+                              "best_r2": "best in family, %"}))
+        t.index.name = "family"
+        r.table(t.round(3), align_right=list(t.columns),
+                heat=["best in family, %"],
+                caption="By signal family.")
+    r.prose(
+        "<strong>Short-term reversal dominates.</strong> Twenty-four reversal "
+        "signals average +0.30% on their own, an order of magnitude better than "
+        "any other family, and eight of the top twelve individual signals are "
+        "reversals. The single best is a five day change in the VIX at +1.07%, "
+        "positive on ten of eleven assets, which is the one genuinely "
+        "cross-asset signal in the set.")
+    r.prose(
+        "Two things about that are worth stating plainly. Reversal working best "
+        "at daily frequency is partly a real effect and partly the mark lag "
+        "described in the limitations, since a fund that reports late will look "
+        "like it mean-reverts. And the families a fixed income desk would reach "
+        "for first do worse: carry and rolldown, the Cochrane-Piazzesi factor "
+        "and credit spreads all sit near or below zero as standalone "
+        "predictors. Momentum averages negative across ninety-six variants.")
 
     r.section("Machine learning, and how it was tuned", (
-        "Four families on the same signal panel. Hyperparameters are selected "
-        "on the development sample only, then the chosen setting is scored."))
-    r.prose(
-        "This matters more than it sounds. An untuned model reported as a "
-        "failure is evidence about default settings, not about the model class. "
-        "Each family is run across a grid, the configuration with the best "
-        "development R squared is selected, and only that one is carried "
-        "forward. The holdout is never consulted in the choice.")
+        "Four families from scikit-learn on the same signal panel: elastic "
+        "net, ridge, random forest and gradient boosting. Each is run across a "
+        "grid of hyperparameters, the configuration with the best development "
+        "R squared is selected, and only that one is scored. The holdout is "
+        "never consulted in the choice."))
     if ML is not None:
         t = ML.copy()
         t.index.name = "family"
@@ -370,14 +396,24 @@ def phase2():
                         "forest, and depth and learning rate for the boosted "
                         "trees.")
     if MLS is not None:
-        t = (MLS * 100).copy()
+        t = (MLS * 100).groupby(level=0).mean()
         t.columns = [c.replace("_r2", " R squared, %") for c in t.columns]
-        r.table(t.round(2), align_right=list(t.columns), heat=list(t.columns),
-                caption="The tuned model in each family, by asset.")
+        t.index.name = "family"
+        r.table(t.round(3), align_right=list(t.columns), heat=list(t.columns),
+                caption="Averaged across the eleven assets, for the tuned model "
+                        "in each family.")
+    r.prose(
+        "The pattern that matters is the same one Phase 1 found: <strong>skill "
+        "concentrates in the short end</strong>. Across every family and the "
+        "univariate regression alike, the two year Treasury and short "
+        "investment grade score positive while the 30 year and long credit sit "
+        "at or below zero. That ordering is what a risk-based portfolio ends up "
+        "exploiting without forecasting anything, and Appendix B measures it "
+        "directly.")
 
     r.section("Two ways of turning a forecast into a portfolio", (
-        "Every return signal above is run both ways, because a bounded tilt can "
-        "hide how wrong a signal is."))
+        "A return forecast can guide all of the allocation or only part of it. "
+        "Both are tested."))
     r.prose(
         "<strong>Tilt.</strong> Start from equal weight, deviate in proportion "
         "to the cross-sectionally standardised forecast, and cap the deviation "
@@ -388,17 +424,8 @@ def phase2():
         "<span class='t t3'>z</span> , &nbsp;bounds )",
         "bounded tilt, lambda = 0.5, cap 15 points per asset")
     r.prose(
-        "This is what a desk would run. If the forecast is worthless the "
-        "portfolio stays near equal weight and loses only transaction costs; if "
-        "it carries information the tilt captures part of it. The downside is "
-        "bounded by construction rather than by luck, which is the response "
-        "DeMiguel, Garlappi and Uppal give to estimation error of this size.")
-    r.prose(
         "<strong>Base.</strong> The signal alone sets the weights, long only "
-        "and normalised to sum to one, with no base allocation underneath. "
-        "Nobody would run this. It is included because it shows what the signal "
-        "actually wants to hold, and a tilt that barely moves can make a badly "
-        "wrong signal look merely disappointing.")
+        "and normalized to sum to one, with no base allocation underneath.")
 
     r.section("How every p-value in this project is computed", (
         "Each table from here on carries a p-value against the benchmark. It is "
@@ -479,33 +506,22 @@ def phase2():
                         "* below 0.10.")
         r._blocks.append(LEGEND)
     r.prose(
-        "Read the rail on the left rather than the ordering. Everything that "
-        "needs a return forecast carries one colour and everything built from "
-        "the covariance matrix another, and the separation between those two "
-        "groups is cleaner than the separation between any two individual "
-        "models.")
+        "The colored rail on the left separates the two groups. Everything that "
+        "needs a return forecast carries one color and everything built from "
+        "the covariance matrix another, and the gap between those groups is "
+        "wider than the gap between any two individual models.")
     r.prose(
-        "<strong>Every base variant is far worse than its tilt.</strong> Carry "
-        "goes from 0.734 as a tilt to 0.581 as a standalone portfolio, the "
-        "regression from 0.714 to 0.542, momentum from 0.686 to 0.405. The "
-        "volatility column explains it: the base portfolios run at 7% to 9% "
-        "against 5% for the tilts, because a signal-weighted book concentrates "
-        "into whichever assets the signal likes this month and those are "
-        "usually the long ones. This is the clearest evidence on the page that "
-        "the bounded tilt was doing the work rather than the forecast. Given "
-        "room, the same signals actively destroy risk-adjusted return.")
-    r.prose(
-        "One row is worth explaining rather than ranking. <strong>The ridge "
-        "tilt scores 0.910 on development despite the worst out of sample R "
-        "squared of any model tested.</strong> Ridge at alpha 100 shrinks its "
-        "forecasts so hard toward the sample mean that the tilt barely moves, "
-        "so the portfolio is close to equal weight with a small amount of "
-        "residual variation. It scores well by not really doing anything, its "
-        "development margin is not significant at p = 0.13, and it does not "
-        "survive the holdout. A model can look good in a portfolio for reasons "
-        "that have nothing to do with its forecasts being right.")
+        "Two patterns are worth naming. <strong>Every base variant scores well "
+        "below its tilt</strong>: carry falls from 0.61 to 0.27, the regression "
+        "from 0.67 to 0.50, momentum from 0.62 to 0.27. The volatility column "
+        "explains it. A signal-weighted book concentrates into whatever the "
+        "signal likes at that moment, which on a bond universe is usually the "
+        "long end, so it runs at 7 to 9% volatility against 5% for the bounded "
+        "version. And <strong>turnover separates the two groups as sharply as "
+        "performance does</strong>: the risk-based methods trade 1.5 to 2% of "
+        "the book a year, the forecast-driven ones 12 to 72%.")
 
-    r.section("What goes forward", (
+    r.section("From Development to Validation", (
         "Two strategies are carried into the holdout."))
     r.prose(
         "<strong>Equal risk contribution and hierarchical risk parity, both on "
@@ -565,26 +581,23 @@ def phase3():
     HD = get("fi_canonical_hrp_duration")
 
     r.metrics([
-        ("128", "holdout months", None),
-        ("-0.072", "Agg Sharpe on the holdout", "fail"),
-        ("+0.115", "hierarchical RP edge", "pass"),
-        ("0.042", "holdout p-value", "pass"),
-        ("+0.147", "edge after duration matching", "pass"),
+        ("2,660", "holdout trading days", None),
+        ("-0.081", "Agg Sharpe on the holdout", "fail"),
+        ("+0.146", "hierarchical RP edge", "pass"),
+        ("+0.175", "equal risk contribution edge", "pass"),
+        ("0.060", "best holdout p-value", "pass"),
     ])
 
     r.section("The holdout", (
         "Every model from Phase 2 on data none of them was fitted to."))
     if T is not None:
-        t = window(T, "oos", ["sharpe", "vs_agg", "p"],
-                   ["Sharpe", "vs the Agg", "p"])
-        t.insert(0, "class", T["class"])
-        t.insert(1, "dev Sharpe", T["dev_sharpe"].round(3))
-        r.table(t.round(4),
-                align_right=[c for c in t.columns if c != "class"],
-                stars=["p"], row_class=row_kinds(T),
-                caption="Holdout, 2016 to 2026, with the development Sharpe "
-                        "alongside for reference.")
-        r._blocks.append(LEGEND)
+        keep = [i for i in T.index if i.endswith(", annual")]
+        t = window(T.loc[keep], "oos", ["sharpe", "vol", "vs_agg", "p"],
+                   ["Sharpe", "volatility", "vs the Agg", "p"])
+        t.insert(0, "dev Sharpe", T.loc[keep, "dev_sharpe"].round(3))
+        r.table(t.round(4), align_right=list(t.columns), stars=["p"],
+                caption="Holdout, 2016 to 2026, for the two strategies carried "
+                        "forward from development.")
     r.prose(
         "The Aggregate returned a Sharpe of <strong>-0.072</strong> across the "
         "holdout, so the bar is low in absolute terms and a great many things "
@@ -675,10 +688,8 @@ def phase3():
                     color=charts.MUTED)
         charts.legend(ax, loc="upper left")
         r.figure(charts.to_svg(fig),
-                 "Growth of one dollar at constant risk, so vertical position "
-                 "corresponds to risk-adjusted performance. Marked line is "
-                 "hierarchical risk parity; reference portfolios are dotted and "
-                 "dashed.")
+                 "Growth of one dollar, every series held at the "
+                 "Aggregate's volatility.")
 
     if OVL is not None:
         r.section("Leverage route", (
@@ -764,7 +775,11 @@ def phase3():
     if DT is not None:
         d = DT.copy()
         d.index.name = "strategy"
-        r.table(d.round(4), align_right=list(d.columns), stars=["dm p"])
+        d.columns = [c.replace("dm p", "p").replace("dm CI low", "CI low")
+                     .replace("dm CI high", "CI high")
+                     .replace("vs duration-matched 1/N", "vs duration matched")
+                     for c in d.columns]
+        r.table(d.round(4), align_right=list(d.columns), stars=["p"])
     r.prose(
         "<strong>The edge is unchanged.</strong> Hierarchical risk parity goes "
         "from +0.151 against plain equal weight to +0.147 against the duration "
@@ -777,16 +792,21 @@ def phase3():
     if HW is not None and len(HW):
         W = HW[[c for c in HW.columns]].copy()
         W = W[list(W.mean().sort_values(ascending=False).index)]
-        fig, ax = charts.new_axes(9.0, 3.9)
+        fig, ax = charts.new_axes(7.8, 3.9)
         ax.stackplot(W.index, [W[c].to_numpy() * 100 for c in W.columns],
                      labels=list(W.columns),
                      colors=[charts.SERIES[i % len(charts.SERIES)]
                              for i in range(len(W.columns))],
                      edgecolor="none")
         ax.set_ylim(0, 100)
+        ax.set_xlim(W.index.min(), W.index.max())
         ax.set_ylabel("weight")
         charts.percent_axis(ax, decimals=0)
-        charts.legend(ax, loc="upper center", ncol=6)
+        # Legend outside the plot, stacked, ordered like the stack itself so a
+        # reader can map label to band without counting colors.
+        h, l = ax.get_legend_handles_labels()
+        charts.legend(ax, handles=h[::-1], labels=l[::-1], loc="upper left",
+                      bbox_to_anchor=(1.01, 1.0), ncol=1, borderaxespad=0)
         r.figure(charts.to_svg(fig),
                  "Hierarchical risk parity weights over time, annual "
                  "rebalancing, largest average holding at the bottom.")
