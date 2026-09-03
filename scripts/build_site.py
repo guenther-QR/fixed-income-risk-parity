@@ -348,6 +348,7 @@ def phase2():
     UNI_M = get("fi_uni_regression_skill")
     MLS_M = get("fi_uni_ml_skill")
     REB = get("fi_rebal_summary")
+    MOMCAL = get("fi_momentum_calibration")
 
     bd = None
     if T is not None and {"dev_sharpe", "dev_vs_agg"} <= set(T.columns):
@@ -401,6 +402,7 @@ def phase2():
         t.columns = ["daily"]
         if UNI_M is not None:
             t["monthly"] = (UNI_M * 100)["dev_r2"].reindex(t.index)
+        t.index = [ASSET_NAME.get(a, a) for a in t.index]
         t.index.name = "asset"
         r.table(t.round(3), align_right=list(t.columns), heat=list(t.columns),
                 caption="Development sample only, out of sample R squared in "
@@ -417,13 +419,24 @@ def phase2():
             "accumulates enough carry, curve movement and spread change for a "
             "signal to attach to.")
     r.prose(
-        "The municipal holdings are the exception and should be read with care. "
-        "They score higher at daily than at monthly frequency, which reverses "
-        "the pattern everywhere else. Municipal bonds are priced by matrix "
-        "valuation rather than by trades, so their reported daily returns "
-        "autocorrelate at around 0.25 and part of what a daily model predicts "
-        "is a price change that has already occurred. Monthly aggregation "
-        "removes most of that.")
+        "<strong>The exception is the three holdings that do not trade "
+        "continuously, and the exception is not a discovery.</strong> High "
+        "yield and the two municipal funds are the only assets that score "
+        "higher daily than monthly, and they are also the only assets priced by "
+        "matrix valuation rather than by observed trades. Their reported daily "
+        "returns autocorrelate at 0.24 to 0.25, against 0.01 to 0.03 for the "
+        "Treasuries. When yesterday's return predicts today's, a forecast of "
+        "today is partly a restatement of a price change that has already "
+        "happened.")
+    r.prose(
+        "This matters for how the whole page is read. Any R squared on these "
+        "three assets is an upper bound containing an unknown amount of "
+        "measurement lag, and a strategy that appears to forecast them may be "
+        "trading against a price that no longer exists. Monthly aggregation "
+        "removes most of the effect, which is why the ordering reverses. The "
+        "three are kept in the universe rather than dropped, because removing "
+        "them would remove genuine diversification along with the artefact, but "
+        "every daily result that leans on them is flagged where it appears.")
 
     r.section("Which signals do the work", (
         "The combination averages every signal, so it is worth seeing what "
@@ -471,33 +484,6 @@ def phase2():
         "In a universe where the first principal component explains most of the "
         "variance, a signal built on one holding is partly a signal about the "
         "common factor.")
-    r.prose(
-        "The magnitudes divide along the same line. The best signal reaches "
-        "0.2% on the Treasuries and 1.5% on long credit. On high yield it "
-        "reaches 7.5% and on intermediate municipals 6.3%, a difference "
-        "attributable to the pricing delay rather than to forecastability.")
-    if FAMB is not None:
-        t = FAMB.copy()
-        for c2 in t.columns:
-            if c2 != "signals":
-                t[c2] = t[c2] * 100
-        t.columns = [c2.replace("mean_r2_", "mean, ").replace("best_r2_", "best, ")
-                     .replace("signals", "signals in family") for c2 in t.columns]
-        t.index.name = "family"
-        r.table(t.round(3), align_right=list(t.columns),
-                heat=[c2 for c2 in t.columns if c2 != "signals in family"],
-                caption="By family, both frequencies, development sample. R "
-                        "squared in percent. A blank means the family has no "
-                        "counterpart in that library: short-term reversal is a "
-                        "daily construction, and valuation and term premium are "
-                        "monthly.")
-    r.prose(
-        "The monthly means are negative in every family while the monthly best "
-        "values are the highest anywhere in the table, reaching 2.3% for macro "
-        "signals and 2.3% for the term premium. Individual monthly signals are "
-        "noisy, and most of them lose to a rolling mean. That is the case for "
-        "combining them rather than picking one.")
-
     r.section("Machine learning, and how it was tuned", (
         "Four families from scikit-learn on the same signal panel: elastic "
         "net, ridge, random forest and gradient boosting. Each is run across a "
@@ -506,15 +492,18 @@ def phase2():
         "never consulted in the choice."))
     if MLS is not None:
         t = (MLS * 100)["dev_r2"].unstack()
+        t.index = [i.replace("_", " ").capitalize() for i in t.index]
         t.index.name = "family"
         stale = [c for c in ["hy", "muni", "muni_hy"] if c in t.columns]
         clean = [c for c in t.columns if c not in stale]
         t = t[clean + stale]
+        t.columns = [ASSET_NAME.get(c2, c2) for c2 in t.columns]
         r.table(t.round(2), align_right=list(t.columns), heat=list(t.columns),
-                caption="Out of sample R squared by asset, percent, "
-                        "development sample. The three right-hand columns are "
-                        "the municipal and high yield funds, whose prices are "
-                        "set by matrix valuation rather than by trades.")
+                caption="Development sample, daily data, R squared in percent. "
+                        "Each forecast is fitted only on data preceding the day "
+                        "it predicts. The three right-hand columns are the "
+                        "funds priced by matrix valuation rather than by "
+                        "trades.")
         r.prose(
             "<strong>Out of sample and development are not in conflict.</strong> "
             "<em>Out of sample</em> describes how each forecast was formed: the "
@@ -525,13 +514,6 @@ def phase2():
             "onward, which no model or model choice has seen at all. So a "
             "figure can be out of sample in the walk-forward sense and still "
             "sit inside the development window.")
-    if ML is not None:
-        picked = ", ".join(
-            f"{i.replace('_', ' ')}: {row['params']}"
-            for i, row in ML.iterrows()) if "params" in ML.columns else ""
-        r.prose(
-            f"<span class=\"note\">Hyperparameters selected on development: "
-            f"{picked}.</span>")
     r.prose(
         "<strong>The per-asset view explains the aggregate.</strong> Averaged "
         "across all eleven assets the families look mildly positive, at +2.0% "
@@ -540,16 +522,23 @@ def phase2():
         "every family is negative, and on high yield and the two municipal "
         "funds every family is strongly positive.")
     r.table(pd.DataFrame([
-        ("Elastic net", "+2.03", "+7.67", "-0.09"),
-        ("Random forest", "+1.90", "+7.83", "-0.33"),
-        ("Ridge", "+1.60", "+8.39", "-0.95"),
-        ("Gradient boosting", "+1.13", "+4.46", "-0.12"),
-    ], columns=["family", "all 11 assets", "high yield and municipals",
-                "the other 8 assets"]).set_index("family"),
+        ("Elastic net", "alpha 0.1, L1 ratio 0.5",
+         "+2.03", "+7.67", "-0.09"),
+        ("Random forest", "150 trees, max depth 3",
+         "+1.90", "+7.83", "-0.33"),
+        ("Ridge", "alpha 1000",
+         "+1.60", "+8.39", "-0.95"),
+        ("Gradient boosting", "100 trees, depth 1, learning rate 0.01",
+         "+1.13", "+4.46", "-0.12"),
+    ], columns=["family", "specification", "all 11 assets",
+                "high yield and municipals", "the other 8 assets"]
+    ).set_index("family"),
         align_right=["all 11 assets", "high yield and municipals",
                      "the other 8 assets"],
-        caption="Out of sample R squared, percent, daily data, development "
-                "sample.")
+        caption="Development sample, daily data, R squared in percent. Each "
+                "specification is the configuration with the best development "
+                "score from its grid search; the holdout was not consulted in "
+                "the choice.")
     r.prose(
         "This also accounts for the daily figures exceeding the monthly ones "
         "for these models, which is the opposite of the regression result. "
@@ -560,8 +549,18 @@ def phase2():
         "The regression does not show this pattern. Averaging 256 univariate "
         "fits dilutes any single artefact rather than concentrating on it, "
         "which is the practical argument for the combination approach.")
+    r.prose(
+        "<strong>The conclusion drawn here, before the holdout is opened, is "
+        "that none of these models is expected to survive it.</strong> The "
+        "aggregate figures rest entirely on three assets whose forecastability "
+        "is a pricing delay, and on the eight assets that trade continuously "
+        "every family is negative. A result that reverses sign when the "
+        "universe is split along a line that has nothing to do with the models "
+        "is not describing bond returns. It is describing how the funds are "
+        "marked. That is a structural weakness rather than a tuning problem, "
+        "and no amount of further specification search addresses it.")
 
-    r.section("Two ways of turning a forecast into a portfolio", (
+    r.section("Return forecast tilting", (
         "A return forecast can guide all of the allocation or only part of it. "
         "Both are tested."))
     r.prose(
@@ -643,6 +642,83 @@ def phase2():
         ("Expected returns", "None. The mean vector never enters either "
          "objective, which is why neither method has a forecast to decay."),
     ], columns=["choice", "what was done"]).set_index("choice"))
+
+    r.section("Technical models, and how the signal was calibrated", (
+        "The third family. No return model is estimated; a rule is applied to "
+        "past prices and yields, and the rule is the whole strategy."))
+    r.prose(
+        "<strong>Carry</strong> ranks each holding by its yield less the "
+        "financing rate, which for a bond is the return earned if the curve "
+        "does not move. <strong>Momentum</strong> ranks by trailing return. "
+        "<strong>Momentum (Sharpe)</strong> divides that trailing return by its "
+        "own volatility, so an asset is ranked on how consistently it rose "
+        "rather than how far. Each appears twice below, once as a bounded tilt "
+        "and once as a signal-weighted book.")
+    r.prose(
+        "Momentum needs a lookback window, and choosing one is where this "
+        "family is most easily fitted to its own sample. Asness, Moskowitz and "
+        "Pedersen set the standard: across eight markets they impose the "
+        "twelve month return skipping the most recent month, take it from the "
+        "prior literature rather than estimating it, and apply it identically "
+        "everywhere. They state plainly that they are not looking for the best "
+        "predictor in each market, and that uniformity is the defense against "
+        "data snooping. They keep the skipped month even in markets that do not "
+        "need it. Their own bond results are the weakest in the paper and do "
+        "not reach statistical significance, which is the first evidence "
+        "against a momentum tilt working here.")
+    r.prose(
+        "Four ways of setting the window were tested, differing only in how "
+        "much the data was allowed to choose. Each is applied as a tilt around "
+        "the hierarchical risk parity weights, so the comparison is against "
+        "that portfolio rather than against the Aggregate.")
+    r.table(pd.DataFrame([
+        ("Uniform", "One definition for all eleven holdings, twelve months "
+         "skipping the most recent month, following Asness, Moskowitz and "
+         "Pedersen. Nothing is estimated."),
+        ("Frozen", "Each asset's window is chosen once, on the five year "
+         "burn-in that precedes the backtest, then never revisited. "
+         "Development is therefore a genuine test of the selection rather than "
+         "the sample it was drawn from."),
+        ("Combined", "No window is chosen. All sixteen candidates contribute, "
+         "weighted by their trailing rank correlation with next day's return."),
+        ("Averaged", "All sixteen candidates weighted equally and permanently. "
+         "No quantity is estimated anywhere."),
+    ], columns=["design", "how the window is set"]).set_index("design"))
+    if MOMCAL is not None:
+        m = MOMCAL.xs("development", level="sample")
+        t = m[["sharpe", "vs_hrp", "p_magnitude", "turnover"]].copy()
+        t["turnover"] = t["turnover"] * 100
+        t.columns = ["Sharpe", "vs risk parity", "p", "turnover, %"]
+        t.index = [i.split(". ", 1)[-1] for i in t.index]
+        t.index.name = "design"
+        r.table(t.round(4), align_right=list(t.columns),
+                caption="Development sample, momentum tilts on hierarchical "
+                        "risk parity, net of per-asset costs. Risk parity "
+                        "itself scores 1.024 on the same window. The p column "
+                        "tests the size of the gap, in either direction.")
+    r.prose(
+        "<strong>The more freedom a design has to choose, the worse it does.</strong> "
+        "Imposing one definition everywhere costs 0.11 of Sharpe against risk "
+        "parity, and choosing per asset on the burn-in costs 0.06. The two "
+        "designs that decline to choose at all are the only ones that finish "
+        "above risk parity, and neither gap is statistically distinguishable "
+        "from zero.")
+    r.prose(
+        "The comparison that carries the most information is between the last "
+        "two rows. Weighting the sixteen candidate windows by their measured "
+        "predictive skill scores 1.044; weighting them equally and never "
+        "updating scores 1.041. If measuring which window predicts better is "
+        "worth four thousandths of a Sharpe ratio over ignoring the question, "
+        "then the measurement contains no information. That single result "
+        "explains the rest of the family: a design that selects a window is "
+        "taking a maximum over sixteen numbers that are indistinguishable from "
+        "noise, and the more aggressively it selects the more of that noise it "
+        "carries into the portfolio.")
+    r.prose(
+        "None of the four is carried into the holdout as a strategy. The "
+        "designs are revisited in Phase 3 for a different purpose, as a way of "
+        "measuring how much of a development result survives when the choice "
+        "that produced it was made honestly.")
 
     r.section("Development results", (
         "Every model, the full development sample, net of per-asset "
