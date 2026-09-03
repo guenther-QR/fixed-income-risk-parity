@@ -28,6 +28,7 @@ PAGES = [
     ("phase3_results", "Phase 3", "Results"),
     ("appendix_method", "Appendix A", "Implementation"),
     ("appendix_universe", "Appendix B", "Market Dynamics"),
+    ("appendix_eval", "Appendix C", "Evaluating Results"),
 ]
 
 DROP_ROWS = ["Inverse volatility"]
@@ -138,20 +139,26 @@ def phase1():
     r.prose(
         "<strong>The two year Treasury is the most forecastable asset at +2.1%, "
         "and the S&amp;P 500 is the least at zero.</strong> Every fixed income "
-        "instrument except the 30 year is positive; the equity index is not. "
-        "That gap is the entire reason this project exists, and it is a monthly "
-        "result: the same measurement at daily frequency is dominated by how "
-        "quickly each fund is marked rather than by what is predictable, which "
-        "the limitations in Phase 3 set out.")
+        "instrument except the 30 year is positive; the equity index is not.")
     r.prose(
-        "The magnitudes deserve context rather than excitement. An R squared of "
-        "2% means the forecast explains two percent of the variance of next "
-        "month's return, which is small in absolute terms and large by the "
-        "standards of return prediction. It is also concentrated in exactly the "
-        "wrong place: the assets that are forecastable are the short-dated ones "
-        "that carry almost no risk, which Appendix B measures directly and "
-        "which turns out to be the reason a risk-based portfolio beats a "
-        "forecast-driven one here.")
+        "Two percent forecastability of monthly forward returns sounds small, "
+        "but given the inherent variance of asset returns it is a compelling "
+        "result. The benchmark for this is Campbell and Thompson (2008), who "
+        "showed that a monthly out of sample R squared of about "
+        "<strong>0.5% is already economically meaningful</strong> for a "
+        "mean-variance investor, and that an R squared as low as 0.25% can "
+        "raise average monthly portfolio return by roughly a fifth in "
+        "proportional terms. On that scale the two year Treasury's 2.1% is "
+        "several times the threshold at which a forecast starts being worth "
+        "acting on.")
+    r.prose(
+        "The same holds in the bond literature specifically. Cochrane and "
+        "Piazzesi (2005) report in sample R squared up to 40% on annual excess "
+        "bond returns from a forward rate factor, but the out of sample "
+        "versions of that work land in low single digits once the coefficients "
+        "have to be estimated in real time. Low single digit out of sample R "
+        "squared is the normal range for a genuine return forecast, not a "
+        "disappointing one.")
 
     r.section("The asset universe", (
         "Eleven assets at daily frequency. Data begins November 1982 and every "
@@ -203,26 +210,20 @@ def phase1():
         "begins in November 1982. The 3 month bill covers the whole period, and "
         "the difference between the two averages a few basis points where they "
         "overlap.")
-    r.prose(
-        "The three month bill is excluded from the portfolio universe. It is a "
-        "cash proxy at 0.9% volatility and every risk minimising method piles "
-        "into it if allowed. A portfolio that wants less risk should hold less "
-        "of the portfolio, not relabel cash as an asset.")
 
     r.section("Extension beyond the original project", (
         "What was already built, and what this project adds to it."))
     r.prose(
         "<strong>Carried over from the macro project.</strong> The fixed income "
         "machinery was built there and is reused here unchanged. Treasury par "
-        "yields are bootstrapped into a zero curve, correcting for the fact "
-        "that the published grid starts at six months, which left the risk free "
-        "rate carrying a 14.8 basis point bias until money market points were "
-        "added at one and three months. Constant maturity holdings are then "
+        "yields are bootstrapped into a zero curve. Constant maturity holdings "
+        "are then "
         "priced off that single discount function, so a 2 year and a 30 year "
         "differ in maturity and nothing else rather than being two unrelated "
         "vendor series. Each holding genuinely ages and is rolled back to "
         "target, which is what a bond index does, and the resulting return is "
-        "decomposed into carry, rolldown, duration and convexity. The "
+        "decomposed into <strong>carry</strong>, <strong>rolldown</strong>, "
+        "<strong>duration</strong> and <strong>convexity</strong>. The "
         "walk-forward backtesting engine, the per-asset transaction costs and "
         "the sealed holdout come across intact, which is what makes results "
         "from the two projects directly comparable.")
@@ -234,22 +235,23 @@ def phase1():
          "four corporate credit sleeves, agency mortgages and two municipal "
          "holdings. The credit and municipal sleeves are new instruments, not "
          "reweighted versions of what came before."),
-        ("Bond-specific signals and factors", "Carry and rolldown by maturity, "
-         "modified duration, forward rates at every curve node, the "
-         "Cochrane-Piazzesi forward rate factor, and yield curve principal "
-         "components as level, slope and curvature. The parent project's macro "
-         "and credit signals are kept alongside them."),
-        ("Risk-based construction as the main line", "The parent project spent "
-         "most of its effort forecasting returns and concluded that was the "
-         "wrong place to spend it. This one tests forecasting again on a "
-         "universe where it should work better, and then builds the portfolio "
-         "from the covariance matrix instead. That comparison, run on one "
-         "sample with one estimation window, is the substance of Phase 2."),
+        ("Bond-specific signals and factors", "Signals that are distinctly "
+         "useful for forecasting fixed income and have no counterpart in "
+         "equities or commodities: carry and rolldown by maturity, modified "
+         "duration, forward rates at every curve node, the Cochrane-Piazzesi "
+         "forward rate factor, and yield curve principal components as level, "
+         "slope and curvature. The parent project's macro and credit signals "
+         "are kept alongside them."),
+        ("Return forecasting as well as risk-based approaches", "The parent "
+         "project spent most of its effort forecasting returns and concluded "
+         "that was the wrong place to spend it. This one tests forecasting "
+         "again on a universe where it should work better, and also looks at "
+         "portfolio construction via the covariance matrix."),
     ], columns=["addition", "what it means"]).set_index("addition"))
 
     r.next_up("Phase 2 - Strategies", [
         "Five model classes and how each forms its weights",
-        "Machine learning tuned on development before it is scored",
+        "Machine learning model tuning",
         "Development results, and what goes forward",
     ])
     paginate(r, "phase1_idea")
@@ -426,70 +428,6 @@ def phase2():
     r.prose(
         "<strong>Base.</strong> The signal alone sets the weights, long only "
         "and normalized to sum to one, with no base allocation underneath.")
-
-    r.section("How every p-value in this project is computed", (
-        "Each table from here on carries a p-value against the benchmark. It is "
-        "worth setting out how those are produced, because the textbook "
-        "calculation does not apply to a Sharpe ratio and would overstate "
-        "significance throughout."))
-    r.prose(
-        "<strong>The question being asked.</strong> A strategy beat the "
-        "Aggregate by some margin. Could a strategy with no genuine edge have "
-        "produced a gap that large, purely from the luck of which returns "
-        "happened to land in this sample? The p-value is the fraction of the "
-        "time the answer is yes.")
-    r.prose(
-        "<strong>Why not a t-test.</strong> The standard error of a Sharpe "
-        "ratio assumes returns are independent and normally distributed. Bond "
-        "returns are neither. They cluster: volatile stretches follow volatile "
-        "stretches, and returns in adjacent periods are not independent of one "
-        "another. Serial dependence means the sample contains fewer independent "
-        "observations than it has rows, so a formula that counts rows produces "
-        "an error bar that is too narrow and a p-value that is too small.")
-    r.prose(
-        "<strong>What is done instead.</strong> A stationary block bootstrap, "
-        "following Politis and Romano. The procedure is mechanical:")
-    r.table(pd.DataFrame([
-        ("1", "Take excess returns", "Subtract the risk-free rate from both the "
-         "strategy and the benchmark, on every date, and keep only dates where "
-         "both exist."),
-        ("2", "Resample in blocks", "Build a synthetic history the same length "
-         "as the real one by drawing contiguous <em>blocks</em> of dates rather "
-         "than individual days. Blocks preserve whatever autocorrelation and "
-         "volatility clustering the data has; drawing single days would destroy "
-         "it and hand back the too-narrow error bar."),
-        ("3", "Randomise the block length", "Block lengths are drawn from a "
-         "geometric distribution rather than fixed. That is the "
-         "<em>stationary</em> part, and it prevents the result depending on an "
-         "arbitrary choice of block size."),
-        ("4", "Keep the pair together", "The same block of dates is drawn for "
-         "the strategy and the benchmark. Both live through the same simulated "
-         "market, so the common move cancels and what remains is the "
-         "difference between them, which is the quantity in question."),
-        ("5", "Repeat 5,000 times", "Each resample gives one Sharpe difference. "
-         "Five thousand of them trace out the distribution of gaps this data "
-         "could produce."),
-        ("6", "Centre and count", "Shift that distribution to a mean of zero, "
-         "which imposes the null of no true edge, then count how often a "
-         "resample still reaches the observed gap. That fraction is the "
-         "one-sided p-value."),
-    ], columns=["", "step", "what it does"]).set_index(""))
-    r.prose(
-        "So <strong>p = 0.03 means that in 3% of five thousand simulated "
-        "histories, a strategy with no real edge still beat the benchmark by as "
-        "much as this one did.</strong> The 95% confidence intervals reported "
-        "later come from the same 5,000 draws, read at the 2.5th and 97.5th "
-        "percentiles.")
-    r.prose(
-        "Blocks average twelve periods. The seed is fixed, so the numbers "
-        "reproduce exactly. Stars in every table mark *** below 0.01, ** below "
-        "0.05 and * below 0.10.")
-    r.prose(
-        "One limit worth stating: this handles serial dependence, but it does "
-        "not correct for having tried many strategies. Twenty candidates "
-        "against a benchmark will produce a low p-value somewhere by chance, "
-        "which is the reason the holdout exists and the reason candidates are "
-        "chosen on development before it is opened.")
 
     r.section("Development results", (
         "Every model, the full development sample, net of per-asset "
@@ -719,9 +657,9 @@ def phase3():
             "more expensive of the two.")
 
     r.section("Significance", (
-        "The same stationary block bootstrap set out in Phase 2: 5,000 paired "
-        "resamples in blocks of random length, centred on the null of no edge, "
-        "counting how often chance reaches the observed gap."))
+        "A stationary block bootstrap, set out in full in Appendix C: 5,000 "
+        "paired resamples in blocks of random length, centred on the null of no "
+        "edge, counting how often chance reaches the observed gap."))
     if Bt is not None:
         for tag, win in [("dev", "Development"), ("oos", "Holdout"),
                          ("full", "Full sample")]:
@@ -1288,12 +1226,132 @@ def appendix_method():
         "1303-1313. <span class=\"note\">The resampling scheme behind every "
         "p-value reported in this project.</span>")
     r.prose(
+        "Campbell, J. Y. and Thompson, S. B. (2008). Predicting Excess Stock "
+        "Returns Out of Sample: Can Anything Beat the Historical Average? "
+        "<em>Review of Financial Studies</em>, 21(4), 1509-1531. "
+        "<span class=\"note\">The benchmark for what counts as an "
+        "economically meaningful out of sample R squared, cited in Phase 1."
+        "</span>")
+    r.prose(
+        "Cochrane, J. H. and Piazzesi, M. (2005). Bond Risk Premia. "
+        "<em>American Economic Review</em>, 95(1), 138-160. "
+        "<span class=\"note\">The forward rate factor, used as a signal and "
+        "cited on the scale of bond return predictability.</span>")
+    r.prose(
+        "Ledoit, O. and Wolf, M. (2008). Robust Performance Hypothesis Testing "
+        "with the Sharpe Ratio. <em>Journal of Empirical Finance</em>, 15(5), "
+        "850-859. <span class=\"note\">The basis for the bootstrap in "
+        "Appendix C, and the reference the 2025 study cited.</span>")
+    r.prose(
         "Ledoit, O. and Wolf, M. (2004). Honey, I Shrunk the Sample Covariance "
         "Matrix. <em>Journal of Portfolio Management</em>, 30(4), 110-119. "
         "<span class=\"note\">The covariance estimator used by every "
         "risk-based strategy in this project.</span>")
     paginate(r, "appendix_method")
     return r.render(OUT / "appendix_method.html")
+
+
+# ---------------------------------------------------------------- appendix C
+
+def appendix_eval():
+    r = PhaseReport(
+        phase="Appendix C", title="Evaluating Results",
+        summary="P-values, bootstrapping.",
+        status="complete", project=PROJECT)
+
+    r.section("How every p-value in this project is computed", (
+        "Each table from here on carries a p-value against the benchmark. It is "
+        "worth setting out how those are produced, because the textbook "
+        "calculation does not apply to a Sharpe ratio and would overstate "
+        "significance throughout."))
+    r.prose(
+        "<strong>The question being asked.</strong> A strategy beat the "
+        "Aggregate by some margin. Could a strategy with no genuine edge have "
+        "produced a gap that large, purely from the luck of which returns "
+        "happened to land in this sample? The p-value is the fraction of the "
+        "time the answer is yes.")
+    r.prose(
+        "<strong>Why not a t-test.</strong> The standard error of a Sharpe "
+        "ratio assumes returns are independent and normally distributed. Bond "
+        "returns are neither. They cluster: volatile stretches follow volatile "
+        "stretches, and returns in adjacent periods are not independent of one "
+        "another. Serial dependence means the sample contains fewer independent "
+        "observations than it has rows, so a formula that counts rows produces "
+        "an error bar that is too narrow and a p-value that is too small.")
+    r.prose(
+        "<strong>What is done instead.</strong> A stationary block bootstrap, "
+        "following Politis and Romano. The procedure is mechanical:")
+    r.table(pd.DataFrame([
+        ("1", "Take excess returns", "Subtract the risk-free rate from both the "
+         "strategy and the benchmark, on every date, and keep only dates where "
+         "both exist."),
+        ("2", "Resample in blocks", "Build a synthetic history the same length "
+         "as the real one by drawing contiguous <em>blocks</em> of dates rather "
+         "than individual days. Blocks preserve whatever autocorrelation and "
+         "volatility clustering the data has; drawing single days would destroy "
+         "it and hand back the too-narrow error bar."),
+        ("3", "Randomise the block length", "Block lengths are drawn from a "
+         "geometric distribution rather than fixed. That is the "
+         "<em>stationary</em> part, and it prevents the result depending on an "
+         "arbitrary choice of block size."),
+        ("4", "Keep the pair together", "The same block of dates is drawn for "
+         "the strategy and the benchmark. Both live through the same simulated "
+         "market, so the common move cancels and what remains is the "
+         "difference between them, which is the quantity in question."),
+        ("5", "Repeat 5,000 times", "Each resample gives one Sharpe difference. "
+         "Five thousand of them trace out the distribution of gaps this data "
+         "could produce."),
+        ("6", "Centre and count", "Shift that distribution to a mean of zero, "
+         "which imposes the null of no true edge, then count how often a "
+         "resample still reaches the observed gap. That fraction is the "
+         "one-sided p-value."),
+    ], columns=["", "step", "what it does"]).set_index(""))
+    r.prose(
+        "So <strong>p = 0.03 means that in 3% of five thousand simulated "
+        "histories, a strategy with no real edge still beat the benchmark by as "
+        "much as this one did.</strong> The 95% confidence intervals reported "
+        "later come from the same 5,000 draws, read at the 2.5th and 97.5th "
+        "percentiles.")
+    r.prose(
+        "Blocks average twelve periods. The seed is fixed, so the numbers "
+        "reproduce exactly. Stars in every table mark *** below 0.01, ** below "
+        "0.05 and * below 0.10.")
+    r.prose(
+        "One limit worth stating: this handles serial dependence, but it does "
+        "not correct for having tried many strategies. Twenty candidates "
+        "against a benchmark will produce a low p-value somewhere by chance, "
+        "which is the reason the holdout exists and the reason candidates are "
+        "chosen on development before it is opened.")
+
+    r.section("How this extends the 2025 work", (
+        "The original study bootstrapped a Sharpe difference too. Three things "
+        "are done differently here, and each is worth a small amount."))
+    r.prose(
+        "The 2025 version drew 100,000 resamples of <em>individual</em> months, "
+        "paired across both series, and reported the fraction of resampled "
+        "differences at or below zero. It cited Ledoit and Wolf (2008), which "
+        "is the right reference, though that paper argues for a block bootstrap "
+        "rather than the independent draws it actually used.")
+    r.table(pd.DataFrame([
+        ("Blocks instead of single periods", "Individual draws destroy the "
+         "autocorrelation and volatility clustering in the data, which makes "
+         "the resampled distribution too narrow and the p-value too small."),
+        ("Random block length", "Fixed blocks make the answer depend on the "
+         "block size chosen. Drawing lengths from a geometric distribution "
+         "removes that, which is what makes the bootstrap stationary."),
+        ("Centring on the null", "The 2025 p-value was the raw fraction of "
+         "resamples below zero, which is a confidence statement about the "
+         "observed effect rather than a test against a null of no edge. "
+         "Shifting the distribution to a mean of zero first imposes the null."),
+    ], columns=["change", "why it matters"]).set_index("change"))
+    r.prose(
+        "Run side by side on the same data, the three changes move p-values by "
+        "at most about 0.03, always in the conservative direction on the "
+        "development sample. The 2025 conclusion was not wrong; it was measured "
+        "with a method that would understate p on more autocorrelated data, "
+        "which is exactly the situation in this universe.")
+    paginate(r, "appendix_eval")
+    return r.render(OUT / "appendix_eval.html")
 
 
 # ------------------------------------------------------------------- index
@@ -1330,6 +1388,8 @@ def index():
         "forecastability is distributed across it.",
         "Per-asset financing, the shared estimation window, and the "
         "constant-risk convention.",
+        "How every p-value in this project is produced, and how that extends "
+        "the validation in the 2025 study.",
     ]
     cards = "".join(
         f'<a class="card" href="{stem}.html"><span class="num">{label}</span>'
@@ -1428,7 +1488,7 @@ def main() -> int:
         if f.exists():
             f.unlink()
     for fn in [phase1, phase2, phase3, appendix_method, appendix_universe,
-               index]:
+               appendix_eval, index]:
         try:
             p = fn()
             print(f"  wrote {Path(p).name}")
