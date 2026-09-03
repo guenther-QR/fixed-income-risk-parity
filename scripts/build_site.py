@@ -33,6 +33,64 @@ PAGES = [
 
 DROP_ROWS = ["Inverse volatility", "2s10s barbell 50/50"]
 
+# Coded signal names carry the construction, which is useful in the data and
+# unreadable on a page. This turns them back into English.
+ASSET_NAME = {
+    "ust2y": "2y Treasury", "ust5y": "5y Treasury", "ust10y": "10y Treasury",
+    "ust30y": "30y Treasury", "ig_short": "short IG", "ig": "IG credit",
+    "ig_long": "long IG", "hy": "high yield", "mbs": "agency MBS",
+    "muni": "municipals", "muni_hy": "high yield municipals",
+    "ust3m": "3m bill",
+}
+
+
+def signal_name(code: str) -> str:
+    """Translate a coded signal into something readable."""
+    import re as _re
+    c = code
+    if c.startswith("regime_"):
+        return f"{c.replace('regime_', '').title()} regime"
+    if " x " in c:
+        a, b = c.split(" x ", 1)
+        return f"{signal_name(a)} in {b.title()}"
+    m = _re.match(r"d_rev(\d+)_(.+)$", c)
+    if m:
+        return f"{m.group(1)}-day reversal, {ASSET_NAME.get(m.group(2), m.group(2))}"
+    m = _re.match(r"d_mom(\d+)s(\d+)_(.+)$", c)
+    if m:
+        return (f"{int(m.group(1)) // 21}-month momentum, "
+                f"{ASSET_NAME.get(m.group(3), m.group(3))}")
+    m = _re.match(r"d_mom(\d+)_(.+)$", c)
+    if m:
+        d = int(m.group(1))
+        span = f"{d}-day" if d < 21 else f"{d // 21}-month"
+        return f"{span} momentum, {ASSET_NAME.get(m.group(2), m.group(2))}"
+    m = _re.match(r"d_ma(\d+)_(\d+)_(.+)$", c)
+    if m:
+        return (f"{m.group(1)} vs {m.group(2)} day moving average, "
+                f"{ASSET_NAME.get(m.group(3), m.group(3))}")
+    m = _re.match(r"d_rvol(\d+)_(.+?)(_z)?$", c)
+    if m:
+        z = ", z-score" if m.group(3) else ""
+        return (f"{m.group(1)}-day realized volatility, "
+                f"{ASSET_NAME.get(m.group(2), m.group(2))}{z}")
+    named = {
+        "d_vix_chg5": "VIX, 5-day change",
+        "d_vix_chg1": "VIX, 1-day change",
+        "d_vix_z": "VIX, z-score",
+        "d_vix": "VIX, level",
+        "d_nfci_chg": "Chicago Fed financial conditions, change",
+        "d_nfci": "Chicago Fed financial conditions, level",
+        "d_slope_2s10s_chg5": "2s10s curve slope, 5-day change",
+        "d_slope_10y3m_chg5": "10y minus 3m slope, 5-day change",
+        "d_slope_2s10s": "2s10s curve slope",
+        "d_slope_10y3m": "10y minus 3m slope",
+        "d_cp_factor": "Cochrane-Piazzesi forward rate factor",
+    }
+    if c in named:
+        return named[c]
+    return c.replace("d_", "").replace("_", " ")
+
 
 def get(name):
     try:
@@ -285,6 +343,7 @@ def phase2():
     RANK = get("fi_regressor_ranks")
     FAM = get("fi_regressor_families")
     TOP3 = get("fi_regressor_top3")
+    RECUR = get("fi_regressor_recurring")
     FAMB = get("fi_regressor_families_both")
     UNI_M = get("fi_uni_regression_skill")
     MLS_M = get("fi_uni_ml_skill")
@@ -357,6 +416,14 @@ def phase2():
             "day of bond returns is mostly quoting and flow noise. A month "
             "accumulates enough carry, curve movement and spread change for a "
             "signal to attach to.")
+    r.prose(
+        "The municipal holdings are the exception and should be read with care. "
+        "They score higher at daily than at monthly frequency, which reverses "
+        "the pattern everywhere else. Municipal bonds are priced by matrix "
+        "valuation rather than by trades, so their reported daily returns "
+        "autocorrelate at around 0.25 and part of what a daily model predicts "
+        "is a price change that has already occurred. Monthly aggregation "
+        "removes most of that.")
 
     r.section("Which signals do the work", (
         "The combination averages every signal, so it is worth seeing what "
@@ -364,38 +431,51 @@ def phase2():
         "expanding-window regression per signal per asset, on the development "
         "sample."))
     r.prose(
-        "Ranking 256 signals by R squared alone would produce a leaderboard "
-        "whether or not anything predicts, so the more useful view is the top "
-        "three signals for each asset. Signals that recur across assets are the "
-        "ones worth attention.")
-    if TOP3 is not None:
-        t = TOP3.copy()
-        t["r2"] = t["r2"] * 100
-        t = t.rename(columns={"r2": "R squared, %"})
-        t = t.reset_index().set_index("asset")
+        "Ranking 256 signals by R squared would produce a leaderboard whether "
+        "or not anything predicts, and reporting the winner for each of eleven "
+        "assets gives 110 results to read. The more useful question is which "
+        "signals recur. Taking each asset's ten best and keeping only those "
+        "that appear for three or more assets reduces the field to ten.")
+    if RECUR is not None:
+        t = RECUR.copy()
+        # A k-day momentum signal and a k-day reversal signal are the same
+        # quantity with opposite sign, so they score identically. Keep one.
+        t = t[~t.index.str.startswith("d_rev5_")]
+        t.index = [signal_name(x) for x in t.index]
+        t["best_on"] = [ASSET_NAME.get(a, a) for a in t["best_on"]]
+        t["median_r2"] = t["median_r2"] * 100
+        t["best_r2"] = t["best_r2"] * 100
+        t.columns = ["family", "assets in top ten", "median R squared, %",
+                     "best R squared, %", "best on"]
+        t.index.name = "signal"
         r.table(t.round(3),
-                align_right=["rank", "R squared, %"],
-                heat=["R squared, %"],
-                caption="Top three signals per asset, daily data, development "
-                        "sample.")
-        fam_counts = TOP3["family"].value_counts()
-        c = pd.DataFrame({"appearances in the top three": fam_counts})
-        c.index.name = "family"
-        r.table(c, align_right=["appearances in the top three"])
+                align_right=["assets in top ten", "median R squared, %",
+                             "best R squared, %"],
+                heat=["median R squared, %"],
+                caption="Signals appearing in the ten best for three or more "
+                        "assets, daily data, development sample. Momentum and "
+                        "reversal over the same horizon are one quantity with "
+                        "opposite sign, so only one of each pair is shown.")
+
     r.prose(
-        "Two signals recur. <strong>The five day change in the VIX appears in "
-        "the top three for six of the eleven assets</strong>, including every "
-        "credit sleeve and the long Treasuries, which makes it the closest "
-        "thing here to a cross-asset predictor. <strong>Short-term reversal "
-        "appears eleven times</strong>, and almost entirely on the three "
-        "holdings that are marked with a lag. Reversal picking up a delayed "
-        "mark is not the same as reversal picking up a real overreaction, and "
-        "the limitations in Phase 3 cover the difference.")
+        "<strong>Volatility and financial conditions account for six of the ten "
+        "recurring signals</strong>, and the five day change in the VIX appears "
+        "for seven of the eleven assets, more than any other. Nothing in the "
+        "yield curve or carry families recurs at all. Whatever forecastability "
+        "exists at daily frequency comes from the risk environment rather than "
+        "from the term structure.")
     r.prose(
-        "The magnitudes separate the same way. The clean holdings top out "
-        "around 0.2% for the Treasuries and 1.5% for long credit. High yield "
-        "reaches 7.5% and intermediate municipals 6.3%, which is the mark lag "
-        "again rather than six times the forecastability.")
+        "Signals defined on a single asset also predict others. The five day "
+        "return on investment grade credit appears in the top ten for four "
+        "assets, and realized volatility on short investment grade for three. "
+        "In a universe where the first principal component explains most of the "
+        "variance, a signal built on one holding is partly a signal about the "
+        "common factor.")
+    r.prose(
+        "The magnitudes divide along the same line. The best signal reaches "
+        "0.2% on the Treasuries and 1.5% on long credit. On high yield it "
+        "reaches 7.5% and on intermediate municipals 6.3%, a difference "
+        "attributable to the pricing delay rather than to forecastability.")
     if FAMB is not None:
         t = FAMB.copy()
         for c2 in t.columns:
@@ -431,9 +511,20 @@ def phase2():
         clean = [c for c in t.columns if c not in stale]
         t = t[clean + stale]
         r.table(t.round(2), align_right=list(t.columns), heat=list(t.columns),
-                caption="Development out of sample R squared by asset, percent, "
-                        "for the tuned model in each family. The three "
-                        "right-hand columns are the holdings marked with a lag.")
+                caption="Out of sample R squared by asset, percent, "
+                        "development sample. The three right-hand columns are "
+                        "the municipal and high yield funds, whose prices are "
+                        "set by matrix valuation rather than by trades.")
+        r.prose(
+            "<strong>Out of sample and development are not in conflict.</strong> "
+            "<em>Out of sample</em> describes how each forecast was formed: the "
+            "model that predicts a given day was fitted only on data before it, "
+            "so no observation is used to predict itself. <em>Development</em> "
+            "describes the date range over which those forecasts are then "
+            "scored, 1987 to 2015. The holdout is a further period, 2016 "
+            "onward, which no model or model choice has seen at all. So a "
+            "figure can be out of sample in the walk-forward sense and still "
+            "sit inside the development window.")
     if ML is not None:
         picked = ", ".join(
             f"{i.replace('_', ' ')}: {row['params']}"
@@ -444,30 +535,31 @@ def phase2():
     r.prose(
         "<strong>The per-asset view explains the aggregate.</strong> Averaged "
         "across all eleven assets the families look mildly positive, at +2.0% "
-        "for the elastic net and +1.9% for the random forest. Split the "
-        "universe and that reverses: on the eight cleanly priced holdings every "
-        "family is negative, and on the three marked with a lag every family is "
-        "strongly positive.")
+        "for the elastic net and +1.9% for the random forest. Splitting the "
+        "universe reverses that: on the eight holdings that trade continuously "
+        "every family is negative, and on high yield and the two municipal "
+        "funds every family is strongly positive.")
     r.table(pd.DataFrame([
         ("Elastic net", "+2.03", "+7.67", "-0.09"),
         ("Random forest", "+1.90", "+7.83", "-0.33"),
         ("Ridge", "+1.60", "+8.39", "-0.95"),
         ("Gradient boosting", "+1.13", "+4.46", "-0.12"),
-    ], columns=["family", "all 11 assets", "the 3 lagged", "the other 8"]
-    ).set_index("family"),
-        align_right=["all 11 assets", "the 3 lagged", "the other 8"],
-        caption="Development out of sample R squared, percent, daily data.")
+    ], columns=["family", "all 11 assets", "high yield and municipals",
+                "the other 8 assets"]).set_index("family"),
+        align_right=["all 11 assets", "high yield and municipals",
+                     "the other 8 assets"],
+        caption="Out of sample R squared, percent, daily data, development "
+                "sample.")
     r.prose(
-        "This also answers why the daily numbers look better than the monthly "
-        "ones for these models. It is not that daily returns are easier to "
-        "forecast. Monthly aggregation averages the lag away, so a monthly "
-        "series carries almost none of it, while a daily series carries all of "
-        "it and a flexible model finds it immediately. <strong>The daily "
-        "advantage here is the lag, not skill.</strong>")
+        "This also accounts for the daily figures exceeding the monthly ones "
+        "for these models, which is the opposite of the regression result. "
+        "Monthly aggregation averages the pricing delay away; a daily series "
+        "retains it, and a flexible model locates it quickly. <strong>The daily "
+        "advantage is the pricing delay rather than forecast skill.</strong>")
     r.prose(
-        "The regression does not show the same pattern, because averaging 256 "
-        "univariate fits dilutes any single artefact rather than concentrating "
-        "on it. That is the practical case for the combination approach.")
+        "The regression does not show this pattern. Averaging 256 univariate "
+        "fits dilutes any single artefact rather than concentrating on it, "
+        "which is the practical argument for the combination approach.")
 
     r.section("Two ways of turning a forecast into a portfolio", (
         "A return forecast can guide all of the allocation or only part of it. "
@@ -613,9 +705,9 @@ def phase2():
         "to try.")
 
     r.next_up("Phase 3 - Results", [
-        "The held-out decade, opened once",
-        "Constant risk, duration and financing",
-        "What the portfolio actually holds",
+        "Validating strategies on the holdout data",
+        "Trading and leverage costs",
+        "Portfolio characteristics and conclusion",
     ])
     paginate(r, "phase2_strategies")
     return r.render(OUT / "phase2_strategies.html")
