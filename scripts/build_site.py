@@ -23,8 +23,7 @@ DUR = {"ust2y": 1.9, "ust5y": 4.6, "ust10y": 8.4, "ust30y": 18.5,
        "muni": 5.0, "muni_hy": 7.5}
 
 PAGES = [
-    ("phase1_idea", "Phase 1",
-     "Extension from Lessons Learned in my Macro Portfolio Project"),
+    ("phase1_idea", "Phase 1", "The Idea"),
     ("phase2_strategies", "Phase 2", "Strategies"),
     ("phase3_results", "Phase 3", "Results"),
     ("appendix_method", "Appendix A", "Implementation"),
@@ -91,22 +90,19 @@ LEGEND = ('<div class="legend"><span class="l-risk">risk based, no return '
 def phase1():
     r = PhaseReport(
         phase="Phase 1", title="The Idea",
-        summary=("A prior multi-asset study tested roughly 1,600 "
-                 "specifications against a sealed holdout and none beat a "
-                 "60/40 benchmark. Its one durable result pointed at bonds. "
-                 "This phase sets out that evidence, the universe built to "
-                 "follow it, and what this half adds."),
+        summary=("Extension from lessons learned in my macro portfolio "
+                 "project. Asset universe and data collection."),
         status="complete", project=PROJECT)
 
     stats = get("fi_daily_stats")
-    zoo = macro("daily_model_skill")
+    mskill = macro("predict_skill")
 
     r.metrics([
         ("11", "assets in the universe", None),
         ("10,944", "daily observations", None),
         ("1982-2026", "data available", None),
         ("1987-2026", "evaluated, after burn-in", None),
-        ("+2.06%", "best bond monthly out of sample R squared", "pass"),
+        ("+2.1%", "2y Treasury monthly out of sample R squared", "pass"),
     ])
 
     r.section("Where this comes from", (
@@ -121,35 +117,41 @@ def phase1():
         "the held-out decade. One thing in that work did hold up everywhere it "
         "was tested, and it was about bonds rather than about the method.")
 
-    r.section("Predictive skill by instrument and by model", (
-        "Eight model families fitted at daily frequency across a seven asset "
-        "universe, five of which are fixed income. Out of sample R squared is "
-        "measured against a rolling mean forecast, so positive means the model "
-        "beats predicting the average."))
-    if zoo is not None:
-        fi_cols = [c for c in ["ig", "hy", "ust2y", "ust10y", "ust30y"]
-                   if c in zoo.columns]
-        eq_cols = [c for c in ["sp500", "gold"] if c in zoo.columns]
-        t = (zoo[fi_cols + eq_cols] * 100).copy()
-        t.index.name = "model family"
-        r.table(t.round(2), align_right=list(t.columns), heat=list(t.columns),
-                caption="Out of sample R squared, percent. Green positive, red "
-                        "negative, shading scaled within each column. Left "
-                        "block is fixed income, right block equity and gold.")
+    r.section("Predictive skill by instrument", (
+        "The result from the parent project that pointed here. Out of sample R "
+        "squared measures a forecast against a rolling mean: positive means the "
+        "model beat simply predicting the average, and the scale is small by "
+        "construction because monthly asset returns are mostly noise."))
+    if mskill is not None:
+        t = (mskill[["oos_r2"]] * 100).copy()
+        t.columns = ["out of sample R squared, %"]
+        if "cw_p" in mskill.columns:
+            t["Clark-West p"] = mskill["cw_p"]
+        t.index.name = "asset"
+        t = t.sort_values("out of sample R squared, %", ascending=False)
+        r.table(t.round(3), align_right=list(t.columns),
+                heat=["out of sample R squared, %"], stars=["Clark-West p"],
+                caption="Monthly forecasts from the parent project's univariate "
+                        "combination across 152 signals, 1980 to 2015. The "
+                        "Clark-West test is the standard one for comparing a "
+                        "forecast against a nested benchmark.")
     r.prose(
-        "Two patterns. <strong>The fixed income columns are systematically "
-        "better than the equity column.</strong> The two year Treasury is "
-        "positive under six of eight model families; the S&amp;P 500 under "
-        "three, and never by more than two basis points of R squared. And "
-        "<strong>within fixed income the short maturities beat the long "
-        "ones</strong>, an ordering that holds across model families sharing no "
-        "functional form.")
+        "<strong>The two year Treasury is the most forecastable asset at +2.1%, "
+        "and the S&amp;P 500 is the least at zero.</strong> Every fixed income "
+        "instrument except the 30 year is positive; the equity index is not. "
+        "That gap is the entire reason this project exists, and it is a monthly "
+        "result: the same measurement at daily frequency is dominated by how "
+        "quickly each fund is marked rather than by what is predictable, which "
+        "the limitations in Phase 3 set out.")
     r.prose(
-        "The high yield column should be read against the others rather than on "
-        "its own. Illiquid credit is marked with a lag, so a flexible model can "
-        "score against it for reasons that have nothing to do with forecasting "
-        "the future, which is why the elastic net reports +16.95% there and "
-        "close to nothing anywhere else.")
+        "The magnitudes deserve context rather than excitement. An R squared of "
+        "2% means the forecast explains two percent of the variance of next "
+        "month's return, which is small in absolute terms and large by the "
+        "standards of return prediction. It is also concentrated in exactly the "
+        "wrong place: the assets that are forecastable are the short-dated ones "
+        "that carry almost no risk, which Appendix B measures directly and "
+        "which turns out to be the reason a risk-based portfolio beats a "
+        "forecast-driven one here.")
 
     r.section("The asset universe", (
         "Eleven assets at daily frequency. Data begins November 1982 and every "
@@ -178,11 +180,14 @@ def phase1():
                             "autocorr_1"] if c in stats.columns]
         t = stats[cols].copy()
         t.index.name = "asset"
-        r.table(t.round(4), align_right=[c for c in cols if c != "group"],
-                caption="Annualised from daily returns. Return is the "
-                        "arithmetic mean times 252; Sharpe is mean excess "
-                        "return over the standard deviation of excess returns, "
-                        "using the 3 month Treasury bill as the risk free rate.")
+        t.columns = ["group", "annualized return", "annualized volatility",
+                     "Sharpe", "autocorrelation"][:len(cols)]
+        r.table(t.round(4), align_right=[c for c in t.columns if c != "group"],
+                caption="Daily asset statistics, November 1982 to August 2026, "
+                        "annualized. Return is the arithmetic mean times 252. "
+                        "Sharpe is mean excess return divided by the standard "
+                        "deviation of excess returns. Autocorrelation is the "
+                        "first-order autocorrelation of daily returns.")
     r.prose(
         "The autocorrelation column reflects how each market trades. "
         "Treasuries sit between 0.01 and 0.03, which is what a continuously "
@@ -192,30 +197,55 @@ def phase1():
         "property of the asset class rather than of these particular funds, and "
         "its consequences are set out in the limitations in Phase 3.")
     r.prose(
+        "<strong>The risk free rate is the 3 month Treasury bill.</strong> The "
+        "1 month bill would be the more natural choice for a daily series, but "
+        "the Federal Reserve only publishes it from July 2001 and this sample "
+        "begins in November 1982. The 3 month bill covers the whole period, and "
+        "the difference between the two averages a few basis points where they "
+        "overlap.")
+    r.prose(
         "The three month bill is excluded from the portfolio universe. It is a "
         "cash proxy at 0.9% volatility and every risk minimising method piles "
         "into it if allowed. A portfolio that wants less risk should hold less "
         "of the portfolio, not relabel cash as an asset.")
 
-    r.section("What this half adds", (
-        "Beyond the change of universe, three things are new relative to the "
-        "parent study."))
-    r.table(pd.DataFrame([
-        ("A bond-specific signal set", "Carry and rolldown by maturity, "
-         "modified duration, forward rates at every curve node, and the "
-         "Cochrane-Piazzesi forward rate factor, alongside the macro and credit "
-         "signals carried over."),
-        ("Regime terms inside the models", "Regime dummies and regime "
-         "interactions enter the signal panel directly, so a regime can change "
-         "a signal's slope rather than only its intercept."),
-        ("One estimation window", "Every model class burns in for the same "
-         "sixty months and is scored on the same dates, so a comparison across "
-         "classes is not a comparison of sample lengths."),
-    ], columns=["addition", "what it means"]).set_index("addition"))
+    r.section("Extension beyond the original project", (
+        "What was already built, and what this project adds to it."))
     r.prose(
-        "The walk-forward backtesting framework is carried over unchanged, "
-        "which is what makes results across the two projects directly "
-        "comparable.")
+        "<strong>Carried over from the macro project.</strong> The fixed income "
+        "machinery was built there and is reused here unchanged. Treasury par "
+        "yields are bootstrapped into a zero curve, correcting for the fact "
+        "that the published grid starts at six months, which left the risk free "
+        "rate carrying a 14.8 basis point bias until money market points were "
+        "added at one and three months. Constant maturity holdings are then "
+        "priced off that single discount function, so a 2 year and a 30 year "
+        "differ in maturity and nothing else rather than being two unrelated "
+        "vendor series. Each holding genuinely ages and is rolled back to "
+        "target, which is what a bond index does, and the resulting return is "
+        "decomposed into carry, rolldown, duration and convexity. The "
+        "walk-forward backtesting engine, the per-asset transaction costs and "
+        "the sealed holdout come across intact, which is what makes results "
+        "from the two projects directly comparable.")
+    r.prose(
+        "<strong>New here.</strong> Three things:")
+    r.table(pd.DataFrame([
+        ("A fixed income universe", "Eleven assets rather than the parent "
+         "project's seven, and all of them bonds: four Treasury maturities, "
+         "four corporate credit sleeves, agency mortgages and two municipal "
+         "holdings. The credit and municipal sleeves are new instruments, not "
+         "reweighted versions of what came before."),
+        ("Bond-specific signals and factors", "Carry and rolldown by maturity, "
+         "modified duration, forward rates at every curve node, the "
+         "Cochrane-Piazzesi forward rate factor, and yield curve principal "
+         "components as level, slope and curvature. The parent project's macro "
+         "and credit signals are kept alongside them."),
+        ("Risk-based construction as the main line", "The parent project spent "
+         "most of its effort forecasting returns and concluded that was the "
+         "wrong place to spend it. This one tests forecasting again on a "
+         "universe where it should work better, and then builds the portfolio "
+         "from the covariance matrix instead. That comparison, run on one "
+         "sample with one estimation window, is the substance of Phase 2."),
+    ], columns=["addition", "what it means"]).set_index("addition"))
 
     r.next_up("Phase 2 - Strategies", [
         "Five model classes and how each forms its weights",
@@ -741,7 +771,7 @@ def phase3():
         "matched version at p = 0.008, and equal risk contribution from +0.087 "
         "to +0.088 at p = 0.012. All intervals exclude zero.")
 
-    r.section("Risk Parity Portfolio Holdings over Time", (
+    r.section("Portfolio characteristics", (
         "A risk parity book is usually described and rarely shown. These are "
         "the realised weights, month by month."))
     if HW is not None and len(HW):
@@ -1270,12 +1300,12 @@ def index():
                      + "".join(f"<td>{c}</td>" for c in cells) + "</tr>")
 
     descs = [
-        "Where the project comes from, the eleven asset universe, and what this "
-        "half adds to the parent study.",
+        "Extension from lessons learned in my macro portfolio project. Asset "
+        "universe and data collection.",
         "Five model classes, how each forms its weights, and how they score on "
         "the development sample.",
         "The held-out decade, the constant-risk comparison, the duration check, "
-        "and what the portfolio actually holds.",
+        "and portfolio characteristics.",
         "How much independent variation the universe contains, and how "
         "forecastability is distributed across it.",
         "Per-asset financing, the shared estimation window, and the "
@@ -1339,22 +1369,13 @@ prior project, so results across the two are directly comparable.</p>
 <p><b>What was tested.</b> Carry and momentum signals, univariate regression
 forecasts including regime interactions, four machine learning families tuned on
 the development sample, regime-conditional estimation, and risk-based
-construction. Each return signal was run both as a bounded tilt and as a
-standalone portfolio.</p>
+construction.</p>
 
 <p><b>What worked.</b> Risk parity, which never needs an expected return at all.
 I built and tested both classic risk parity and Marcos Lopez de Prado's
 Hierarchical Risk Parity, benchmarked against the Bloomberg Aggregate with equal
 weight as a second reference.</p>
 
-<p><b>How performance is measured.</b> A Sharpe ratio earned at 2.8% volatility
-and one earned at 4.2% are not the same claim, so <b>every comparison is made at
-constant risk</b>: each strategy is scaled to the index's own volatility, with
-financing charged per asset at an institutional cost of funds.</p>
-
-<p><b>The duration question.</b> Risk parity naturally holds less duration, so
-the obvious objection is that this is a bet on shorter bonds. It is not, and
-Phase 3 sets out the duration-matched test.</p>
 </div>
 
 <h2>Sharpe ratio, and edge against the Aggregate index</h2>

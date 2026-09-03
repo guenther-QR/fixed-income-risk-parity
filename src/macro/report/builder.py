@@ -55,12 +55,15 @@ class PhaseReport:
               align_right: list[str] | None = None,
               caption: str | None = None,
               heat: list[str] | None = None,
+              heat_rows: bool = False,
               row_class: dict | None = None,
               stars: list[str] | None = None) -> "PhaseReport":
         """Render a frame.
 
-        heat        columns to shade by value, green positive, red negative,
-                    opacity scaled to the largest magnitude in that column.
+        heat        columns to shade by value, green positive, red negative.
+        heat_rows   scale the shading within each row instead of each column,
+                    so the reader sees what a given row is relatively good at
+                    rather than which row is best at a given column.
         row_class   index label -> css class, for grouping rows by kind.
         stars       p-value columns to mark: *** below .01, ** below .05,
                     * below .10.
@@ -71,7 +74,11 @@ class PhaseReport:
         row_class = row_class or {}
         cols = list(df.columns)
 
-        scale = {}
+        scale, row_scale = {}, {}
+        if heat_rows and heat:
+            sub = df[heat].apply(pd.to_numeric, errors="coerce").abs()
+            for idx, v in sub.max(axis=1).items():
+                row_scale[idx] = float(v) if v and np.isfinite(v) and v > 0 else 1.0
         for c in heat:
             v = pd.to_numeric(df[c], errors="coerce").abs().max()
             scale[c] = float(v) if v and np.isfinite(v) and v > 0 else 1.0
@@ -93,7 +100,8 @@ class PhaseReport:
                 if c in heat:
                     v = pd.to_numeric(pd.Series([row[c]]), errors="coerce").iloc[0]
                     if pd.notna(v):
-                        a = min(abs(float(v)) / scale[c], 1.0) * 0.42
+                        denom = row_scale.get(idx, scale[c]) if heat_rows else scale[c]
+                        a = min(abs(float(v)) / denom, 1.0) * 0.42
                         rgb = "46,125,90" if v > 0 else "160,58,58"
                         style = f' style="background:rgba({rgb},{a:.3f})"'
                 if c in stars:

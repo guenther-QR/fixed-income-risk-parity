@@ -51,22 +51,13 @@ prior project, so results across the two are directly comparable.</p>
 <p><b>What was tested.</b> Carry and momentum signals, univariate regression
 forecasts including regime interactions, four machine learning families tuned on
 the development sample, regime-conditional estimation, and risk-based
-construction. Each return signal was run both as a bounded tilt and as a
-standalone portfolio.</p>
+construction.</p>
 
 <p><b>What worked.</b> Risk parity, which never needs an expected return at all.
 I built and tested both classic risk parity and Marcos Lopez de Prado's
 Hierarchical Risk Parity, benchmarked against the Bloomberg Aggregate with equal
 weight as a second reference.</p>
 
-<p><b>How performance is measured.</b> A Sharpe ratio earned at 2.8% volatility
-and one earned at 4.2% are not the same claim, so <b>every comparison is made at
-constant risk</b>: each strategy is scaled to the index's own volatility, with
-financing charged per asset at an institutional cost of funds.</p>
-
-<p><b>The duration question.</b> Risk parity naturally holds less duration, so
-the obvious objection is that this is a bet on shorter bonds. It is not, and
-Phase 3 sets out the duration-matched test.</p>
 </div>
 
 <h2>Sharpe ratio, and edge against the Aggregate index</h2>
@@ -79,7 +70,7 @@ Phase 3 sets out the duration-matched test.</p>
 <p class="note">Stars mark one-sided bootstrap significance against the
 Aggregate: *** below 0.01, ** below 0.05, * below 0.10.</p>
 
-<a class="card" href="phase1_idea.html"><span class="num">Phase 1</span><span class="ttl">Extension from Lessons Learned in my Macro Portfolio Project</span><span class="dsc">Where the project comes from, the eleven asset universe, and what this half adds to the parent study.</span></a><a class="card" href="phase2_strategies.html"><span class="num">Phase 2</span><span class="ttl">Strategies</span><span class="dsc">Five model classes, how each forms its weights, and how they score on the development sample.</span></a><a class="card" href="phase3_results.html"><span class="num">Phase 3</span><span class="ttl">Results</span><span class="dsc">The held-out decade, the constant-risk comparison, the duration check, and what the portfolio actually holds.</span></a><a class="card" href="appendix_method.html"><span class="num">Appendix A</span><span class="ttl">Implementation</span><span class="dsc">How much independent variation the universe contains, and how forecastability is distributed across it.</span></a><a class="card" href="appendix_universe.html"><span class="num">Appendix B</span><span class="ttl">Market Dynamics</span><span class="dsc">Per-asset financing, the shared estimation window, and the constant-risk convention.</span></a>
+<a class="card" href="phase1_idea.html"><span class="num">Phase 1</span><span class="ttl">The Idea</span><span class="dsc">Extension from lessons learned in my macro portfolio project. Asset universe and data collection.</span></a><a class="card" href="phase2_strategies.html"><span class="num">Phase 2</span><span class="ttl">Strategies</span><span class="dsc">Five model classes, how each forms its weights, and how they score on the development sample.</span></a><a class="card" href="phase3_results.html"><span class="num">Phase 3</span><span class="ttl">Results</span><span class="dsc">The held-out decade, the constant-risk comparison, the duration check, and portfolio characteristics.</span></a><a class="card" href="appendix_method.html"><span class="num">Appendix A</span><span class="ttl">Implementation</span><span class="dsc">How much independent variation the universe contains, and how forecastability is distributed across it.</span></a><a class="card" href="appendix_universe.html"><span class="num">Appendix B</span><span class="ttl">Market Dynamics</span><span class="dsc">Per-asset financing, the shared estimation window, and the constant-risk convention.</span></a>
 <footer>
 The project this grew out of:
 <a class="plain" href="https://guenther-qr.github.io/macro-portfolio-rebuild/">macro-portfolio-rebuild</a>.
