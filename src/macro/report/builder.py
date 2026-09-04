@@ -58,7 +58,8 @@ class PhaseReport:
               heat_rows: bool = False,
               row_class: dict | None = None,
               stars: list[str] | None = None,
-              compact: bool = False) -> "PhaseReport":
+              compact: bool = False,
+              bench_row: str | None = None) -> "PhaseReport":
         """Render a frame.
 
         heat        columns to shade by value, green positive, red negative.
@@ -213,7 +214,6 @@ class PhaseReport:
     # ------------------------------------------------------------------ render
 
     def render(self, path: str | Path) -> Path:
-        built = datetime.now().strftime("%d %B %Y, %H:%M")
         page = f"""<title>{html.escape(self.phase)} {html.escape(self.title)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -226,7 +226,6 @@ class PhaseReport:
     </div>
     <h1><span class="masthead__phase">{html.escape(self.phase)}</span>{html.escape(self.title)}</h1>
     <p class="standfirst">{self.summary}</p>
-    <p class="built">Generated {built}</p>
   </header>
   <main>
     {"".join(self._blocks)}

@@ -324,4 +324,14 @@ span.pager__slot { border-color: transparent; }  /* first and last page */
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
+/* A result that clears five percent is worth seeing without reading the
+   p-value column, so the cell carries a tint rather than only a star. */
+.sig-cell { background: rgba(65,105,225,.10); font-weight: 600; }
+tr.bench-row th, tr.bench-row td {
+  background: rgba(207,106,26,.09);
+  border-top: 1.5px solid #cf6a1a;
+  border-bottom: 1.5px solid #cf6a1a;
+}
+tr.bench-row th::after { content: " \2190 benchmark"; color: #cf6a1a;
+  font-size: .78em; letter-spacing: .04em; white-space: nowrap; }
 """

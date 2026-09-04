@@ -58,7 +58,7 @@ HOLDOUT_SET = {
     "HRP + Rolling 60m overlay": "confirmatory",
     "HRP, annual": "confirmatory",
     "HRP + Momentum (Sharpe) overlay": "confirmatory",
-    "ERC, annual": "confirmatory",
+    "ERC, annual": "comparison",
     "Rolling 60m, long only": "exploratory",
     "Momentum (Sharpe), long only": "exploratory",
 }

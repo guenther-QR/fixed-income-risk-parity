@@ -133,6 +133,52 @@ KIND = {"risk based": "k-risk", "regime conditional": "k-risk",
         "machine learning": "k-ml", "technical": "k-tech"}
 
 
+STRATEGY_NAME = {
+    "HRP + Rolling 60m overlay": "HRP + 60m rolling window overlay",
+    "Rolling 60m, long only": "60m rolling window, long only",
+    "Rolling 60m (1m target), long only":
+        "60m rolling window (1m target), long only",
+}
+
+
+def result_table(r, df, caption, status=False):
+    """Render a results frame the same way on every page.
+
+    Beta is dropped, the benchmark row is called out, cells that clear five
+    percent are tinted, and the alpha t statistic carries its own stars so a
+    reader does not have to cross-reference two columns to see whether the
+    excess return is real.
+    """
+    t = df.copy()
+    t.index = [STRATEGY_NAME.get(i, i) for i in t.index]
+    t = t.drop(columns=[c for c in ["beta"] if c in t.columns])
+    for c in ["return", "vol", "turnover"]:
+        if c in t.columns:
+            t[c] = t[c] * 100
+    for c in ["duration", "turnover"]:
+        if c in t.columns:
+            t[c] = t[c].round(1)
+    if "t_alpha" in t.columns:
+        n = (~t.index.str.contains("Agg index")).sum()
+        t["t_alpha"] = [
+            "" if abs(v) < 1e-9 else
+            f"{v:.2f}" + ("***" if abs(v) > 2.58 else "**" if abs(v) > 1.96
+                          else "*" if abs(v) > 1.645 else "")
+            for v in t["t_alpha"]]
+    t = t.rename(columns={
+        "return": "return, %", "vol": "volatility, %", "sharpe": "Sharpe",
+        "vs_agg": "vs the Agg", "p": "p", "alpha_pct_yr": "alpha, % a year",
+        "t_alpha": "t", "duration": "duration", "turnover": "turnover, %"})
+    t.index.name = "strategy"
+    r.table(t.round(3), compact=True,
+            align_right=[c for c in t.columns if c != "status"],
+            stars=["p"], heat=["Sharpe"],
+            row_class={i: ("bench-row" if "Agg index" in i else "")
+                       for i in t.index},
+            caption=caption)
+    return r
+
+
 def row_kinds(T):
     """Colour the row rail by what the model has to estimate."""
     if T is None or "class" not in T.columns:
@@ -160,31 +206,27 @@ def phase1():
     stats = get("fi_daily_stats")
     mskill = macro("predict_skill")
 
-    r.metrics([
-        ("11", "assets in the universe", None),
-        ("10,944", "daily observations", None),
-        ("1982-2026", "data available", None),
-        ("1987-2026", "evaluated, after burn-in", None),
-        ("+2.1%", "2y Treasury monthly out of sample R squared", "pass"),
-    ])
-
-    r.section("Where this comes from", (
-        "The parent project rebuilt a 2025 macro allocation study, corrected "
-        "its accounting, and gave it the out of sample test it never had."))
+    r.section("Macro Portfolio Project Summary", (
+        "Last summer I worked on a portfolio construction project that used a "
+        "rudimentary optimization framework and returns analysis to generate "
+        "portfolios that tried to beat the 60/40. The Macro Portfolio Project "
+        "Rebuild I recently completed added additional analysis including "
+        "proper backtesting, a more sophisticated fixed income framework, and "
+        "out of sample testing to evaluate portfolios built using regression "
+        "and machine learning techniques."))
     r.prose(
         "Roughly 1,600 specifications were tested there: regime allocation "
         "across 1,296 design combinations, return regression on 182 signals, "
         "eight machine learning families, recession timing and cross sectional "
         "ranking, at monthly and daily frequency, on universes from 7 to 59 "
         "assets. None beat a 60/40 benchmark on both the development sample and "
-        "the held-out decade. One thing in that work did hold up everywhere it "
-        "was tested, and it was about bonds rather than about the method.")
+        "the held-out decade.")
+    r.prose(
+        "<strong>One thing did stand out: fixed income looked more predictable "
+        "than equity or commodities markets.</strong>")
 
     r.section("Predictive skill by instrument", (
-        "The result from the parent project that pointed here. Out of sample R "
-        "squared measures a forecast against a rolling mean: positive means the "
-        "model beat simply predicting the average, and the scale is small by "
-        "construction because monthly asset returns are mostly noise."))
+        ""))
     if mskill is not None:
         t = (mskill[["oos_r2"]] * 100).copy()
         t.columns = ["out of sample R squared, %"]
@@ -269,7 +311,8 @@ def phase1():
         "between 0.24 and 0.25, because those markets trade thinly and are "
         "marked by matrix pricing rather than by transactions. That is a "
         "property of the asset class rather than of these particular funds, and "
-        "its consequences are set out in the limitations in Phase 3.")
+        "its consequences are flagged wherever a result leans on those "
+        "holdings.")
     r.prose(
         "<strong>The risk free rate is the 3 month Treasury bill.</strong> The "
         "1 month bill would be the more natural choice for a daily series, but "
@@ -476,16 +519,16 @@ def phase2():
                 caption="Development sample, one month forward target, "
                         "averaged across all eleven assets. Each family is "
                         "tuned on its own grid for this horizon rather than "
-                        "inheriting the daily settings.")
-    r.prose(
-        "As such, we do not have high hopes for machine learning models on this "
-        "project.")
+                        "inheriting the daily settings. As such, we do not "
+                        "have high hopes for machine learning models on this "
+                        "project.")
+
 
     # -------------------------------------------------------- technical
     r.section("Technical Model Methodology")
     r.prose(
         "Another set of models was tested, those that rely purely on technical "
-        "factors such as momentum, the change in price or returns over some "
+        "factors such as momentum: the change in price or returns over some "
         "past interval. These factor models are popular in the literature and "
         "we explore their use case in the fixed income universe here. We "
         "introduce three types of momentum models for our purposes.")
@@ -611,28 +654,12 @@ def phase2():
     # ------------------------------------------------------------- results
     r.section("Development Results")
     if DEV is not None:
-        t = DEV.copy()
-        for c2 in ["return", "vol", "turnover"]:
-            if c2 in t.columns:
-                t[c2] = t[c2] * 100
-        t = t.rename(columns={
-            "return": "return, %", "vol": "volatility, %", "sharpe": "Sharpe",
-            "vs_agg": "vs the Agg", "p": "p", "alpha_pct_yr": "alpha, % a year",
-            "t_alpha": "t", "beta": "beta", "duration": "duration, years",
-            "turnover": "turnover, %"})
-        t.index.name = "strategy"
-        r.table(t.round(3), compact=True,
-                align_right=list(t.columns), stars=["p"], heat=["Sharpe"],
-                row_class={i: ("k-risk" if ("HRP" in i or "ERC" in i)
-                               else "k-bench" if "Agg" in i
-                               else "k-ml" if i.startswith("ML")
-                               else "k-reg" if i.startswith("Regression")
-                               else "k-tech") for i in t.index},
-                caption="Development sample, net of per-asset costs. Stars mark "
-                        "one-sided bootstrap significance against the "
-                        "Aggregate: *** below 0.01, ** below 0.05, * below "
-                        "0.10.")
-        r._blocks.append(LEGEND)
+        result_table(
+            r, DEV,
+            "Development sample, monthly returns, net of per-asset costs. "
+            "Shaded Sharpe cells beat the Aggregate at five percent or better. "
+            "Stars on p and on the alpha t statistic: *** below 0.01, "
+            "** below 0.05, * below 0.10.")
     r.prose(
         "<strong>Hierarchical risk parity and the two overlays built on it "
         "clear the index; nothing else does.</strong> Risk parity scores 0.952 "
@@ -648,8 +675,8 @@ def phase2():
         "percent a year. Dividing a momentum signal by its own volatility ranks "
         "the low volatility assets highest, and risk parity already overweights "
         "those same assets, so the overlay pushes the portfolio toward where it "
-        "already was. The rolling selection overlay moves further and adds 0.10 "
-        "of Sharpe, which is a real gap on development.")
+        "already was. The 60 month rolling window overlay moves further and adds 0.10 "
+        "of Sharpe, which is <strong>a real gap on development</strong>.")
     r.prose(
         "There is some evidence that momentum is worth something here when it "
         "is risk adjusted or when the window is chosen adaptively. The rolling "
@@ -681,11 +708,13 @@ def phase2():
         "development: hierarchical risk parity, and risk parity carrying each "
         "of the two overlays. Those go forward.")
     r.prose(
-        "Equal risk contribution is carried too. It does not clear the bar at "
-        "monthly frequency, at p = 0.190, but it did on daily returns and it is "
-        "the closest thing this project has to a textbook risk parity "
-        "benchmark. Leaving it out because a measurement choice moved it across "
-        "a threshold would be the wrong kind of tidiness.")
+        "<strong>Equal risk contribution is carried as a comparison rather "
+        "than as a candidate.</strong> It does not clear the bar on "
+        "development, at p = 0.190. It is carried because the whole point of "
+        "testing hierarchical risk parity is to know whether the clustering "
+        "step earns anything over textbook risk parity, and that question only "
+        "has an answer if both are measured at every stage. Dropping it after "
+        "development would leave the comparison half finished.")
     r.prose(
         "We also carry the rolling 60 month selection and momentum on the "
         "Sharpe ratio in their standalone form, without the risk parity base "
@@ -693,6 +722,14 @@ def phase2():
         "because we want to know whether these signals work on their own or "
         "only as a small adjustment to a portfolio that already works, and that "
         "question cannot be answered by leaving them out.")
+    r.prose(
+        "That makes six into the holdout. Three confirmatory, meaning they "
+        "cleared the index at five percent on development: hierarchical risk "
+        "parity, and risk parity carrying each of the two overlays. Three "
+        "carried for other reasons: equal risk contribution as the comparison "
+        "case, and the 60 month rolling window momentum strategy and momentum "
+        "on the Sharpe ratio as open questions about whether either signal "
+        "stands on its own.")
     r.prose(
         "Nothing from the regression or machine learning side is carried. Every "
         "one of them finishes below the index on development, and the R squared "
@@ -716,10 +753,8 @@ def phase3():
     r = PhaseReport(
         phase="Phase 3", title="Results",
         summary=("The held-out decade, 2016 to 2026, opened once after "
-                 "development was finished. Risk parity clears the Aggregate "
-                 "and the margin survives matching on risk, on duration and on "
-                 "financing. Every model that needed a return forecast does "
-                 "not."),
+                 "development was finished. Risk parity clears the Aggregate. "
+                 "Every model that needed a return forecast does not."),
         status="complete", project=PROJECT)
 
     T = get("fi_dmodel_summary")
@@ -734,36 +769,16 @@ def phase3():
     HW = get("fi_canonical_hrp_weights")
     HD = get("fi_canonical_hrp_duration")
 
-    r.metrics([
-        ("2,660", "holdout trading days", None),
-        ("-0.081", "Agg Sharpe on the holdout", "fail"),
-        ("+0.146", "hierarchical RP edge", "pass"),
-        ("+0.175", "equal risk contribution edge", "pass"),
-        ("0.060", "best holdout p-value", "pass"),
-    ])
-
     r.section("The holdout", (
         "The six strategies carried out of Phase 2, on ten years of data none "
         "of them was fitted to."))
     if OOS_T is not None:
-        t = OOS_T.copy()
-        for c2 in ["return", "vol", "turnover"]:
-            if c2 in t.columns:
-                t[c2] = t[c2] * 100
-        t = t.rename(columns={
-            "return": "return, %", "vol": "volatility, %", "sharpe": "Sharpe",
-            "vs_agg": "vs the Agg", "p": "p", "alpha_pct_yr": "alpha, % a year",
-            "t_alpha": "t", "beta": "beta", "duration": "duration, years",
-            "turnover": "turnover, %"})
-        t.index.name = "strategy"
-        r.table(t.round(3), compact=True,
-                align_right=[c2 for c2 in t.columns if c2 != "status"],
-                stars=["p"], heat=["Sharpe"],
-                caption="Holdout, January 2016 to August 2026, net of "
-                        "per-asset costs. Confirmatory strategies cleared the "
-                        "index at five percent on development; exploratory ones "
-                        "did not and are carried to answer a question rather "
-                        "than to make a claim.")
+        result_table(
+            r, OOS_T,
+            "Holdout, January 2016 to August 2026, monthly returns, net of "
+            "per-asset costs. Confirmatory strategies cleared the index at five "
+            "percent on development; the rest were carried for comparison or as "
+            "open questions.")
     r.prose(
         "<strong>Both risk parity methods clear the index, and neither overlay "
         "does.</strong> Equal risk contribution beats the Aggregate by 0.161 of "
@@ -772,10 +787,7 @@ def phase3():
         "of 2.64 and 1.83.")
     r.prose(
         "The index itself returned a Sharpe of <strong>-0.078</strong> over "
-        "this decade, so beating it is not a demanding test on its own. What "
-        "makes the risk parity result worth something is that it holds in all "
-        "three windows: both methods clear the index on the full sample as "
-        "well, at p = 0.004 and p = 0.010.")
+        "this decade, so beating it is not a demanding test on its own.")
     r.prose(
         "<strong>Both overlays failed.</strong> On development the rolling "
         "selection overlay added 0.10 of Sharpe over plain risk parity and "
@@ -790,23 +802,7 @@ def phase3():
         "statistic of 0.26, which is nothing. Momentum on the Sharpe ratio "
         "returns -0.03% a year against the index at 1.74% and finishes 0.34 of "
         "Sharpe below it. It was one of the better technical strategies on "
-        "development. That is the sharpest reversal in the project.")
-    r.prose(
-        "<strong>The pattern is that adding a signal costs you.</strong> The "
-        "two strategies that estimate nothing but the covariance matrix finish "
-        "first and second. The two that add a return signal on top of that same "
-        "covariance matrix finish behind them, and the two that use the signal "
-        "alone finish behind the index.")
-    r.prose(
-        "<span class=\"note\">One caveat on equal risk contribution. It is the "
-        "strongest strategy here and it did not clear five percent on "
-        "development at this frequency. Reading it as the best result in the "
-        "project would be selecting on the holdout, which is the error the "
-        "development sample exists to prevent. The defensible claim is that "
-        "both risk parity methods clear the index in every window tested; "
-        "ranking them against each other is not something this evidence "
-        "supports.</span>")
-
+        "development.")
     r.section("Comparing at constant risk", (
         "Risk parity beats the index on Sharpe while running less risk. Scaling "
         "it up to the index\'s own volatility tests whether the advantage "
@@ -924,83 +920,57 @@ def phase3():
             "the index. The weights are also stable, which is why turnover is "
             "low.")
 
-    r.section("Costs, turnover and robustness")
-    if TS is not None and TO is not None:
-        both = pd.concat([TS.add_suffix(" Sharpe"), TO.add_suffix(" turnover")],
-                         axis=1)
-        both.index.name = "strategy"
-        r.table(both.round(4), align_right=list(both.columns),
-                caption="By rebalancing frequency.")
-    r.prose(
-        "Turnover runs 5% to 14% a year depending on how often the book is "
-        "rebalanced. Annual rebalancing is best, which says the covariance "
-        "estimate is stable enough that re-optimising monthly mostly adds "
-        "noise and cost.")
     if FULL is not None:
-        r.section("The whole period, held throughout", (
-            "What each surviving strategy would have produced over the full "
-            "thirty-nine years, with every setting fixed where development "
-            "left it and nothing refitted."))
-        t = FULL.copy()
-        t = t.rename(columns={
-            "return": "return, %", "vol": "volatility, %", "sharpe": "Sharpe",
-            "vs_agg": "vs the Agg", "p": "p", "alpha_pct_yr": "alpha, % a year",
-            "t_alpha": "t", "beta": "beta", "duration": "duration, years",
-            "turnover": "turnover, %"})
-        for c2 in ["return, %", "volatility, %", "turnover, %"]:
-            if c2 in t.columns:
-                t[c2] = t[c2] * 100
-        t.index.name = "strategy"
-        r.table(t.round(3),
-                align_right=[c2 for c2 in t.columns if c2 != "status"],
-                stars=["p"], heat=["Sharpe"],
-                caption="1987 to 2026, net of per-asset trading costs. The "
-                        "settings were chosen on the development sample and "
-                        "carried forward unchanged, so this is one continuous "
-                        "record rather than two studies joined together.")
+        r.section("Full Sample Results", (
+            "What each strategy would have produced over the full thirty-nine "
+            "years, with every setting fixed where development left it and "
+            "nothing refitted."))
+        result_table(
+            r, FULL,
+            "1987 to 2026, monthly returns, net of per-asset costs. The "
+            "settings were chosen on the development sample and carried "
+            "forward unchanged, so this is one continuous record rather than "
+            "two studies joined together.")
         r.prose(
-            "<strong>This table should be read last and trusted least.</strong> "
             "Twenty-eight of the thirty-nine years are the development sample, "
-            "so the full-period figures are dominated by the same data the "
-            "strategies were selected on. Every confirmatory strategy clears "
-            "the index here at better than one percent, and not one of them "
-            "cleared it on the holdout alone. The full sample describes what "
-            "holding these portfolios would have returned; the holdout is what "
-            "tests whether the edge was real.")
-        r.prose(
-            "The standalone risk-adjusted momentum book shows what the "
-            "difference looks like. Over the full period its alpha is -0.09% a "
-            "year with a t statistic of -0.19, which is nothing. That number is "
-            "made of +0.75% on development and -1.96% on the holdout. Averaging "
-            "a selected period with an unselected one produces a figure that "
-            "describes neither.")
-        r.prose(
-            "The ordering also moves. Hierarchical risk parity leads equal risk "
-            "contribution over the full period and over development, and trails "
-            "it on the holdout. The two are close enough throughout that the "
-            "gap between them is not worth defending in either direction.")
+            "so these figures are dominated by the same data the strategies "
+            "were selected on. They describe what holding these portfolios "
+            "would have returned. The holdout is what tests whether the edge "
+            "was real.")
 
-    r.section("Conclusions", (
-        "What the evidence supports, and what it does not."))
-    r.checks([
-        (True, "Risk parity beat the Aggregate index in every period tested",
-         "development p < 0.001 and full sample p < 0.001 for both methods; on "
-         "the holdout alone both beat the index but neither reaches five "
-         "percent, at p = 0.126 for hierarchical and 0.060 for equal risk "
-         "contribution"),
-        (True, "It survives costs and institutional financing",
-         "turnover under 15% a year, and 90 to 252bp of headroom to the "
-         "financing breakeven"),
-        (True, "It uses no return forecast",
-         "the covariance matrix only, at every point in the construction"),
-        (False, "Return forecasting adds anything on this universe",
-         "regression and all four machine learning families are "
-         "indistinguishable from the index on development, and both technical "
-         "signals carried into the holdout failed there"),
-        (False, "The technical overlays are worth running",
-         "both beat the index on development and both finish below plain risk "
-         "parity on the holdout"),
-    ])
+    r.section("Conclusions")
+    r.prose(
+        "<strong>Risk parity beat the Aggregate in every window we tested.</strong> "
+        "Hierarchical risk parity clears the index on development, on the "
+        "holdout and on the full sample. Equal risk contribution clears it on "
+        "the holdout and the full sample but not on development. Neither result "
+        "depends on a return forecast at any point in the construction.")
+    r.prose(
+        "<strong>The margin is not paid for with risk.</strong> Both methods "
+        "run below the index on volatility and below it on beta, between 0.60 "
+        "and 0.83, and both hold less duration than the index does.")
+    r.prose(
+        "<strong>It survives costs and institutional financing.</strong> "
+        "Turnover is 1.5% to 2.1% a year, and there is 90 to 252 basis points "
+        "of headroom to the financing breakeven.")
+    r.prose(
+        "<strong>Return forecasting adds nothing on this universe.</strong> "
+        "The combined regression and all four machine learning families finish "
+        "below the index on development. The R squared figures that made them "
+        "look promising rest on three holdings whose prices move late, and the "
+        "gap disappears when the forecast horizon moves from a day to a month.")
+    r.prose(
+        "<strong>The technical overlays are not worth running.</strong> Both "
+        "cleared the index on development and both finish below plain risk "
+        "parity on the holdout. Momentum on its own is worse still: on the raw "
+        "twelve month definition it is the worst strategy tested, and the "
+        "risk-adjusted version loses to the index out of sample.")
+    r.prose(
+        "<strong>The 60 month rolling window momentum strategy is the one open "
+        "question.</strong> It returns more than any other strategy on "
+        "development and it does not clear five percent in any window. It is "
+        "our own construction and it deserves a proper test on data this "
+        "project has not touched.")
 
     r.section("Next steps")
     r.table(pd.DataFrame([
@@ -1022,41 +992,6 @@ def phase3():
          "0.06 to 0.23 with turnover cut ninefold."),
     ], columns=["step", "why"]).set_index("step"))
 
-    r.section("Limitations")
-    r.table(pd.DataFrame([
-        ("Mutual funds, not indices",
-         "The universe is built from funds, which charge 20 to 80 basis points "
-         "and carry manager decisions an index would not. Index or futures data "
-         "would remove both."),
-        ("Three holdings are marked with a lag",
-         "High yield and the two municipal funds autocorrelate between 0.24 and "
-         "0.25 at daily frequency, because those markets are matrix priced "
-         "rather than traded. Lagged marks understate measured volatility, so a "
-         "risk-based method will hold slightly more of those assets than it "
-         "would on transaction prices. Correcting the variance for the "
-         "autocorrelation moves the holdout edge from +0.146 to +0.108, so the "
-         "effect is real but does not carry the result. The headline numbers "
-         "apply no correction, which is the less favourable of the two."),
-        ("Daily forecast skill on those three is not forecast skill",
-         "Machine learning models report 4.5 to 8.4% out of sample R squared on "
-         "the three matrix priced holdings and negative figures on the other "
-         "eight. Moving the target from one day to one month erases the gap, "
-         "which is what a pricing lag does and what real forecast skill would "
-         "not. No regression or machine learning strategy is carried into the "
-         "holdout for this reason."),
-        ("Eleven assets is a small universe",
-         "Appendix B measures how much independent variation it contains, and "
-         "the answer is less than the count suggests."),
-        ("The holdout was opened once on the parent project",
-         "It is clean of any model being fitted to it, but not of having been "
-         "seen once before this project began."),
-        ("Two strategies were carried without clearing the bar",
-         "The rolling selection and momentum on the Sharpe ratio did not reach "
-         "five percent on development. They were carried in standalone form to "
-         "answer whether the signals work alone or only as an overlay. Their "
-         "holdout figures answer that question and should not be read as "
-         "validation of anything."),
-    ], columns=["limitation", "what it means"]).set_index("limitation"))
     paginate(r, "phase3_results")
     return r.render(OUT / "phase3_results.html")
 
@@ -1396,6 +1331,27 @@ def appendix_method():
         "work for an institution financing at repo and stop working for someone "
         "paying 150 over.")
 
+    r.section("The Aggregate's effective duration", (
+        "Quoted as 4.2 years throughout, and estimated rather than taken from "
+        "a vendor."))
+    r.prose(
+        "The index is held as a fund, so its duration is not published in the "
+        "return series. It is estimated by regressing the index's daily return "
+        "on the daily change in the ten year Treasury yield and taking the "
+        "negative of the slope, which is the definition of effective duration:")
+    r.formula(
+        "<span class='t t1'>r<sub>t</sub></span> &nbsp;=&nbsp; &alpha; "
+        "&nbsp;&minus;&nbsp; <span class='t t2'>D</span> &middot; "
+        "<span class='t t3'>&Delta;y<sub>t</sub></span> &nbsp;+&nbsp; "
+        "&epsilon;<sub>t</sub>",
+        "effective duration from the yield sensitivity")
+    r.prose(
+        "Over the full sample that gives <strong>4.16 years</strong>. The "
+        "figure is used only for comparison against the strategies' own "
+        "durations, which are computed directly from their weights and the "
+        "modified duration of each holding, so nothing in the results depends "
+        "on it.")
+
     r.section("Rebalancing frequency", (
         "Daily data separates estimating the covariance from trading on it. The "
         "matrix is estimated on every day available; the portfolio trades on "
@@ -1663,7 +1619,12 @@ def index():
                     mk = ("***" if pv < .01 else "**" if pv < .05
                           else "*" if pv < .10 else "")
                     sub_ = f"{e:+.3f}{mk} &nbsp;p={pv:.3f}"
-                cells.append(f'{sh:.3f}<span class="d">{sub_}</span>')
+                sig = (name != "Agg index"
+                       and pd.notna(t.loc[name, "p"])
+                       and t.loc[name, "p"] < 0.05)
+                td = ' class="sig-cell"' if sig else ""
+                cells.append(f'<span{td}>{sh:.3f}'
+                             f'<span class="d">{sub_}</span></span>')
             cls = ' class="me"' if name.startswith(("HRP", "ERC")) else ""
             body += (f"<tr{cls}><th>{name}</th>"
                      + "".join(f"<td>{c}</td>" for c in cells) + "</tr>")
@@ -1671,10 +1632,10 @@ def index():
     descs = [
         "Extension from lessons learned in my macro portfolio project. Asset "
         "universe and data collection.",
-        "Five model classes, how each forms its weights, and how they score on "
-        "the development sample.",
-        "The held-out decade, the constant-risk comparison, and portfolio "
-        "characteristics.",
+        "Regression, machine learning, technical, and risk-based strategy "
+        "development.",
+        "Holdout decade results, constant risk comparisons and portfolio "
+        "characteristics. Conclusions and next steps.",
         "Independent variation, principal component analysis, and "
         "forecastability.",
         "Rebalancing, leverage and transaction costs, and other portfolio "
@@ -1683,7 +1644,8 @@ def index():
     ]
     cards = "".join(
         f'<a class="card" href="{stem}.html"><span class="num">{label}</span>'
-        f'<span class="ttl">{title}</span><span class="dsc">{d}</span></a>'
+        f'<span class="ttl">{label}: {title}</span>'
+        f'<span class="dsc">{d}</span></a>'
         for (stem, label, title), d in zip(PAGES, descs))
 
     html = f"""<!doctype html>
@@ -1741,9 +1703,10 @@ signals, four machine learning families tuned on the development sample, three
 technical momentum models including an adaptive rolling window of my own, and
 two risk-based methods built from the covariance matrix alone.</p>
 
-<p><b>What worked.</b> Risk parity, which never needs an expected return at all.
-I built and tested both classic risk parity and Marcos Lopez de Prado's
-Hierarchical Risk Parity, benchmarked against the Bloomberg Aggregate.</p>
+<p><b>What worked.</b> Risk parity strategies, which work by utilizing
+risk-based position weighting instead of return forecasting. I built and tested
+both classic risk parity and Marcos Lopez de Prado's Hierarchical Risk Parity,
+benchmarked against the Bloomberg Aggregate.</p>
 
 </div>
 
@@ -1754,14 +1717,9 @@ Hierarchical Risk Parity, benchmarked against the Bloomberg Aggregate.</p>
 <tbody>{body}</tbody>
 </table>
 </div>
-<p class="note">Sharpe ratios and significance are measured on monthly
-returns. Portfolios are built, traded and costed daily, and the covariance
-matrix is estimated from daily data, because sampling the same span more finely
-improves a variance estimate. Performance is scored monthly, because three of
-the eleven holdings are priced by matrix valuation and their daily returns
-autocorrelate around 0.25, which distorts a daily Sharpe ratio. Stars mark
-one-sided bootstrap significance against the Aggregate: *** below 0.01,
-** below 0.05, * below 0.10.</p>
+<p class="note">Shaded cells beat the Aggregate at five percent or better.
+Stars mark one-sided bootstrap significance: *** below 0.01, ** below 0.05,
+* below 0.10.</p>
 
 {cards}
 <footer>
