@@ -45,7 +45,7 @@ from macro.backtest import metrics  # noqa: E402
 from macro.stats import inference as inf  # noqa: E402
 
 RB = import_module("phase2_rebalance_study")
-AM = import_module("09d_adaptive_momentum")
+AM = import_module("phase2_adaptive_momentum")
 
 P = ROOT / "data/processed"
 PPY = 252
