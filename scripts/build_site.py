@@ -802,20 +802,20 @@ def phase3():
         "two that add a signal on top finish last.")
 
     r.section("Comparing at constant risk", (
-        "A Sharpe ratio earned at 2.8% volatility and one earned at 4.2% are "
-        "not the same claim. Every comparison below puts the strategies on the "
-        "index's own risk before ranking them."))
+        "Risk parity beats the index on Sharpe while running less risk. Scaling "
+        "it up to the index\'s own volatility tests whether the advantage "
+        "survives once the risk is matched."))
     r.prose(
-        "The Aggregate runs at 4.17% annualised volatility over the full sample "
-        "and hierarchical risk parity at 2.82%, so the latter is scaled up by "
-        "1.48 times to sit at the same risk, with financing charged on the "
-        "borrowed portion at the per-asset rates in Appendix B. Anything "
-        "already running hotter than the index is scaled down instead, with the "
-        "balance held in cash.")
+        "The Aggregate runs at 4.17% volatility and hierarchical risk parity at "
+        "2.82%, so risk parity is levered 1.48 times to match, and financing is "
+        "charged on the borrowed portion at the per-asset rates in Appendix A. "
+        "Anything already running hotter than the index is scaled down, with "
+        "the balance in cash.")
     if L is not None:
         keep = [c for c in ["full_leverage", "full_lev_cagr", "full_lev_vol",
                             "full_lev_sharpe", "full_lev_dd", "full_lev_vs_agg"]
                 if c in L.columns]
+        L = L.drop(index=[i for i in ["1/N"] if i in L.index])
         t = L[keep].copy()
         t.columns = ["scaling", "return", "volatility", "Sharpe",
                      "worst drawdown", "vs the Agg"][:len(keep)]
@@ -824,8 +824,10 @@ def phase3():
                 caption="Full sample, every series at the Aggregate's own 4.17% "
                         "volatility, financing charged.")
     if C is not None:
-        C = C.drop(columns=[c for c in DROP_ROWS if c in C.columns])
-        roles = {c: ("benchmark" if c in ("1/N", "Agg index (VBMFX)")
+        # The Aggregate is the only benchmark; equal weight is not shown.
+        C = C.drop(columns=[c for c in list(DROP_ROWS) + ["1/N"]
+                            if c in C.columns])
+        roles = {c: ("benchmark" if c == "Agg index (VBMFX)"
                      else "hero" if "Hierarchical" in c else "strategy")
                  for c in C.columns}
         fig, ax = charts.new_axes(9.0, 4.0)
@@ -845,32 +847,32 @@ def phase3():
         "market in forty years, which constrains what any result measured over "
         "it can establish."))
     r.table(pd.DataFrame([
-        ("2021", "-1.75%", "-0.66%", "-0.29%", "-0.32%"),
-        ("2022", "-13.24%", "-13.53%", "-7.59%", "-9.95%"),
-        ("2023", "+5.62%", "+6.22%", "+5.63%", "+6.06%"),
-        ("2021-2023 cumulative", "-9.96%", "-8.75%", "-2.67%", "-4.80%"),
-        ("Worst drawdown", "-17.5%", "-17.3%", "-10.3%", "-13.0%"),
-    ], columns=["", "Agg index", "equal weight", "Hierarchical RP",
-                "Risk parity"]).set_index(""),
-        align_right=["Agg index", "equal weight", "Hierarchical RP",
-                     "Risk parity"])
+        ("2021", "-1.75%", "-0.29%", "-0.32%"),
+        ("2022", "-13.24%", "-7.59%", "-9.95%"),
+        ("2023", "+5.62%", "+5.63%", "+6.06%"),
+        ("2021-2023 cumulative", "-9.96%", "-2.67%", "-4.80%"),
+        ("Worst drawdown", "-17.5%", "-10.3%", "-13.0%"),
+    ], columns=["", "Agg index", "Hierarchical RP", "Risk parity"]).set_index(""),
+        align_right=["Agg index", "Hierarchical RP", "Risk parity"])
     r.prose(
-        "The risk-based methods took materially less damage through the rate "
-        "shock, losing 7.6% in 2022 against the index's 13.2%. Underweighting "
-        "duration is the mechanism, which raises the obvious objection.")
+        "Both risk based methods lost much less through the rate shock: 7.6% in "
+        "2022 against the index at 13.2%. They hold less duration than the "
+        "index, which is the obvious explanation and the one worth testing.")
 
     r.section("Is it a duration bet?", (
-        "Risk parity underweights volatile assets, volatility in bonds is "
-        "duration, so it holds less duration than the index. If that is the "
-        "whole story an investor could hold shorter bonds and skip the "
-        "covariance matrix."))
+        "Risk parity underweights volatile assets. In bonds, volatility is "
+        "mostly duration. If holding less duration is the whole story, an "
+        "investor could just buy shorter bonds and skip the covariance "
+        "matrix."))
     r.prose(
-        "The benchmark was rebuilt to test exactly that: equal weight, scaled "
-        "month by month to match each strategy's own portfolio duration, with "
-        "the difference held in cash. It carries the same interest rate "
-        "exposure as the strategy and none of its structure.")
+        "To test that, the benchmark is rebuilt to carry the same interest rate "
+        "exposure and none of the structure: equal weight, rescaled each month "
+        "to match the strategy\'s own duration, with the difference in cash. "
+        "This is a control portfolio for the duration question, not a second "
+        "benchmark; the Aggregate remains the only benchmark in this project.")
     if DT is not None:
         d = DT.copy()
+        d = d.drop(columns=[c for c in d.columns if "plain 1/N" in c])
         d.index.name = "strategy"
         d.columns = [c.replace("dm p", "p").replace("dm CI low", "CI low")
                      .replace("dm CI high", "CI high")
@@ -879,13 +881,12 @@ def phase3():
         r.table(d.round(4), align_right=list(d.columns), stars=["p"])
     r.prose(
         "<strong>The edge is unchanged.</strong> Hierarchical risk parity goes "
-        "from +0.151 against plain equal weight to +0.147 against the duration "
-        "matched version at p = 0.008, and equal risk contribution from +0.087 "
-        "to +0.088 at p = 0.012. All intervals exclude zero.")
+        "from +0.151 to +0.147 once duration is matched, at p = 0.008, and "
+        "equal risk contribution from +0.087 to +0.088 at p = 0.012. All "
+        "intervals exclude zero, so duration is not the explanation.")
 
     r.section("Portfolio characteristics", (
-        "A risk parity book is usually described and rarely shown. These are "
-        "the realised weights, month by month."))
+        "What the portfolio actually holds, month by month."))
     if HW is not None and len(HW):
         W = HW[[c for c in HW.columns]].copy()
         W = W[list(W.mean().sort_values(ascending=False).index)]
@@ -951,11 +952,10 @@ def phase3():
         r.table(both.round(4), align_right=list(both.columns),
                 caption="By rebalancing frequency.")
     r.prose(
-        "Turnover runs 5% to 14% a year. Risk parity trades <em>less</em> than "
-        "equal weight, because bond correlations are stable while equal weight "
-        "has to trade back against price drift every month. Annual rebalancing "
-        "is marginally best, which says the covariance estimate is stable "
-        "enough that monthly re-optimisation is mostly noise.")
+        "Turnover runs 5% to 14% a year depending on how often the book is "
+        "rebalanced. Annual rebalancing is best, which says the covariance "
+        "estimate is stable enough that re-optimising monthly mostly adds "
+        "noise and cost.")
     if FULL is not None:
         r.section("The whole period, held throughout", (
             "What each surviving strategy would have produced over the full "
@@ -1003,9 +1003,10 @@ def phase3():
     r.section("Conclusions", (
         "What the evidence supports, and what it does not."))
     r.checks([
-        (True, "Risk parity outperforms the Aggregate index",
-         "significant in development, holdout and full sample; full sample "
-         "p = 0.002 for the hierarchical version and 0.007 for equal risk "
+        (True, "Risk parity beat the Aggregate index in every period tested",
+         "development p < 0.001 and full sample p < 0.001 for both methods; on "
+         "the holdout alone both beat the index but neither reaches five "
+         "percent, at p = 0.126 for hierarchical and 0.060 for equal risk "
          "contribution"),
         (True, "The margin is not explained by duration",
          "unchanged against a duration matched benchmark, p = 0.008 and 0.012"),
@@ -1015,16 +1016,20 @@ def phase3():
         (True, "It uses no return forecast",
          "the covariance matrix only, at every point in the construction"),
         (False, "Return forecasting adds anything on this universe",
-         "every forecast-driven class fails on the holdout, including the ones "
-         "that scored best on development"),
+         "regression and all four machine learning families are "
+         "indistinguishable from the index on development, and both technical "
+         "signals carried into the holdout failed there"),
+        (False, "The technical overlays are worth running",
+         "both beat the index on development and both finish below plain risk "
+         "parity on the holdout"),
     ])
 
     r.section("Next steps")
     r.table(pd.DataFrame([
         ("Replace funds with indices or futures",
          "The universe is mutual funds, which charge 20 to 80 basis points and "
-         "carry manager decisions. High yield's daily returns autocorrelate at "
-         "0.29 from stale pricing. Index or futures data removes both."),
+         "carry manager decisions. High yield\'s daily returns autocorrelate "
+         "at 0.24 from stale pricing. Index or futures data removes both."),
         ("Add genuinely different exposures",
          "Adding more US bonds reduced measured independence rather than "
          "raising it. TIPS, international sovereigns, emerging market debt and "
@@ -1055,18 +1060,24 @@ def phase3():
          "effect is real but does not carry the result. The headline numbers "
          "apply no correction, which is the less favourable of the two."),
         ("Daily forecast skill on those three is not forecast skill",
-         "Flexible models report 8 to 14% out of sample R squared on the stale "
-         "holdings and close to zero on the Treasuries. That is the lag being "
-         "detected, not the future. It is the reason the duration relationship "
-         "in Appendix B is stated at monthly frequency, where the lag washes "
-         "out, and the reason no forecast-driven strategy is carried into the "
-         "holdout."),
+         "Machine learning models report 4.5 to 8.4% out of sample R squared on "
+         "the three matrix priced holdings and negative figures on the other "
+         "eight. Moving the target from one day to one month erases the gap, "
+         "which is what a pricing lag does and what real forecast skill would "
+         "not. No regression or machine learning strategy is carried into the "
+         "holdout for this reason."),
         ("Eleven assets is a small universe",
          "Appendix B measures how much independent variation it contains, and "
          "the answer is less than the count suggests."),
         ("The holdout was opened once on the parent project",
          "It is clean of any model being fitted to it, but not of having been "
          "seen once before this project began."),
+        ("Two strategies were carried without clearing the bar",
+         "The rolling selection and momentum on the Sharpe ratio did not reach "
+         "five percent on development. They were carried in standalone form to "
+         "answer whether the signals work alone or only as an overlay. Their "
+         "holdout figures answer that question and should not be read as "
+         "validation of anything."),
     ], columns=["limitation", "what it means"]).set_index("limitation"))
     paginate(r, "phase3_results")
     return r.render(OUT / "phase3_results.html")

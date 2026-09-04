@@ -329,10 +329,10 @@ span.pager__slot { border-color: transparent; }  /* first and last page */
     </div>
     <h1><span class="masthead__phase">Phase 3</span>Results</h1>
     <p class="standfirst">The held-out decade, 2016 to 2026, opened once after development was finished. Risk parity clears the Aggregate and the margin survives matching on risk, on duration and on financing. Every model that needed a return forecast does not.</p>
-    <p class="built">Generated 04 September 2026, 14:21</p>
+    <p class="built">Generated 04 September 2026, 14:36</p>
   </header>
   <main>
-    <div class="metrics"><div class="metric"><span class="metric__value">2,660</span><span class="metric__label">holdout trading days</span></div><div class="metric metric--fail"><span class="metric__value">-0.081</span><span class="metric__label">Agg Sharpe on the holdout</span></div><div class="metric metric--pass"><span class="metric__value">+0.146</span><span class="metric__label">hierarchical RP edge</span></div><div class="metric metric--pass"><span class="metric__value">+0.175</span><span class="metric__label">equal risk contribution edge</span></div><div class="metric metric--pass"><span class="metric__value">0.060</span><span class="metric__label">best holdout p-value</span></div></div><h2>The holdout</h2><p class="note">The six strategies carried out of Phase 2, on ten years of data none of them was fitted to.</p><figure class="tablewrap compact"><table><thead><tr><th class="rowhead">strategy</th><th class="">status</th><th class="num">return, %</th><th class="num">volatility, %</th><th class="num">Sharpe</th><th class="num">vs the Agg</th><th class="num">p</th><th class="num">alpha, % a year</th><th class="num">t</th><th class="num">beta</th><th class="num">duration, years</th><th class="num">turnover, %</th></tr></thead><tbody><tr><td class="rowhead">ERC, annual</td><td class="">confirmatory</td><td class="num">2.549</td><td class="num">3.244</td><td class="num" style="background:rgba(46,125,90,0.081)">0.094</td><td class="num">0.175</td><td class="num"><strong>0.06</strong><span class="star">*</span></td><td class="num">0.55</td><td class="num">1.456</td><td class="num">0.618</td><td class="num">4.986</td><td class="num">1.464</td></tr><tr><td class="rowhead">HRP, annual</td><td class="">confirmatory</td><td class="num">2.425</td><td class="num">2.504</td><td class="num" style="background:rgba(46,125,90,0.056)">0.065</td><td class="num">0.146</td><td class="num">0.126</td><td class="num">0.345</td><td class="num">1.06</td><td class="num">0.462</td><td class="num">3.873</td><td class="num">2.144</td></tr><tr><td class="rowhead">HRP + Rolling 60m overlay</td><td class="">confirmatory</td><td class="num">2.221</td><td class="num">2.529</td><td class="num" style="background:rgba(160,58,58,0.012)">-0.014</td><td class="num">0.067</td><td class="num">0.347</td><td class="num">0.13</td><td class="num">0.272</td><td class="num">0.42</td><td class="num">4.027</td><td class="num">36.26</td></tr><tr><td class="rowhead">Rolling 60m, long only</td><td class="">exploratory</td><td class="num">2.044</td><td class="num">4.873</td><td class="num" style="background:rgba(160,58,58,0.022)">-0.025</td><td class="num">0.056</td><td class="num">0.393</td><td class="num">0.156</td><td class="num">0.153</td><td class="num">0.702</td><td class="num">6.173</td><td class="num">67.502</td></tr><tr><td class="rowhead">HRP + Momentum (Sharpe) overlay</td><td class="">confirmatory</td><td class="num">2.107</td><td class="num">2.701</td><td class="num" style="background:rgba(160,58,58,0.046)">-0.053</td><td class="num">0.028</td><td class="num">0.439</td><td class="num">0.039</td><td class="num">0.073</td><td class="num">0.462</td><td class="num">3.515</td><td class="num">18.124</td></tr><tr><td class="rowhead">Agg index</td><td class="">benchmark</td><td class="num">1.763</td><td class="num">4.906</td><td class="num" style="background:rgba(160,58,58,0.070)">-0.081</td><td class="num"><span class="nil">&#8212;</span></td><td class="num"><span class="nil">&#8212;</span></td><td class="num">0.0</td><td class="num">0.0</td><td class="num">1.0</td><td class="num"><span class="nil">&#8212;</span></td><td class="num"><span class="nil">&#8212;</span></td></tr><tr><td class="rowhead">Momentum (Sharpe), long only</td><td class="">exploratory</td><td class="num">-0.033</td><td class="num">4.502</td><td class="num" style="background:rgba(160,58,58,0.420)">-0.488</td><td class="num">-0.408</td><td class="num"><strong>0.029</strong><span class="star">**</span></td><td class="num">-1.961</td><td class="num">-1.736</td><td class="num">0.593</td><td class="num">4.079</td><td class="num">156.872</td></tr></tbody></table><figcaption>Holdout, January 2016 to August 2026, net of per-asset costs. Confirmatory strategies cleared the index at five percent on development; exploratory ones did not and are carried to answer a question rather than to make a claim.</figcaption></figure><p><strong>Nothing clears five percent.</strong> All four confirmatory strategies beat the Aggregate, none of them significantly. Equal risk contribution comes closest at p = 0.060 and hierarchical risk parity sits at p = 0.126. The alphas run from 0.04% to 0.55% a year with t statistics between 0.07 and 1.46.</p><p>The index itself returned a Sharpe of <strong>-0.081</strong> over this decade, so beating it is not a demanding test and clearing it should not be read as much of a claim on its own.</p><p><strong>Both overlays failed.</strong> On development the rolling selection overlay added 0.10 of Sharpe over plain risk parity. On the holdout it takes 0.08 away. The momentum Sharpe overlay does worse, finishing 0.12 below risk parity alone. Whatever the overlays were adding on development, they do not add it here.</p><p><strong>The two signals on their own do not work either.</strong> The rolling selection lands at -0.025 with an alpha of 0.16% and a t statistic of 0.15, which is nothing. Momentum on the Sharpe ratio is the only strategy in the table that loses to the index significantly, at p = 0.029, returning -0.03% a year against the index at 1.76%. It was the second best technical strategy on development. That is the sharpest reversal in the project.</p><p><strong>The ranking inverts.</strong> Development order was the rolling overlay, the momentum overlay, hierarchical risk parity, then equal risk contribution. The holdout order is equal risk contribution, hierarchical risk parity, the rolling overlay, then the momentum overlay. The two strategies that estimate nothing finish first; the two that add a signal on top finish last.</p><h2>Comparing at constant risk</h2><p class="note">A Sharpe ratio earned at 2.8% volatility and one earned at 4.2% are not the same claim. Every comparison below puts the strategies on the index's own risk before ranking them.</p><p>The Aggregate runs at 4.17% annualised volatility over the full sample and hierarchical risk parity at 2.82%, so the latter is scaled up by 1.48 times to sit at the same risk, with financing charged on the borrowed portion at the per-asset rates in Appendix B. Anything already running hotter than the index is scaled down instead, with the balance held in cash.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">scaling</th><th class="num">return</th><th class="num">volatility</th><th class="num">Sharpe</th><th class="num">worst drawdown</th><th class="num">vs the Agg</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">1.4811</td><td class="num">0.0554</td><td class="num">0.0411</td><td class="num">0.6305</td><td class="num">-0.1546</td><td class="num">0.1047</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">1.1527</td><td class="num">0.0552</td><td class="num">0.0416</td><td class="num">0.6167</td><td class="num">-0.15</td><td class="num">0.0909</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">1.0</td><td class="num">0.0511</td><td class="num">0.0417</td><td class="num">0.5258</td><td class="num">-0.1753</td><td class="num">0.0</td></tr><tr><td class="rowhead">1/N</td><td class="num">0.8798</td><td class="num">0.0527</td><td class="num">0.0418</td><td class="num">0.5551</td><td class="num">-0.1524</td><td class="num">0.0293</td></tr></tbody></table><figcaption>Full sample, every series at the Aggregate's own 4.17% volatility, financing charged.</figcaption></figure><figure class="chartwrap"><svg class="chart" preserveAspectRatio="xMidYMid meet" xmlns:xlink="http://www.w3.org/1999/xlink"   viewBox="0 0 560.144219 250.886406" xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <div class="metrics"><div class="metric"><span class="metric__value">2,660</span><span class="metric__label">holdout trading days</span></div><div class="metric metric--fail"><span class="metric__value">-0.081</span><span class="metric__label">Agg Sharpe on the holdout</span></div><div class="metric metric--pass"><span class="metric__value">+0.146</span><span class="metric__label">hierarchical RP edge</span></div><div class="metric metric--pass"><span class="metric__value">+0.175</span><span class="metric__label">equal risk contribution edge</span></div><div class="metric metric--pass"><span class="metric__value">0.060</span><span class="metric__label">best holdout p-value</span></div></div><h2>The holdout</h2><p class="note">The six strategies carried out of Phase 2, on ten years of data none of them was fitted to.</p><figure class="tablewrap compact"><table><thead><tr><th class="rowhead">strategy</th><th class="">status</th><th class="num">return, %</th><th class="num">volatility, %</th><th class="num">Sharpe</th><th class="num">vs the Agg</th><th class="num">p</th><th class="num">alpha, % a year</th><th class="num">t</th><th class="num">beta</th><th class="num">duration, years</th><th class="num">turnover, %</th></tr></thead><tbody><tr><td class="rowhead">ERC, annual</td><td class="">confirmatory</td><td class="num">2.549</td><td class="num">3.244</td><td class="num" style="background:rgba(46,125,90,0.081)">0.094</td><td class="num">0.175</td><td class="num"><strong>0.06</strong><span class="star">*</span></td><td class="num">0.55</td><td class="num">1.456</td><td class="num">0.618</td><td class="num">4.986</td><td class="num">1.464</td></tr><tr><td class="rowhead">HRP, annual</td><td class="">confirmatory</td><td class="num">2.425</td><td class="num">2.504</td><td class="num" style="background:rgba(46,125,90,0.056)">0.065</td><td class="num">0.146</td><td class="num">0.126</td><td class="num">0.345</td><td class="num">1.06</td><td class="num">0.462</td><td class="num">3.873</td><td class="num">2.144</td></tr><tr><td class="rowhead">HRP + Rolling 60m overlay</td><td class="">confirmatory</td><td class="num">2.221</td><td class="num">2.529</td><td class="num" style="background:rgba(160,58,58,0.012)">-0.014</td><td class="num">0.067</td><td class="num">0.347</td><td class="num">0.13</td><td class="num">0.272</td><td class="num">0.42</td><td class="num">4.027</td><td class="num">36.26</td></tr><tr><td class="rowhead">Rolling 60m, long only</td><td class="">exploratory</td><td class="num">2.044</td><td class="num">4.873</td><td class="num" style="background:rgba(160,58,58,0.022)">-0.025</td><td class="num">0.056</td><td class="num">0.393</td><td class="num">0.156</td><td class="num">0.153</td><td class="num">0.702</td><td class="num">6.173</td><td class="num">67.502</td></tr><tr><td class="rowhead">HRP + Momentum (Sharpe) overlay</td><td class="">confirmatory</td><td class="num">2.107</td><td class="num">2.701</td><td class="num" style="background:rgba(160,58,58,0.046)">-0.053</td><td class="num">0.028</td><td class="num">0.439</td><td class="num">0.039</td><td class="num">0.073</td><td class="num">0.462</td><td class="num">3.515</td><td class="num">18.124</td></tr><tr><td class="rowhead">Agg index</td><td class="">benchmark</td><td class="num">1.763</td><td class="num">4.906</td><td class="num" style="background:rgba(160,58,58,0.070)">-0.081</td><td class="num"><span class="nil">&#8212;</span></td><td class="num"><span class="nil">&#8212;</span></td><td class="num">0.0</td><td class="num">0.0</td><td class="num">1.0</td><td class="num"><span class="nil">&#8212;</span></td><td class="num"><span class="nil">&#8212;</span></td></tr><tr><td class="rowhead">Momentum (Sharpe), long only</td><td class="">exploratory</td><td class="num">-0.033</td><td class="num">4.502</td><td class="num" style="background:rgba(160,58,58,0.420)">-0.488</td><td class="num">-0.408</td><td class="num"><strong>0.029</strong><span class="star">**</span></td><td class="num">-1.961</td><td class="num">-1.736</td><td class="num">0.593</td><td class="num">4.079</td><td class="num">156.872</td></tr></tbody></table><figcaption>Holdout, January 2016 to August 2026, net of per-asset costs. Confirmatory strategies cleared the index at five percent on development; exploratory ones did not and are carried to answer a question rather than to make a claim.</figcaption></figure><p><strong>Nothing clears five percent.</strong> All four confirmatory strategies beat the Aggregate, none of them significantly. Equal risk contribution comes closest at p = 0.060 and hierarchical risk parity sits at p = 0.126. The alphas run from 0.04% to 0.55% a year with t statistics between 0.07 and 1.46.</p><p>The index itself returned a Sharpe of <strong>-0.081</strong> over this decade, so beating it is not a demanding test and clearing it should not be read as much of a claim on its own.</p><p><strong>Both overlays failed.</strong> On development the rolling selection overlay added 0.10 of Sharpe over plain risk parity. On the holdout it takes 0.08 away. The momentum Sharpe overlay does worse, finishing 0.12 below risk parity alone. Whatever the overlays were adding on development, they do not add it here.</p><p><strong>The two signals on their own do not work either.</strong> The rolling selection lands at -0.025 with an alpha of 0.16% and a t statistic of 0.15, which is nothing. Momentum on the Sharpe ratio is the only strategy in the table that loses to the index significantly, at p = 0.029, returning -0.03% a year against the index at 1.76%. It was the second best technical strategy on development. That is the sharpest reversal in the project.</p><p><strong>The ranking inverts.</strong> Development order was the rolling overlay, the momentum overlay, hierarchical risk parity, then equal risk contribution. The holdout order is equal risk contribution, hierarchical risk parity, the rolling overlay, then the momentum overlay. The two strategies that estimate nothing finish first; the two that add a signal on top finish last.</p><h2>Comparing at constant risk</h2><p class="note">Risk parity beats the index on Sharpe while running less risk. Scaling it up to the index's own volatility tests whether the advantage survives once the risk is matched.</p><p>The Aggregate runs at 4.17% volatility and hierarchical risk parity at 2.82%, so risk parity is levered 1.48 times to match, and financing is charged on the borrowed portion at the per-asset rates in Appendix A. Anything already running hotter than the index is scaled down, with the balance in cash.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">scaling</th><th class="num">return</th><th class="num">volatility</th><th class="num">Sharpe</th><th class="num">worst drawdown</th><th class="num">vs the Agg</th></tr></thead><tbody><tr><td class="rowhead">Hierarchical RP</td><td class="num">1.4811</td><td class="num">0.0554</td><td class="num">0.0411</td><td class="num">0.6305</td><td class="num">-0.1546</td><td class="num">0.1047</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">1.1527</td><td class="num">0.0552</td><td class="num">0.0416</td><td class="num">0.6167</td><td class="num">-0.15</td><td class="num">0.0909</td></tr><tr><td class="rowhead">Agg index (VBMFX)</td><td class="num">1.0</td><td class="num">0.0511</td><td class="num">0.0417</td><td class="num">0.5258</td><td class="num">-0.1753</td><td class="num">0.0</td></tr></tbody></table><figcaption>Full sample, every series at the Aggregate's own 4.17% volatility, financing charged.</figcaption></figure><figure class="chartwrap"><svg class="chart" preserveAspectRatio="xMidYMid meet" xmlns:xlink="http://www.w3.org/1999/xlink"   viewBox="0 0 560.144219 250.886406" xmlns="http://www.w3.org/2000/svg" version="1.1">
  <metadata>
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
@@ -374,16 +374,16 @@ z
      <g id="line2d_1">
       <path d="M 98.182498 228.96 
 L 98.182498 7.2 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pd3c8805f89)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_2">
       <defs>
-       <path id="m2fe871c3f2" d="M 0 0 
+       <path id="m72b745e96c" d="M 0 0 
 L 0 3 
 " style="stroke: var(--ink-muted); stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#m2fe871c3f2" x="98.182498" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m72b745e96c" x="98.182498" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_1">
@@ -467,11 +467,11 @@ z
      <g id="line2d_3">
       <path d="M 157.081184 228.96 
 L 157.081184 7.2 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pd3c8805f89)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_4">
       <g>
-       <use xlink:href="#m2fe871c3f2" x="157.081184" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m72b745e96c" x="157.081184" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_2">
@@ -515,11 +515,11 @@ z
      <g id="line2d_5">
       <path d="M 215.979869 228.96 
 L 215.979869 7.2 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pd3c8805f89)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_6">
       <g>
-       <use xlink:href="#m2fe871c3f2" x="215.979869" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m72b745e96c" x="215.979869" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_3">
@@ -562,11 +562,11 @@ z
      <g id="line2d_7">
       <path d="M 274.910811 228.96 
 L 274.910811 7.2 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pd3c8805f89)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_8">
       <g>
-       <use xlink:href="#m2fe871c3f2" x="274.910811" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m72b745e96c" x="274.910811" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_4">
@@ -583,11 +583,11 @@ L 274.910811 7.2
      <g id="line2d_9">
       <path d="M 333.809497 228.96 
 L 333.809497 7.2 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pd3c8805f89)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_10">
       <g>
-       <use xlink:href="#m2fe871c3f2" x="333.809497" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m72b745e96c" x="333.809497" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_5">
@@ -604,11 +604,11 @@ L 333.809497 7.2
      <g id="line2d_11">
       <path d="M 392.708183 228.96 
 L 392.708183 7.2 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pd3c8805f89)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_12">
       <g>
-       <use xlink:href="#m2fe871c3f2" x="392.708183" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m72b745e96c" x="392.708183" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_6">
@@ -625,11 +625,11 @@ L 392.708183 7.2
      <g id="line2d_13">
       <path d="M 451.606869 228.96 
 L 451.606869 7.2 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pd3c8805f89)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_14">
       <g>
-       <use xlink:href="#m2fe871c3f2" x="451.606869" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m72b745e96c" x="451.606869" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_7">
@@ -646,11 +646,11 @@ L 451.606869 7.2
      <g id="line2d_15">
       <path d="M 510.53781 228.96 
 L 510.53781 7.2 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pd3c8805f89)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_16">
       <g>
-       <use xlink:href="#m2fe871c3f2" x="510.53781" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m72b745e96c" x="510.53781" y="228.96" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_8">
@@ -669,16 +669,16 @@ L 510.53781 7.2
      <g id="line2d_17">
       <path d="M 50.744219 219.074633 
 L 552.944219 219.074633 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pd3c8805f89)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_18">
       <defs>
-       <path id="mbc5fc48591" d="M 0 0 
+       <path id="mac6aeddec5" d="M 0 0 
 L -3 0 
 " style="stroke: var(--ink-muted); stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#mbc5fc48591" x="50.744219" y="219.074633" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mac6aeddec5" x="50.744219" y="219.074633" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_9">
@@ -748,11 +748,11 @@ z
      <g id="line2d_19">
       <path d="M 50.744219 191.230595 
 L 552.944219 191.230595 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pd3c8805f89)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_20">
       <g>
-       <use xlink:href="#mbc5fc48591" x="50.744219" y="191.230595" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mac6aeddec5" x="50.744219" y="191.230595" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_10">
@@ -770,11 +770,11 @@ L 552.944219 191.230595
      <g id="line2d_21">
       <path d="M 50.744219 163.386557 
 L 552.944219 163.386557 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pd3c8805f89)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_22">
       <g>
-       <use xlink:href="#mbc5fc48591" x="50.744219" y="163.386557" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mac6aeddec5" x="50.744219" y="163.386557" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_11">
@@ -826,11 +826,11 @@ z
      <g id="line2d_23">
       <path d="M 50.744219 135.542518 
 L 552.944219 135.542518 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pd3c8805f89)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_24">
       <g>
-       <use xlink:href="#mbc5fc48591" x="50.744219" y="135.542518" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mac6aeddec5" x="50.744219" y="135.542518" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_12">
@@ -869,11 +869,11 @@ z
      <g id="line2d_25">
       <path d="M 50.744219 107.69848 
 L 552.944219 107.69848 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pd3c8805f89)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_26">
       <g>
-       <use xlink:href="#mbc5fc48591" x="50.744219" y="107.69848" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mac6aeddec5" x="50.744219" y="107.69848" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_13">
@@ -891,11 +891,11 @@ L 552.944219 107.69848
      <g id="line2d_27">
       <path d="M 50.744219 79.854441 
 L 552.944219 79.854441 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pd3c8805f89)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_28">
       <g>
-       <use xlink:href="#mbc5fc48591" x="50.744219" y="79.854441" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mac6aeddec5" x="50.744219" y="79.854441" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_14">
@@ -945,11 +945,11 @@ z
      <g id="line2d_29">
       <path d="M 50.744219 52.010403 
 L 552.944219 52.010403 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pd3c8805f89)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_30">
       <g>
-       <use xlink:href="#mbc5fc48591" x="50.744219" y="52.010403" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mac6aeddec5" x="50.744219" y="52.010403" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_15">
@@ -979,11 +979,11 @@ z
      <g id="line2d_31">
       <path d="M 50.744219 24.166365 
 L 552.944219 24.166365 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pd3c8805f89)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_32">
       <g>
-       <use xlink:href="#mbc5fc48591" x="50.744219" y="24.166365" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mac6aeddec5" x="50.744219" y="24.166365" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_16">
@@ -1211,7 +1211,7 @@ z
    <g id="line2d_33">
     <path d="M 404.481469 228.96 
 L 404.481469 7.2 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke-dasharray: 1.2,1.98; stroke-dashoffset: 0; stroke: var(--ink-muted); stroke-width: 1.2"/>
+" clip-path="url(#pd3c8805f89)" style="fill: none; stroke-dasharray: 1.2,1.98; stroke-dashoffset: 0; stroke: var(--ink-muted); stroke-width: 1.2"/>
    </g>
    <g id="patch_3">
     <path d="M 50.744219 228.96 
@@ -1836,7 +1836,7 @@ L 528.1171 20.943641
 L 529.117023 23.69469 
 L 530.116946 22.898185 
 L 530.116946 22.898185 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke: #cf6a1a; stroke-width: 1.6; stroke-linecap: square"/>
+" clip-path="url(#pd3c8805f89)" style="fill: none; stroke: #cf6a1a; stroke-width: 1.6; stroke-linecap: square"/>
    </g>
    <g id="line2d_35">
     <path d="M 73.571491 218.88 
@@ -2263,439 +2263,16 @@ L 528.1171 51.352698
 L 529.117023 53.945917 
 L 530.116946 53.742569 
 L 530.116946 53.742569 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke-dasharray: 1.95,2.85; stroke-dashoffset: 0; stroke: var(--ink); stroke-width: 1.5"/>
-   </g>
-   <g id="line2d_36">
-    <path d="M 73.571491 218.764754 
-L 74.571414 218.370381 
-L 75.571337 217.409404 
-L 76.506749 217.052199 
-L 77.506672 217.382473 
-L 79.474262 217.583629 
-L 80.44193 216.945643 
-L 81.441853 217.016061 
-L 82.441775 216.941581 
-L 84.409366 215.811645 
-L 85.377033 216.090909 
-L 86.376956 215.895097 
-L 87.376879 215.462447 
-L 88.280035 215.630994 
-L 89.279958 215.508178 
-L 90.247625 214.939289 
-L 91.247548 214.207474 
-L 92.215216 213.337547 
-L 93.215139 212.781036 
-L 94.215062 213.155981 
-L 95.182729 213.081941 
-L 96.182652 212.509565 
-L 97.150319 212.13938 
-L 98.150242 212.035099 
-L 99.150165 212.491017 
-L 101.053244 212.331243 
-L 102.020911 212.628803 
-L 103.020834 211.679784 
-L 104.988425 210.712799 
-L 105.988348 211.360819 
-L 106.956015 211.348337 
-L 107.955938 211.003085 
-L 108.923605 210.146704 
-L 111.826607 208.811935 
-L 112.82653 208.498777 
-L 113.794198 207.987702 
-L 114.79412 207.745847 
-L 115.761788 207.749117 
-L 116.761711 207.247225 
-L 118.729301 205.660054 
-L 120.696891 204.907286 
-L 121.696814 203.613549 
-L 122.696737 204.023821 
-L 123.632149 203.785054 
-L 124.632072 203.907908 
-L 125.599739 203.675729 
-L 127.567329 202.300012 
-L 128.567252 201.164603 
-L 129.567175 200.901086 
-L 130.534843 200.431737 
-L 131.534766 201.124759 
-L 132.502433 200.807669 
-L 133.502356 200.129539 
-L 134.502279 199.272471 
-L 135.405435 198.149109 
-L 136.405358 198.057773 
-L 137.373025 197.717991 
-L 138.372948 197.62694 
-L 139.340616 196.682417 
-L 140.340538 196.439889 
-L 141.340461 195.348431 
-L 143.308052 194.72272 
-L 144.275719 195.207292 
-L 145.275642 194.844311 
-L 146.275565 194.197148 
-L 147.178721 195.18018 
-L 148.178644 196.466321 
-L 149.146311 196.782324 
-L 150.146234 196.699334 
-L 151.113902 196.831292 
-L 152.113825 196.048314 
-L 153.113747 195.914375 
-L 154.081415 196.530271 
-L 156.049005 196.918151 
-L 157.048928 196.402398 
-L 158.048851 195.480361 
-L 158.952007 194.313922 
-L 159.95193 193.938466 
-L 160.919597 193.338382 
-L 161.91952 191.37281 
-L 162.887188 191.121776 
-L 163.887111 191.119645 
-L 166.854624 189.154161 
-L 168.822214 187.495511 
-L 169.822137 187.139037 
-L 170.757549 188.024604 
-L 172.725139 188.803931 
-L 173.725062 188.87106 
-L 174.692729 188.270658 
-L 175.692652 188.047213 
-L 176.692575 188.072938 
-L 178.660165 186.020126 
-L 179.627833 184.887755 
-L 180.627756 185.338772 
-L 181.627679 185.242222 
-L 182.530835 184.984481 
-L 183.530758 185.692193 
-L 184.498425 184.915894 
-L 186.466015 183.526346 
-L 187.465938 181.77127 
-L 188.465861 182.327931 
-L 190.433451 180.525571 
-L 191.401119 180.201786 
-L 193.400965 178.547772 
-L 194.304121 178.569998 
-L 196.271711 178.149661 
-L 198.239301 176.794963 
-L 199.239224 176.66581 
-L 200.239147 175.601359 
-L 201.206815 173.989539 
-L 202.206738 174.423281 
-L 203.174405 173.894518 
-L 204.174328 173.604603 
-L 205.174251 173.04948 
-L 206.077407 174.332079 
-L 207.07733 174.021048 
-L 208.044997 173.838462 
-L 209.04492 174.495262 
-L 210.012587 174.886295 
-L 212.012433 175.038779 
-L 212.980101 174.544842 
-L 213.980024 174.627768 
-L 214.947691 174.479699 
-L 216.947537 175.025207 
-L 218.882871 172.969631 
-L 219.850539 173.241966 
-L 220.850462 173.314902 
-L 221.818129 171.901527 
-L 222.818052 171.181362 
-L 223.817975 170.125361 
-L 224.785642 170.053986 
-L 225.785565 169.68949 
-L 226.753233 168.864307 
-L 227.753156 167.354867 
-L 229.656235 165.404469 
-L 230.656158 165.17544 
-L 231.623825 165.926911 
-L 232.623748 165.403309 
-L 233.591415 165.210308 
-L 234.591338 163.606585 
-L 235.591261 162.584893 
-L 236.558928 162.344141 
-L 237.558851 160.52348 
-L 238.526519 161.512355 
-L 239.526442 162.156024 
-L 241.429521 161.012067 
-L 242.429444 162.376865 
-L 243.397111 160.879353 
-L 245.364701 159.936213 
-L 246.364624 159.080343 
-L 248.332214 155.811047 
-L 249.332137 156.993299 
-L 250.299805 156.878338 
-L 251.299728 154.993078 
-L 252.299651 155.058748 
-L 253.202807 153.797914 
-L 254.20273 153.947501 
-L 255.170397 153.077252 
-L 256.17032 150.869768 
-L 257.137987 151.185763 
-L 258.13791 154.67747 
-L 259.137833 153.866712 
-L 260.1055 151.523472 
-L 261.105423 152.299009 
-L 262.073091 151.863765 
-L 264.072937 150.316077 
-L 265.008348 149.312318 
-L 266.008271 148.717944 
-L 266.975939 151.198311 
-L 267.975862 151.518409 
-L 268.943529 151.041567 
-L 269.943452 150.104908 
-L 270.943375 148.141588 
-L 271.911042 147.727074 
-L 272.910965 146.84192 
-L 273.878632 147.747498 
-L 274.878555 146.580121 
-L 275.878478 145.669744 
-L 276.781634 146.102294 
-L 277.781557 146.717871 
-L 279.749148 144.061147 
-L 280.716815 143.213273 
-L 281.716738 144.139984 
-L 282.716661 142.781914 
-L 283.684328 143.991938 
-L 284.684251 144.793711 
-L 285.651918 144.172263 
-L 286.651841 143.079984 
-L 287.651764 143.226287 
-L 288.554921 142.578982 
-L 289.554843 143.74616 
-L 290.522511 144.245651 
-L 292.490101 144.083287 
-L 293.490024 142.817193 
-L 294.489947 141.146703 
-L 295.457614 140.129623 
-L 296.457537 139.396233 
-L 297.425205 138.113165 
-L 298.425127 138.780183 
-L 299.42505 138.908815 
-L 300.328207 137.11766 
-L 301.328129 137.36606 
-L 302.295797 136.736042 
-L 303.29572 137.504871 
-L 304.263387 138.014672 
-L 306.263233 136.224373 
-L 307.2309 135.280147 
-L 308.230823 134.460508 
-L 309.198491 132.465106 
-L 310.198414 132.427007 
-L 311.198336 130.83994 
-L 312.133748 131.468113 
-L 313.133671 130.766457 
-L 314.101338 131.04187 
-L 315.101261 131.84866 
-L 316.068929 131.742315 
-L 317.068852 131.901051 
-L 318.068775 130.777972 
-L 319.036442 132.815324 
-L 320.036365 136.240123 
-L 321.004032 132.970008 
-L 322.003955 128.145186 
-L 323.907034 130.114018 
-L 324.906957 128.891325 
-L 325.874625 128.514132 
-L 326.874547 127.593258 
-L 327.842215 127.048064 
-L 328.842138 125.009916 
-L 329.842061 123.458615 
-L 330.809728 121.08874 
-L 331.809651 121.520096 
-L 332.777318 120.292688 
-L 333.777241 122.005734 
-L 334.777164 120.437985 
-L 335.68032 120.08744 
-L 336.680243 120.274384 
-L 337.647911 118.699636 
-L 338.647834 117.543373 
-L 339.615501 115.358224 
-L 340.615424 114.124327 
-L 341.615347 111.075097 
-L 342.583014 111.14253 
-L 343.582937 111.468806 
-L 345.550527 114.423029 
-L 346.55045 114.82168 
-L 347.453606 113.905626 
-L 348.453529 113.982912 
-L 350.42112 110.187885 
-L 351.388787 110.830291 
-L 353.388633 105.963481 
-L 354.3563 103.234459 
-L 355.356223 103.194941 
-L 356.32389 103.279671 
-L 357.323813 101.057812 
-L 358.323736 99.423949 
-L 359.259148 99.614746 
-L 360.259071 101.030761 
-L 361.226738 98.98548 
-L 362.226661 96.604292 
-L 363.194329 96.633992 
-L 364.194252 94.110647 
-L 365.194174 94.205865 
-L 366.161842 94.160204 
-L 367.161765 93.887207 
-L 368.129432 93.011339 
-L 369.129355 93.728257 
-L 370.129278 94.690775 
-L 371.032434 93.80658 
-L 372.032357 93.660664 
-L 373.000024 91.608378 
-L 374.967615 98.098765 
-L 375.967538 98.136075 
-L 376.96746 99.311738 
-L 378.935051 96.347388 
-L 379.902718 97.06989 
-L 380.902641 98.00823 
-L 381.902564 94.956242 
-L 382.80572 93.897066 
-L 383.805643 93.91277 
-L 384.77331 92.61098 
-L 385.773233 90.759349 
-L 386.740901 90.638536 
-L 387.740824 90.835344 
-L 388.740747 88.564885 
-L 389.708414 89.75007 
-L 390.708337 88.003694 
-L 391.676004 86.784624 
-L 392.675927 86.141404 
-L 393.67585 81.905658 
-L 394.579006 83.96029 
-L 395.578929 83.33975 
-L 396.546596 84.277036 
-L 397.546519 85.070487 
-L 398.514187 86.888245 
-L 399.51411 85.33823 
-L 400.514033 85.680901 
-L 401.4817 84.833925 
-L 402.481623 84.476239 
-L 404.449213 85.286142 
-L 405.449136 83.050414 
-L 406.384548 81.837643 
-L 407.384471 80.312853 
-L 408.352138 79.444411 
-L 409.352061 79.246679 
-L 410.319728 75.760896 
-L 411.319651 74.406364 
-L 412.319574 74.389833 
-L 413.287242 74.67085 
-L 414.287165 76.470639 
-L 415.254832 81.200955 
-L 417.254678 80.113069 
-L 418.157834 78.854685 
-L 419.157757 79.00434 
-L 420.125424 77.715765 
-L 421.125347 76.131315 
-L 422.093014 76.066395 
-L 423.092937 75.36977 
-L 424.09286 73.729824 
-L 425.060528 74.554548 
-L 426.060451 74.430635 
-L 427.028118 74.488014 
-L 428.028041 73.425744 
-L 429.93112 77.019214 
-L 430.931043 75.903121 
-L 431.89871 77.05521 
-L 432.898633 75.811813 
-L 434.866223 75.594328 
-L 435.866146 74.626557 
-L 436.833814 75.696339 
-L 437.833737 77.245399 
-L 438.801404 76.188044 
-L 439.801327 73.55887 
-L 440.80125 71.478747 
-L 441.704406 71.380654 
-L 442.704329 67.93706 
-L 443.671996 67.880088 
-L 444.671919 64.569847 
-L 445.639587 62.477628 
-L 446.63951 61.9174 
-L 447.639432 56.333826 
-L 448.6071 57.694671 
-L 449.607023 57.397292 
-L 450.57469 57.425062 
-L 451.574613 57.88209 
-L 453.509948 49.968579 
-L 454.509871 51.954684 
-L 455.477538 49.852203 
-L 456.477461 48.165338 
-L 457.445128 46.829649 
-L 458.445051 43.023836 
-L 459.444974 45.237569 
-L 460.412641 45.231058 
-L 461.412564 46.573447 
-L 462.380232 44.104605 
-L 463.380155 43.808831 
-L 464.380078 45.250562 
-L 465.283234 48.394409 
-L 466.283157 50.361688 
-L 467.250824 48.582331 
-L 468.250747 47.847657 
-L 470.218337 43.708599 
-L 471.21826 44.029061 
-L 472.185927 45.897216 
-L 473.18585 45.535906 
-L 474.153518 44.407966 
-L 475.153441 44.9782 
-L 476.153364 49.257832 
-L 477.05652 50.761077 
-L 478.056443 55.698703 
-L 479.02411 62.489679 
-L 480.024033 61.518289 
-L 480.9917 64.820456 
-L 481.991623 60.252365 
-L 482.991546 64.846142 
-L 483.959214 72.130345 
-L 484.959136 74.096431 
-L 485.926804 67.797911 
-L 486.926727 68.828475 
-L 487.92665 63.483378 
-L 488.829806 67.518145 
-L 489.829729 63.299431 
-L 490.797396 62.406352 
-L 491.797319 64.252362 
-L 492.764986 64.090202 
-L 493.764909 64.202553 
-L 494.764832 65.29002 
-L 495.7325 69.735983 
-L 496.732423 72.18853 
-L 497.70009 64.308647 
-L 498.700013 57.947746 
-L 499.699936 58.480668 
-L 500.635348 60.085902 
-L 501.63527 58.749485 
-L 502.602938 62.652126 
-L 504.570528 58.241519 
-L 505.570451 54.845772 
-L 507.538041 50.063825 
-L 508.537964 53.942792 
-L 509.505632 51.731589 
-L 510.505554 54.945586 
-L 511.505477 54.050845 
-L 512.408634 50.402244 
-L 513.408556 50.907558 
-L 514.376224 50.567105 
-L 515.376147 51.647088 
-L 516.343814 48.975465 
-L 517.343737 49.446712 
-L 518.34366 47.567783 
-L 519.311327 44.901174 
-L 520.31125 43.522841 
-L 521.278918 42.38605 
-L 522.278841 42.923776 
-L 523.278763 42.392624 
-L 524.18192 39.234229 
-L 525.181843 42.654124 
-L 527.149433 41.371579 
-L 528.1171 40.412595 
-L 529.117023 43.348026 
-L 530.116946 42.579651 
-L 530.116946 42.579651 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke-dasharray: 7.8,3.12; stroke-dashoffset: 0; stroke: var(--ink-muted); stroke-width: 1.3"/>
+" clip-path="url(#pd3c8805f89)" style="fill: none; stroke-dasharray: 1.95,2.85; stroke-dashoffset: 0; stroke: var(--ink); stroke-width: 1.5"/>
    </g>
    <g id="legend_1">
-    <g id="line2d_37">
+    <g id="line2d_36">
      <path d="M 58.394219 18.333672 
 L 66.894219 18.333672 
 L 75.394219 18.333672 
 " style="fill: none; stroke: #4169e1; stroke-width: 2.6; stroke-linecap: square"/>
      <defs>
-      <path id="m4fc42484fd" d="M 0 2.3 
+      <path id="m6e860fbac0" d="M 0 2.3 
 C 0.609967 2.3 1.195034 2.057657 1.626346 1.626346 
 C 2.057657 1.195034 2.3 0.609967 2.3 0 
 C 2.3 -0.609967 2.057657 -1.195034 1.626346 -1.626346 
@@ -2708,7 +2285,7 @@ z
 " style="stroke: #000000; stroke-opacity: 0"/>
      </defs>
      <g>
-      <use xlink:href="#m4fc42484fd" x="66.894219" y="18.333672" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+      <use xlink:href="#m6e860fbac0" x="66.894219" y="18.333672" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
      </g>
     </g>
     <g id="text_19">
@@ -2851,7 +2428,7 @@ z
       <use xlink:href="#DejaVuSans-50" transform="translate(697.212891 0)"/>
      </g>
     </g>
-    <g id="line2d_38">
+    <g id="line2d_37">
      <path d="M 58.394219 30.810078 
 L 66.894219 30.810078 
 L 75.394219 30.810078 
@@ -3000,7 +2577,7 @@ z
       <use xlink:href="#DejaVuSans-29" transform="translate(799.394531 0)"/>
      </g>
     </g>
-    <g id="line2d_39">
+    <g id="line2d_38">
      <path d="M 58.394219 43.286484 
 L 66.894219 43.286484 
 L 75.394219 43.286484 
@@ -3147,44 +2724,8 @@ z
       <use xlink:href="#DejaVuSans-29" transform="translate(920.857422 0)"/>
      </g>
     </g>
-    <g id="line2d_40">
-     <path d="M 58.394219 55.762891 
-L 66.894219 55.762891 
-L 75.394219 55.762891 
-" style="fill: none; stroke-dasharray: 7.8,3.12; stroke-dashoffset: 0; stroke: var(--ink-muted); stroke-width: 1.3"/>
-    </g>
-    <g id="text_22">
-     <!-- 1/N -->
-     <g style="fill: var(--ink)" transform="translate(82.194219 58.737891) scale(0.085 -0.085)">
-      <defs>
-       <path id="DejaVuSans-2f" d="M 1625 4666 
-L 2156 4666 
-L 531 -594 
-L 0 -594 
-L 1625 4666 
-z
-" transform="scale(0.015625)"/>
-       <path id="DejaVuSans-4e" d="M 628 4666 
-L 1478 4666 
-L 3547 763 
-L 3547 4666 
-L 4159 4666 
-L 4159 0 
-L 3309 0 
-L 1241 3903 
-L 1241 0 
-L 628 0 
-L 628 4666 
-z
-" transform="scale(0.015625)"/>
-      </defs>
-      <use xlink:href="#DejaVuSans-31"/>
-      <use xlink:href="#DejaVuSans-2f" transform="translate(63.623047 0)"/>
-      <use xlink:href="#DejaVuSans-4e" transform="translate(97.314453 0)"/>
-     </g>
-    </g>
    </g>
-   <g id="line2d_41">
+   <g id="line2d_39">
     <path d="M 73.571491 218.745672 
 L 74.571414 218.321212 
 L 75.571337 217.267513 
@@ -3613,35 +3154,35 @@ L 528.1171 19.592584
 L 529.117023 21.790239 
 L 530.116946 20.861951 
 L 530.116946 20.861951 
-" clip-path="url(#pf30871de12)" style="fill: none; stroke: #4169e1; stroke-width: 2.6; stroke-linecap: square"/>
-    <g clip-path="url(#pf30871de12)">
-     <use xlink:href="#m4fc42484fd" x="73.571491" y="218.745672" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m4fc42484fd" x="117.761634" y="205.389704" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m4fc42484fd" x="157.048928" y="193.572391" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m4fc42484fd" x="194.304121" y="173.277189" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m4fc42484fd" x="233.591415" y="157.034724" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m4fc42484fd" x="264.072937" y="137.916166" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m4fc42484fd" x="300.328207" y="126.232151" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m4fc42484fd" x="327.842215" y="113.644397" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m4fc42484fd" x="355.356223" y="85.916545" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m4fc42484fd" x="384.77331" y="72.210338" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m4fc42484fd" x="415.254832" y="60.791703" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m4fc42484fd" x="445.639587" y="42.378855" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m4fc42484fd" x="470.218337" y="21.367682" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m4fc42484fd" x="483.959214" y="54.653718" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m4fc42484fd" x="497.70009" y="45.62527" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m4fc42484fd" x="515.376147" y="30.29112" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+" clip-path="url(#pd3c8805f89)" style="fill: none; stroke: #4169e1; stroke-width: 2.6; stroke-linecap: square"/>
+    <g clip-path="url(#pd3c8805f89)">
+     <use xlink:href="#m6e860fbac0" x="73.571491" y="218.745672" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m6e860fbac0" x="117.761634" y="205.389704" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m6e860fbac0" x="157.048928" y="193.572391" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m6e860fbac0" x="194.304121" y="173.277189" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m6e860fbac0" x="233.591415" y="157.034724" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m6e860fbac0" x="264.072937" y="137.916166" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m6e860fbac0" x="300.328207" y="126.232151" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m6e860fbac0" x="327.842215" y="113.644397" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m6e860fbac0" x="355.356223" y="85.916545" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m6e860fbac0" x="384.77331" y="72.210338" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m6e860fbac0" x="415.254832" y="60.791703" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m6e860fbac0" x="445.639587" y="42.378855" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m6e860fbac0" x="470.218337" y="21.367682" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m6e860fbac0" x="483.959214" y="54.653718" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m6e860fbac0" x="497.70009" y="45.62527" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m6e860fbac0" x="515.376147" y="30.29112" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
     </g>
    </g>
   </g>
  </g>
  <defs>
-  <clipPath id="pf30871de12">
+  <clipPath id="pd3c8805f89">
    <rect x="50.744219" y="7.2" width="502.2" height="221.76"/>
   </clipPath>
  </defs>
 </svg>
-<figcaption>Growth of one dollar, every series held at the Aggregate's volatility.</figcaption></figure><h2>2021-2023 bond bear market performance</h2><p class="note">The decade the strategies were tested on contained the worst bond market in forty years, which constrains what any result measured over it can establish.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead"></th><th class="num">Agg index</th><th class="num">equal weight</th><th class="num">Hierarchical RP</th><th class="num">Risk parity</th></tr></thead><tbody><tr><td class="rowhead">2021</td><td class="num">-1.75%</td><td class="num">-0.66%</td><td class="num">-0.29%</td><td class="num">-0.32%</td></tr><tr><td class="rowhead">2022</td><td class="num">-13.24%</td><td class="num">-13.53%</td><td class="num">-7.59%</td><td class="num">-9.95%</td></tr><tr><td class="rowhead">2023</td><td class="num">+5.62%</td><td class="num">+6.22%</td><td class="num">+5.63%</td><td class="num">+6.06%</td></tr><tr><td class="rowhead">2021-2023 cumulative</td><td class="num">-9.96%</td><td class="num">-8.75%</td><td class="num">-2.67%</td><td class="num">-4.80%</td></tr><tr><td class="rowhead">Worst drawdown</td><td class="num">-17.5%</td><td class="num">-17.3%</td><td class="num">-10.3%</td><td class="num">-13.0%</td></tr></tbody></table></figure><p>The risk-based methods took materially less damage through the rate shock, losing 7.6% in 2022 against the index's 13.2%. Underweighting duration is the mechanism, which raises the obvious objection.</p><h2>Is it a duration bet?</h2><p class="note">Risk parity underweights volatile assets, volatility in bonds is duration, so it holds less duration than the index. If that is the whole story an investor could hold shorter bonds and skip the covariance matrix.</p><p>The benchmark was rebuilt to test exactly that: equal weight, scaled month by month to match each strategy's own portfolio duration, with the difference held in cash. It carries the same interest rate exposure as the strategy and none of its structure.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">vs plain 1/N</th><th class="num">vs duration matched</th><th class="num">CI low</th><th class="num">CI high</th><th class="num">p</th><th class="num">strategy duration</th></tr></thead><tbody><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0866</td><td class="num">0.0879</td><td class="num">0.0234</td><td class="num">0.1604</td><td class="num"><strong>0.0117</strong><span class="star">**</span></td><td class="num">5.0094</td></tr><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.1507</td><td class="num">0.1473</td><td class="num">0.0345</td><td class="num">0.2631</td><td class="num"><strong>0.008</strong><span class="star">***</span></td><td class="num">3.7949</td></tr><tr><td class="rowhead">Group risk budget</td><td class="num">0.0885</td><td class="num">0.0895</td><td class="num">0.0307</td><td class="num">0.1554</td><td class="num"><strong>0.004</strong><span class="star">***</span></td><td class="num">5.0388</td></tr></tbody></table></figure><p><strong>The edge is unchanged.</strong> Hierarchical risk parity goes from +0.151 against plain equal weight to +0.147 against the duration matched version at p = 0.008, and equal risk contribution from +0.087 to +0.088 at p = 0.012. All intervals exclude zero.</p><h2>Portfolio characteristics</h2><p class="note">A risk parity book is usually described and rarely shown. These are the realised weights, month by month.</p><figure class="chartwrap"><svg class="chart" preserveAspectRatio="xMidYMid meet" xmlns:xlink="http://www.w3.org/1999/xlink"   viewBox="0 0 564.185916 248.571742" xmlns="http://www.w3.org/2000/svg" version="1.1">
+<figcaption>Growth of one dollar, every series held at the Aggregate's volatility.</figcaption></figure><h2>2021-2023 bond bear market performance</h2><p class="note">The decade the strategies were tested on contained the worst bond market in forty years, which constrains what any result measured over it can establish.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead"></th><th class="num">Agg index</th><th class="num">Hierarchical RP</th><th class="num">Risk parity</th></tr></thead><tbody><tr><td class="rowhead">2021</td><td class="num">-1.75%</td><td class="num">-0.29%</td><td class="num">-0.32%</td></tr><tr><td class="rowhead">2022</td><td class="num">-13.24%</td><td class="num">-7.59%</td><td class="num">-9.95%</td></tr><tr><td class="rowhead">2023</td><td class="num">+5.62%</td><td class="num">+5.63%</td><td class="num">+6.06%</td></tr><tr><td class="rowhead">2021-2023 cumulative</td><td class="num">-9.96%</td><td class="num">-2.67%</td><td class="num">-4.80%</td></tr><tr><td class="rowhead">Worst drawdown</td><td class="num">-17.5%</td><td class="num">-10.3%</td><td class="num">-13.0%</td></tr></tbody></table></figure><p>Both risk based methods lost much less through the rate shock: 7.6% in 2022 against the index at 13.2%. They hold less duration than the index, which is the obvious explanation and the one worth testing.</p><h2>Is it a duration bet?</h2><p class="note">Risk parity underweights volatile assets. In bonds, volatility is mostly duration. If holding less duration is the whole story, an investor could just buy shorter bonds and skip the covariance matrix.</p><p>To test that, the benchmark is rebuilt to carry the same interest rate exposure and none of the structure: equal weight, rescaled each month to match the strategy's own duration, with the difference in cash. This is a control portfolio for the duration question, not a second benchmark; the Aggregate remains the only benchmark in this project.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">vs duration matched</th><th class="num">CI low</th><th class="num">CI high</th><th class="num">p</th><th class="num">strategy duration</th></tr></thead><tbody><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.0879</td><td class="num">0.0234</td><td class="num">0.1604</td><td class="num"><strong>0.0117</strong><span class="star">**</span></td><td class="num">5.0094</td></tr><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.1473</td><td class="num">0.0345</td><td class="num">0.2631</td><td class="num"><strong>0.008</strong><span class="star">***</span></td><td class="num">3.7949</td></tr><tr><td class="rowhead">Group risk budget</td><td class="num">0.0895</td><td class="num">0.0307</td><td class="num">0.1554</td><td class="num"><strong>0.004</strong><span class="star">***</span></td><td class="num">5.0388</td></tr></tbody></table></figure><p><strong>The edge is unchanged.</strong> Hierarchical risk parity goes from +0.151 to +0.147 once duration is matched, at p = 0.008, and equal risk contribution from +0.087 to +0.088 at p = 0.012. All intervals exclude zero, so duration is not the explanation.</p><h2>Portfolio characteristics</h2><p class="note">What the portfolio actually holds, month by month.</p><figure class="chartwrap"><svg class="chart" preserveAspectRatio="xMidYMid meet" xmlns:xlink="http://www.w3.org/1999/xlink"   viewBox="0 0 564.185916 248.571742" xmlns="http://www.w3.org/2000/svg" version="1.1">
  <metadata>
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
@@ -3683,16 +3224,16 @@ z
      <g id="line2d_1">
       <path d="M 52.001982 226.645336 
 L 52.001982 10.429336 
-" clip-path="url(#pb224b5513e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pafc8fff591)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_2">
       <defs>
-       <path id="m9bc9658f6b" d="M 0 0 
+       <path id="m77cf91b2c0" d="M 0 0 
 L 0 3 
 " style="stroke: var(--ink-muted); stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#m9bc9658f6b" x="52.001982" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m77cf91b2c0" x="52.001982" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_1">
@@ -3794,11 +3335,11 @@ z
      <g id="line2d_3">
       <path d="M 96.90916 226.645336 
 L 96.90916 10.429336 
-" clip-path="url(#pb224b5513e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pafc8fff591)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_4">
       <g>
-       <use xlink:href="#m9bc9658f6b" x="96.90916" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m77cf91b2c0" x="96.90916" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_2">
@@ -3841,11 +3382,11 @@ z
      <g id="line2d_5">
       <path d="M 141.816338 226.645336 
 L 141.816338 10.429336 
-" clip-path="url(#pb224b5513e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pafc8fff591)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_6">
       <g>
-       <use xlink:href="#m9bc9658f6b" x="141.816338" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m77cf91b2c0" x="141.816338" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_3">
@@ -3894,11 +3435,11 @@ z
      <g id="line2d_7">
       <path d="M 186.723516 226.645336 
 L 186.723516 10.429336 
-" clip-path="url(#pb224b5513e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pafc8fff591)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_8">
       <g>
-       <use xlink:href="#m9bc9658f6b" x="186.723516" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m77cf91b2c0" x="186.723516" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_4">
@@ -3938,11 +3479,11 @@ z
      <g id="line2d_9">
       <path d="M 231.630694 226.645336 
 L 231.630694 10.429336 
-" clip-path="url(#pb224b5513e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pafc8fff591)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_10">
       <g>
-       <use xlink:href="#m9bc9658f6b" x="231.630694" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m77cf91b2c0" x="231.630694" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_5">
@@ -3980,11 +3521,11 @@ z
      <g id="line2d_11">
       <path d="M 276.537872 226.645336 
 L 276.537872 10.429336 
-" clip-path="url(#pb224b5513e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pafc8fff591)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_12">
       <g>
-       <use xlink:href="#m9bc9658f6b" x="276.537872" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m77cf91b2c0" x="276.537872" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_6">
@@ -4001,11 +3542,11 @@ L 276.537872 10.429336
      <g id="line2d_13">
       <path d="M 321.44505 226.645336 
 L 321.44505 10.429336 
-" clip-path="url(#pb224b5513e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pafc8fff591)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_14">
       <g>
-       <use xlink:href="#m9bc9658f6b" x="321.44505" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m77cf91b2c0" x="321.44505" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_7">
@@ -4022,11 +3563,11 @@ L 321.44505 10.429336
      <g id="line2d_15">
       <path d="M 366.352227 226.645336 
 L 366.352227 10.429336 
-" clip-path="url(#pb224b5513e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pafc8fff591)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_16">
       <g>
-       <use xlink:href="#m9bc9658f6b" x="366.352227" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m77cf91b2c0" x="366.352227" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_8">
@@ -4043,11 +3584,11 @@ L 366.352227 10.429336
      <g id="line2d_17">
       <path d="M 411.259405 226.645336 
 L 411.259405 10.429336 
-" clip-path="url(#pb224b5513e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pafc8fff591)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_18">
       <g>
-       <use xlink:href="#m9bc9658f6b" x="411.259405" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m77cf91b2c0" x="411.259405" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_9">
@@ -4064,11 +3605,11 @@ L 411.259405 10.429336
      <g id="line2d_19">
       <path d="M 456.166583 226.645336 
 L 456.166583 10.429336 
-" clip-path="url(#pb224b5513e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pafc8fff591)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_20">
       <g>
-       <use xlink:href="#m9bc9658f6b" x="456.166583" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m77cf91b2c0" x="456.166583" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_10">
@@ -4087,16 +3628,16 @@ L 456.166583 10.429336
      <g id="line2d_21">
       <path d="M 50.711016 226.645336 
 L 485.951016 226.645336 
-" clip-path="url(#pb224b5513e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pafc8fff591)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_22">
       <defs>
-       <path id="md3ea71f8e7" d="M 0 0 
+       <path id="m009392af8e" d="M 0 0 
 L -3 0 
 " style="stroke: var(--ink-muted); stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#md3ea71f8e7" x="50.711016" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m009392af8e" x="50.711016" y="226.645336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_11">
@@ -4160,11 +3701,11 @@ z
      <g id="line2d_23">
       <path d="M 50.711016 183.402136 
 L 485.951016 183.402136 
-" clip-path="url(#pb224b5513e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pafc8fff591)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_24">
       <g>
-       <use xlink:href="#md3ea71f8e7" x="50.711016" y="183.402136" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m009392af8e" x="50.711016" y="183.402136" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_12">
@@ -4180,11 +3721,11 @@ L 485.951016 183.402136
      <g id="line2d_25">
       <path d="M 50.711016 140.158936 
 L 485.951016 140.158936 
-" clip-path="url(#pb224b5513e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pafc8fff591)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_26">
       <g>
-       <use xlink:href="#md3ea71f8e7" x="50.711016" y="140.158936" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m009392af8e" x="50.711016" y="140.158936" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_13">
@@ -4200,11 +3741,11 @@ L 485.951016 140.158936
      <g id="line2d_27">
       <path d="M 50.711016 96.915736 
 L 485.951016 96.915736 
-" clip-path="url(#pb224b5513e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pafc8fff591)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_28">
       <g>
-       <use xlink:href="#md3ea71f8e7" x="50.711016" y="96.915736" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m009392af8e" x="50.711016" y="96.915736" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_14">
@@ -4220,11 +3761,11 @@ L 485.951016 96.915736
      <g id="line2d_29">
       <path d="M 50.711016 53.672536 
 L 485.951016 53.672536 
-" clip-path="url(#pb224b5513e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pafc8fff591)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_30">
       <g>
-       <use xlink:href="#md3ea71f8e7" x="50.711016" y="53.672536" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m009392af8e" x="50.711016" y="53.672536" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_15">
@@ -4240,11 +3781,11 @@ L 485.951016 53.672536
      <g id="line2d_31">
       <path d="M 50.711016 10.429336 
 L 485.951016 10.429336 
-" clip-path="url(#pb224b5513e)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pafc8fff591)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_32">
       <g>
-       <use xlink:href="#md3ea71f8e7" x="50.711016" y="10.429336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m009392af8e" x="50.711016" y="10.429336" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_16">
@@ -23771,7 +23312,7 @@ L 50.833965 149.976286
 L 50.803227 150.007248 
 L 50.711016 149.963371 
 z
-" clip-path="url(#pb224b5513e)" style="fill: #4169e1"/>
+" clip-path="url(#pafc8fff591)" style="fill: #4169e1"/>
    </g>
    <g id="FillBetweenPolyCollection_2">
     <path d="M 50.711016 115.236834 
@@ -43145,7 +42686,7 @@ L 50.833965 115.300269
 L 50.803227 115.294115 
 L 50.711016 115.236834 
 z
-" clip-path="url(#pb224b5513e)" style="fill: #cf6a1a"/>
+" clip-path="url(#pafc8fff591)" style="fill: #cf6a1a"/>
    </g>
    <g id="FillBetweenPolyCollection_3">
     <path d="M 50.711016 106.752174 
@@ -62519,7 +62060,7 @@ L 50.833965 106.827953
 L 50.803227 106.820933 
 L 50.711016 106.752174 
 z
-" clip-path="url(#pb224b5513e)" style="fill: #1f9c7a"/>
+" clip-path="url(#pafc8fff591)" style="fill: #1f9c7a"/>
    </g>
    <g id="FillBetweenPolyCollection_4">
     <path d="M 50.711016 83.946653 
@@ -81893,7 +81434,7 @@ L 50.833965 84.05561
 L 50.803227 84.018643 
 L 50.711016 83.946653 
 z
-" clip-path="url(#pb224b5513e)" style="fill: #a83c66"/>
+" clip-path="url(#pafc8fff591)" style="fill: #a83c66"/>
    </g>
    <g id="FillBetweenPolyCollection_5">
     <path d="M 50.711016 67.467722 
@@ -101267,7 +100808,7 @@ L 50.833965 67.527196
 L 50.803227 67.513022 
 L 50.711016 67.467722 
 z
-" clip-path="url(#pb224b5513e)" style="fill: #7a52c8"/>
+" clip-path="url(#pafc8fff591)" style="fill: #7a52c8"/>
    </g>
    <g id="FillBetweenPolyCollection_6">
     <path d="M 50.711016 62.416953 
@@ -120641,7 +120182,7 @@ L 50.833965 62.483775
 L 50.803227 62.469085 
 L 50.711016 62.416953 
 z
-" clip-path="url(#pb224b5513e)" style="fill: #9c7d1e"/>
+" clip-path="url(#pafc8fff591)" style="fill: #9c7d1e"/>
    </g>
    <g id="FillBetweenPolyCollection_7">
     <path d="M 50.711016 46.59517 
@@ -140015,7 +139556,7 @@ L 50.833965 46.668186
 L 50.803227 46.618237 
 L 50.711016 46.59517 
 z
-" clip-path="url(#pb224b5513e)" style="fill: #2f8f5b"/>
+" clip-path="url(#pafc8fff591)" style="fill: #2f8f5b"/>
    </g>
    <g id="FillBetweenPolyCollection_8">
     <path d="M 50.711016 30.034722 
@@ -159389,7 +158930,7 @@ L 50.833965 30.115888
 L 50.803227 30.062786 
 L 50.711016 30.034722 
 z
-" clip-path="url(#pb224b5513e)" style="fill: #4169e1"/>
+" clip-path="url(#pafc8fff591)" style="fill: #4169e1"/>
    </g>
    <g id="FillBetweenPolyCollection_9">
     <path d="M 50.711016 15.581925 
@@ -178763,7 +178304,7 @@ L 50.833965 15.59162
 L 50.803227 15.592532 
 L 50.711016 15.581925 
 z
-" clip-path="url(#pb224b5513e)" style="fill: #cf6a1a"/>
+" clip-path="url(#pafc8fff591)" style="fill: #cf6a1a"/>
    </g>
    <g id="FillBetweenPolyCollection_10">
     <path d="M 50.711016 12.17999 
@@ -198137,7 +197678,7 @@ L 50.833965 12.184599
 L 50.803227 12.185356 
 L 50.711016 12.17999 
 z
-" clip-path="url(#pb224b5513e)" style="fill: #1f9c7a"/>
+" clip-path="url(#pafc8fff591)" style="fill: #1f9c7a"/>
    </g>
    <g id="FillBetweenPolyCollection_11">
     <path d="M 50.711016 10.429336 
@@ -217511,7 +217052,7 @@ L 50.833965 10.429336
 L 50.803227 10.429336 
 L 50.711016 10.429336 
 z
-" clip-path="url(#pb224b5513e)" style="fill: #a83c66"/>
+" clip-path="url(#pafc8fff591)" style="fill: #a83c66"/>
    </g>
    <g id="patch_3">
     <path d="M 50.711016 226.645336 
@@ -217990,7 +217531,7 @@ z
   </g>
  </g>
  <defs>
-  <clipPath id="pb224b5513e">
+  <clipPath id="pafc8fff591">
    <rect x="50.711016" y="10.429336" width="435.24" height="216.216"/>
   </clipPath>
  </defs>
@@ -218037,16 +217578,16 @@ z
      <g id="line2d_1">
       <path d="M 87.678238 151.344 
 L 87.678238 7.2 
-" clip-path="url(#p47393f6484)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p50b1c02add)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_2">
       <defs>
-       <path id="m8e9e611789" d="M 0 0 
+       <path id="m8e21e4ea1d" d="M 0 0 
 L 0 3 
 " style="stroke: var(--ink-muted); stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#m8e9e611789" x="87.678238" y="151.344" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m8e21e4ea1d" x="87.678238" y="151.344" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_1">
@@ -218130,11 +217671,11 @@ z
      <g id="line2d_3">
       <path d="M 146.551967 151.344 
 L 146.551967 7.2 
-" clip-path="url(#p47393f6484)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p50b1c02add)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_4">
       <g>
-       <use xlink:href="#m8e9e611789" x="146.551967" y="151.344" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m8e21e4ea1d" x="146.551967" y="151.344" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_2">
@@ -218178,11 +217719,11 @@ z
      <g id="line2d_5">
       <path d="M 205.425696 151.344 
 L 205.425696 7.2 
-" clip-path="url(#p47393f6484)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p50b1c02add)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_6">
       <g>
-       <use xlink:href="#m8e9e611789" x="205.425696" y="151.344" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m8e21e4ea1d" x="205.425696" y="151.344" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_3">
@@ -218225,11 +217766,11 @@ z
      <g id="line2d_7">
       <path d="M 264.331667 151.344 
 L 264.331667 7.2 
-" clip-path="url(#p47393f6484)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p50b1c02add)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_8">
       <g>
-       <use xlink:href="#m8e9e611789" x="264.331667" y="151.344" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m8e21e4ea1d" x="264.331667" y="151.344" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_4">
@@ -218246,11 +217787,11 @@ L 264.331667 7.2
      <g id="line2d_9">
       <path d="M 323.205396 151.344 
 L 323.205396 7.2 
-" clip-path="url(#p47393f6484)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p50b1c02add)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_10">
       <g>
-       <use xlink:href="#m8e9e611789" x="323.205396" y="151.344" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m8e21e4ea1d" x="323.205396" y="151.344" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_5">
@@ -218267,11 +217808,11 @@ L 323.205396 7.2
      <g id="line2d_11">
       <path d="M 382.079124 151.344 
 L 382.079124 7.2 
-" clip-path="url(#p47393f6484)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p50b1c02add)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_12">
       <g>
-       <use xlink:href="#m8e9e611789" x="382.079124" y="151.344" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m8e21e4ea1d" x="382.079124" y="151.344" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_6">
@@ -218288,11 +217829,11 @@ L 382.079124 7.2
      <g id="line2d_13">
       <path d="M 440.952853 151.344 
 L 440.952853 7.2 
-" clip-path="url(#p47393f6484)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p50b1c02add)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_14">
       <g>
-       <use xlink:href="#m8e9e611789" x="440.952853" y="151.344" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m8e21e4ea1d" x="440.952853" y="151.344" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_7">
@@ -218309,11 +217850,11 @@ L 440.952853 7.2
      <g id="line2d_15">
       <path d="M 499.858824 151.344 
 L 499.858824 7.2 
-" clip-path="url(#p47393f6484)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p50b1c02add)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_16">
       <g>
-       <use xlink:href="#m8e9e611789" x="499.858824" y="151.344" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m8e21e4ea1d" x="499.858824" y="151.344" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_8">
@@ -218332,16 +217873,16 @@ L 499.858824 7.2
      <g id="line2d_17">
       <path d="M 39.927969 144.49075 
 L 542.127969 144.49075 
-" clip-path="url(#p47393f6484)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p50b1c02add)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_18">
       <defs>
-       <path id="ma44b7b9607" d="M 0 0 
+       <path id="m7222946147" d="M 0 0 
 L -3 0 
 " style="stroke: var(--ink-muted); stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#ma44b7b9607" x="39.927969" y="144.49075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m7222946147" x="39.927969" y="144.49075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_9">
@@ -218428,11 +217969,11 @@ z
      <g id="line2d_19">
       <path d="M 39.927969 121.350048 
 L 542.127969 121.350048 
-" clip-path="url(#p47393f6484)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p50b1c02add)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_20">
       <g>
-       <use xlink:href="#ma44b7b9607" x="39.927969" y="121.350048" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m7222946147" x="39.927969" y="121.350048" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_10">
@@ -218460,11 +218001,11 @@ z
      <g id="line2d_21">
       <path d="M 39.927969 98.209345 
 L 542.127969 98.209345 
-" clip-path="url(#p47393f6484)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p50b1c02add)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_22">
       <g>
-       <use xlink:href="#ma44b7b9607" x="39.927969" y="98.209345" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m7222946147" x="39.927969" y="98.209345" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_11">
@@ -218521,11 +218062,11 @@ z
      <g id="line2d_23">
       <path d="M 39.927969 75.068643 
 L 542.127969 75.068643 
-" clip-path="url(#p47393f6484)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p50b1c02add)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_24">
       <g>
-       <use xlink:href="#ma44b7b9607" x="39.927969" y="75.068643" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m7222946147" x="39.927969" y="75.068643" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_12">
@@ -218541,11 +218082,11 @@ L 542.127969 75.068643
      <g id="line2d_25">
       <path d="M 39.927969 51.927941 
 L 542.127969 51.927941 
-" clip-path="url(#p47393f6484)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p50b1c02add)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_26">
       <g>
-       <use xlink:href="#ma44b7b9607" x="39.927969" y="51.927941" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m7222946147" x="39.927969" y="51.927941" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_13">
@@ -218582,11 +218123,11 @@ z
      <g id="line2d_27">
       <path d="M 39.927969 28.787239 
 L 542.127969 28.787239 
-" clip-path="url(#p47393f6484)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#p50b1c02add)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_28">
       <g>
-       <use xlink:href="#ma44b7b9607" x="39.927969" y="28.787239" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m7222946147" x="39.927969" y="28.787239" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_14">
@@ -224023,9 +223564,9 @@ L 519.107245 114.891326
 L 519.20397 115.194381 
 L 519.268454 114.361301 
 L 519.300696 114.499468 
-" clip-path="url(#p47393f6484)" style="fill: none; stroke: #4169e1; stroke-width: 2.6; stroke-linecap: square"/>
+" clip-path="url(#p50b1c02add)" style="fill: none; stroke: #4169e1; stroke-width: 2.6; stroke-linecap: square"/>
     <defs>
-     <path id="m0d1af40a6c" d="M 0 2.3 
+     <path id="m4680b888b0" d="M 0 2.3 
 C 0.609967 2.3 1.195034 2.057657 1.626346 1.626346 
 C 2.057657 1.195034 2.3 0.609967 2.3 0 
 C 2.3 -0.609967 2.057657 -1.195034 1.626346 -1.626346 
@@ -224037,137 +223578,137 @@ C -1.195034 2.057657 -0.609967 2.3 0 2.3
 z
 " style="stroke: #000000; stroke-opacity: 0"/>
     </defs>
-    <g clip-path="url(#p47393f6484)">
-     <use xlink:href="#m0d1af40a6c" x="62.755241" y="62.460634" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="67.172383" y="59.080788" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="72.234363" y="57.433065" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="75.361829" y="78.842167" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="81.036405" y="71.09874" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="87.774964" y="66.044369" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="91.869687" y="76.737804" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="95.351813" y="84.334679" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="98.350311" y="76.692942" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="101.445534" y="80.000805" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="105.862676" y="82.525521" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="110.247576" y="75.915385" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="112.762445" y="95.229081" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="117.792183" y="89.941086" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="122.112599" y="91.830019" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="126.368531" y="78.447721" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="131.07585" y="60.983529" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="133.977622" y="65.091638" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="136.008862" y="95.769916" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="138.942876" y="112.061654" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="142.425003" y="110.606716" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="145.810403" y="113.110864" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="145.907129" y="42.816116" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="148.679933" y="38.598898" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="152.581204" y="23.642517" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="156.127815" y="19.51181" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="157.707668" y="43.374868" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="160.802892" y="54.616972" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="164.31726" y="55.192104" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="168.057322" y="54.022019" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="171.539448" y="61.378351" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="177.278508" y="60.193431" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="181.437715" y="67.706803" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="186.75763" y="65.343116" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="191.787368" y="65.921738" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="194.52793" y="39.287692" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="198.783862" y="51.584937" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="203.329972" y="60.212539" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="206.263986" y="44.305146" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="209.681628" y="41.603605" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="214.421189" y="37.346053" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="218.000041" y="48.371724" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="221.740103" y="50.335368" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="226.382938" y="46.782348" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="229.091258" y="43.260627" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="234.282206" y="41.172121" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="237.635365" y="30.567456" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="240.827314" y="34.826516" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="244.631859" y="36.594578" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="247.34018" y="39.328644" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="250.306436" y="39.256056" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="253.627352" y="44.185689" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="258.173462" y="47.995287" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="262.590604" y="37.009259" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="265.298924" y="43.387902" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="268.684325" y="40.600248" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="272.166451" y="35.416732" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="276.003238" y="40.161801" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="276.648077" y="113.549098" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="278.872768" y="115.59887" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="286.094956" y="114.393392" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="294.316644" y="119.323517" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="300.184671" y="117.588718" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="303.989217" y="114.890802" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="308.889987" y="128.317504" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="311.46934" y="114.631515" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="313.887483" y="114.350019" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="317.788755" y="109.465806" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="322.882976" y="102.492633" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="327.364602" y="113.171698" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="331.71726" y="104.786203" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="335.779741" y="114.663767" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="335.973192" y="68.252248" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="340.293608" y="59.381132" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="342.5183" y="44.615528" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="343.936944" y="36.898205" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="345.935943" y="37.80197" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="347.773731" y="31.162194" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="348.483053" y="80.060739" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="352.094147" y="74.310554" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="355.866451" y="71.793652" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="359.767722" y="83.367234" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="363.991413" y="87.327354" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="367.376813" y="93.249395" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="372.535519" y="88.649884" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="377.597499" y="77.262044" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="382.240334" y="65.581465" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="383.594494" y="91.748749" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="387.012137" y="97.604355" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="390.590989" y="96.513462" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="395.395033" y="89.424451" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="399.876659" y="83.314976" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="404.229317" y="96.346014" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="409.355781" y="95.031718" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="415.642953" y="87.0048" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="419.898886" y="97.614057" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="426.347268" y="99.887487" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="433.504972" y="94.619824" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="438.180049" y="82.00891" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="442.7584" y="76.668129" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="443.370996" y="106.202945" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="445.241027" y="105.483205" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="450.270765" y="99.740143" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="454.752391" y="105.445891" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="459.201775" y="103.77402" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="463.489949" y="105.027323" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="467.101043" y="119.643571" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="470.325234" y="132.42766" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="474.162021" y="143.289336" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="477.934325" y="133.132717" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="480.836097" y="119.203915" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="484.963061" y="127.296136" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="488.15501" y="116.972739" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="492.604394" y="114.914134" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="497.440681" y="113.438854" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="501.728855" y="116.000269" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="505.114255" y="116.281236" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="512.27196" y="113.437546" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
-     <use xlink:href="#m0d1af40a6c" x="518.784825" y="114.115673" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+    <g clip-path="url(#p50b1c02add)">
+     <use xlink:href="#m4680b888b0" x="62.755241" y="62.460634" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="67.172383" y="59.080788" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="72.234363" y="57.433065" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="75.361829" y="78.842167" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="81.036405" y="71.09874" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="87.774964" y="66.044369" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="91.869687" y="76.737804" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="95.351813" y="84.334679" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="98.350311" y="76.692942" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="101.445534" y="80.000805" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="105.862676" y="82.525521" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="110.247576" y="75.915385" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="112.762445" y="95.229081" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="117.792183" y="89.941086" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="122.112599" y="91.830019" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="126.368531" y="78.447721" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="131.07585" y="60.983529" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="133.977622" y="65.091638" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="136.008862" y="95.769916" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="138.942876" y="112.061654" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="142.425003" y="110.606716" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="145.810403" y="113.110864" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="145.907129" y="42.816116" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="148.679933" y="38.598898" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="152.581204" y="23.642517" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="156.127815" y="19.51181" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="157.707668" y="43.374868" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="160.802892" y="54.616972" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="164.31726" y="55.192104" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="168.057322" y="54.022019" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="171.539448" y="61.378351" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="177.278508" y="60.193431" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="181.437715" y="67.706803" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="186.75763" y="65.343116" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="191.787368" y="65.921738" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="194.52793" y="39.287692" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="198.783862" y="51.584937" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="203.329972" y="60.212539" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="206.263986" y="44.305146" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="209.681628" y="41.603605" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="214.421189" y="37.346053" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="218.000041" y="48.371724" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="221.740103" y="50.335368" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="226.382938" y="46.782348" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="229.091258" y="43.260627" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="234.282206" y="41.172121" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="237.635365" y="30.567456" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="240.827314" y="34.826516" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="244.631859" y="36.594578" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="247.34018" y="39.328644" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="250.306436" y="39.256056" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="253.627352" y="44.185689" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="258.173462" y="47.995287" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="262.590604" y="37.009259" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="265.298924" y="43.387902" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="268.684325" y="40.600248" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="272.166451" y="35.416732" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="276.003238" y="40.161801" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="276.648077" y="113.549098" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="278.872768" y="115.59887" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="286.094956" y="114.393392" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="294.316644" y="119.323517" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="300.184671" y="117.588718" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="303.989217" y="114.890802" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="308.889987" y="128.317504" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="311.46934" y="114.631515" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="313.887483" y="114.350019" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="317.788755" y="109.465806" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="322.882976" y="102.492633" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="327.364602" y="113.171698" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="331.71726" y="104.786203" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="335.779741" y="114.663767" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="335.973192" y="68.252248" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="340.293608" y="59.381132" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="342.5183" y="44.615528" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="343.936944" y="36.898205" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="345.935943" y="37.80197" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="347.773731" y="31.162194" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="348.483053" y="80.060739" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="352.094147" y="74.310554" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="355.866451" y="71.793652" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="359.767722" y="83.367234" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="363.991413" y="87.327354" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="367.376813" y="93.249395" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="372.535519" y="88.649884" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="377.597499" y="77.262044" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="382.240334" y="65.581465" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="383.594494" y="91.748749" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="387.012137" y="97.604355" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="390.590989" y="96.513462" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="395.395033" y="89.424451" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="399.876659" y="83.314976" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="404.229317" y="96.346014" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="409.355781" y="95.031718" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="415.642953" y="87.0048" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="419.898886" y="97.614057" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="426.347268" y="99.887487" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="433.504972" y="94.619824" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="438.180049" y="82.00891" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="442.7584" y="76.668129" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="443.370996" y="106.202945" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="445.241027" y="105.483205" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="450.270765" y="99.740143" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="454.752391" y="105.445891" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="459.201775" y="103.77402" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="463.489949" y="105.027323" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="467.101043" y="119.643571" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="470.325234" y="132.42766" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="474.162021" y="143.289336" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="477.934325" y="133.132717" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="480.836097" y="119.203915" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="484.963061" y="127.296136" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="488.15501" y="116.972739" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="492.604394" y="114.914134" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="497.440681" y="113.438854" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="501.728855" y="116.000269" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="505.114255" y="116.281236" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="512.27196" y="113.437546" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
+     <use xlink:href="#m4680b888b0" x="518.784825" y="114.115673" style="fill: #4169e1; stroke: #000000; stroke-opacity: 0"/>
     </g>
    </g>
   </g>
  </g>
  <defs>
-  <clipPath id="p47393f6484">
+  <clipPath id="p50b1c02add">
    <rect x="39.927969" y="7.2" width="502.2" height="144.144"/>
   </clipPath>
  </defs>
 </svg>
-<figcaption>Hierarchical risk parity portfolio duration over time: mean 3.87 years, ranging 3.60 to 4.16. The Aggregate index runs around six.</figcaption></figure><p>The book concentrates in the short end: <strong>51%</strong> of the portfolio sits in the two year Treasury and short investment grade combined, against 4% in the 30 year Treasury and long credit. That is what equalising risk contributions does when the long end is roughly eight times more volatile than the short end. Portfolio duration works out around 3.9 years, well inside the index. The weights are also stable, which is why turnover is low.</p><h2>Costs, turnover and robustness</h2><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">1m Sharpe</th><th class="num">3m Sharpe</th><th class="num">6m Sharpe</th><th class="num">12m Sharpe</th><th class="num">1m turnover</th><th class="num">3m turnover</th><th class="num">6m turnover</th><th class="num">12m turnover</th></tr></thead><tbody><tr><td class="rowhead">Equal weight</td><td class="num">0.7438</td><td class="num">0.7412</td><td class="num">0.7415</td><td class="num">0.7435</td><td class="num">0.12</td><td class="num">0.08</td><td class="num">0.07</td><td class="num">0.05</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.884</td><td class="num">0.8814</td><td class="num">0.8824</td><td class="num">0.89</td><td class="num">0.09</td><td class="num">0.07</td><td class="num">0.05</td><td class="num">0.05</td></tr><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.9334</td><td class="num">0.9297</td><td class="num">0.9319</td><td class="num">0.9391</td><td class="num">0.14</td><td class="num">0.11</td><td class="num">0.08</td><td class="num">0.07</td></tr></tbody></table><figcaption>By rebalancing frequency.</figcaption></figure><p>Turnover runs 5% to 14% a year. Risk parity trades <em>less</em> than equal weight, because bond correlations are stable while equal weight has to trade back against price drift every month. Annual rebalancing is marginally best, which says the covariance estimate is stable enough that monthly re-optimisation is mostly noise.</p><h2>The whole period, held throughout</h2><p class="note">What each surviving strategy would have produced over the full thirty-nine years, with every setting fixed where development left it and nothing refitted.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="">status</th><th class="num">return, %</th><th class="num">volatility, %</th><th class="num">Sharpe</th><th class="num">vs the Agg</th><th class="num">p</th><th class="num">alpha, % a year</th><th class="num">t</th><th class="num">beta</th><th class="num">duration, years</th><th class="num">turnover, %</th></tr></thead><tbody><tr><td class="rowhead">HRP + Rolling 60m overlay</td><td class="">confirmatory</td><td class="num">5.15</td><td class="num">2.551</td><td class="num" style="background:rgba(46,125,90,0.420)">0.814</td><td class="num">0.336</td><td class="num"><strong>0.0</strong><span class="star">***</span></td><td class="num">1.034</td><td class="num">4.463</td><td class="num">0.484</td><td class="num">4.027</td><td class="num">36.26</td></tr><tr><td class="rowhead">HRP, annual</td><td class="">confirmatory</td><td class="num">4.994</td><td class="num">2.529</td><td class="num" style="background:rgba(46,125,90,0.393)">0.762</td><td class="num">0.284</td><td class="num"><strong>0.0</strong><span class="star">***</span></td><td class="num">0.824</td><td class="num">4.397</td><td class="num">0.512</td><td class="num">3.873</td><td class="num">2.144</td></tr><tr><td class="rowhead">ERC, annual</td><td class="">confirmatory</td><td class="num">5.359</td><td class="num">3.245</td><td class="num" style="background:rgba(46,125,90,0.365)">0.707</td><td class="num">0.228</td><td class="num"><strong>0.0</strong><span class="star">***</span></td><td class="num">0.849</td><td class="num">4.027</td><td class="num">0.671</td><td class="num">4.986</td><td class="num">1.464</td></tr><tr><td class="rowhead">HRP + Momentum (Sharpe) overlay</td><td class="">confirmatory</td><td class="num">4.694</td><td class="num">2.392</td><td class="num" style="background:rgba(46,125,90,0.354)">0.686</td><td class="num">0.207</td><td class="num"><strong>0.007</strong><span class="star">***</span></td><td class="num">0.634</td><td class="num">3.05</td><td class="num">0.466</td><td class="num">3.515</td><td class="num">18.124</td></tr><tr><td class="rowhead">Rolling 60m, long only</td><td class="">exploratory</td><td class="num">6.088</td><td class="num">4.954</td><td class="num" style="background:rgba(46,125,90,0.318)">0.616</td><td class="num">0.138</td><td class="num">0.107</td><td class="num">1.365</td><td class="num">2.598</td><td class="num">0.785</td><td class="num">6.173</td><td class="num">67.502</td></tr><tr><td class="rowhead">Agg index</td><td class="">benchmark</td><td class="num">5.158</td><td class="num">4.496</td><td class="num" style="background:rgba(46,125,90,0.247)">0.479</td><td class="num"><span class="nil">&#8212;</span></td><td class="num"><span class="nil">&#8212;</span></td><td class="num">0.0</td><td class="num">0.0</td><td class="num">1.0</td><td class="num"><span class="nil">&#8212;</span></td><td class="num"><span class="nil">&#8212;</span></td></tr><tr><td class="rowhead">Momentum (Sharpe), long only</td><td class="">exploratory</td><td class="num">4.025</td><td class="num">3.343</td><td class="num" style="background:rgba(46,125,90,0.158)">0.306</td><td class="num">-0.172</td><td class="num"><strong>0.097</strong><span class="star">*</span></td><td class="num">-0.087</td><td class="num">-0.192</td><td class="num">0.516</td><td class="num">4.079</td><td class="num">156.872</td></tr></tbody></table><figcaption>1987 to 2026, net of per-asset trading costs. The settings were chosen on the development sample and carried forward unchanged, so this is one continuous record rather than two studies joined together.</figcaption></figure><p><strong>This table should be read last and trusted least.</strong> Twenty-eight of the thirty-nine years are the development sample, so the full-period figures are dominated by the same data the strategies were selected on. Every confirmatory strategy clears the index here at better than one percent, and not one of them cleared it on the holdout alone. The full sample describes what holding these portfolios would have returned; the holdout is what tests whether the edge was real.</p><p>The standalone risk-adjusted momentum book shows what the difference looks like. Over the full period its alpha is -0.09% a year with a t statistic of -0.19, which is nothing. That number is made of +0.75% on development and -1.96% on the holdout. Averaging a selected period with an unselected one produces a figure that describes neither.</p><p>The ordering also moves. Hierarchical risk parity leads equal risk contribution over the full period and over development, and trails it on the holdout. The two are close enough throughout that the gap between them is not worth defending in either direction.</p><h2>Conclusions</h2><p class="note">What the evidence supports, and what it does not.</p><ul class="checks"><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">Risk parity outperforms the Aggregate index</span><span class="check__detail">significant in development, holdout and full sample; full sample p = 0.002 for the hierarchical version and 0.007 for equal risk contribution</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">The margin is not explained by duration</span><span class="check__detail">unchanged against a duration matched benchmark, p = 0.008 and 0.012</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">It survives costs and institutional financing</span><span class="check__detail">turnover under 15% a year, and 90 to 252bp of headroom to the financing breakeven</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">It uses no return forecast</span><span class="check__detail">the covariance matrix only, at every point in the construction</span></li><li class="check check--fail"><span class="chip chip--fail">FAIL</span><span class="check__label">Return forecasting adds anything on this universe</span><span class="check__detail">every forecast-driven class fails on the holdout, including the ones that scored best on development</span></li></ul><h2>Next steps</h2><figure class="tablewrap"><table><thead><tr><th class="rowhead">step</th><th class="">why</th></tr></thead><tbody><tr><td class="rowhead">Replace funds with indices or futures</td><td class="">The universe is mutual funds, which charge 20 to 80 basis points and carry manager decisions. High yield&#x27;s daily returns autocorrelate at 0.29 from stale pricing. Index or futures data removes both.</td></tr><tr><td class="rowhead">Add genuinely different exposures</td><td class="">Adding more US bonds reduced measured independence rather than raising it. TIPS, international sovereigns, emerging market debt and bank loans are different factors, not more of the same one.</td></tr><tr><td class="rowhead">Test on a second market</td><td class="">If the duration and forecastability relationship is structural it should appear in gilts and bunds. That is stronger evidence than another robustness check on the same data.</td></tr><tr><td class="rowhead">Cost aware optimisation</td><td class="">On the parent project, trading a fraction of the way toward the target each period rather than fully rebalancing raised Sharpe from 0.06 to 0.23 with turnover cut ninefold.</td></tr></tbody></table></figure><h2>Limitations</h2><figure class="tablewrap"><table><thead><tr><th class="rowhead">limitation</th><th class="">what it means</th></tr></thead><tbody><tr><td class="rowhead">Mutual funds, not indices</td><td class="">The universe is built from funds, which charge 20 to 80 basis points and carry manager decisions an index would not. Index or futures data would remove both.</td></tr><tr><td class="rowhead">Three holdings are marked with a lag</td><td class="">High yield and the two municipal funds autocorrelate between 0.24 and 0.25 at daily frequency, because those markets are matrix priced rather than traded. Lagged marks understate measured volatility, so a risk-based method will hold slightly more of those assets than it would on transaction prices. Correcting the variance for the autocorrelation moves the holdout edge from +0.146 to +0.108, so the effect is real but does not carry the result. The headline numbers apply no correction, which is the less favourable of the two.</td></tr><tr><td class="rowhead">Daily forecast skill on those three is not forecast skill</td><td class="">Flexible models report 8 to 14% out of sample R squared on the stale holdings and close to zero on the Treasuries. That is the lag being detected, not the future. It is the reason the duration relationship in Appendix B is stated at monthly frequency, where the lag washes out, and the reason no forecast-driven strategy is carried into the holdout.</td></tr><tr><td class="rowhead">Eleven assets is a small universe</td><td class="">Appendix B measures how much independent variation it contains, and the answer is less than the count suggests.</td></tr><tr><td class="rowhead">The holdout was opened once on the parent project</td><td class="">It is clean of any model being fitted to it, but not of having been seen once before this project began.</td></tr></tbody></table></figure>
+<figcaption>Hierarchical risk parity portfolio duration over time: mean 3.87 years, ranging 3.60 to 4.16. The Aggregate index runs around six.</figcaption></figure><p>The book concentrates in the short end: <strong>51%</strong> of the portfolio sits in the two year Treasury and short investment grade combined, against 4% in the 30 year Treasury and long credit. That is what equalising risk contributions does when the long end is roughly eight times more volatile than the short end. Portfolio duration works out around 3.9 years, well inside the index. The weights are also stable, which is why turnover is low.</p><h2>Costs, turnover and robustness</h2><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="num">1m Sharpe</th><th class="num">3m Sharpe</th><th class="num">6m Sharpe</th><th class="num">12m Sharpe</th><th class="num">1m turnover</th><th class="num">3m turnover</th><th class="num">6m turnover</th><th class="num">12m turnover</th></tr></thead><tbody><tr><td class="rowhead">Equal weight</td><td class="num">0.7438</td><td class="num">0.7412</td><td class="num">0.7415</td><td class="num">0.7435</td><td class="num">0.12</td><td class="num">0.08</td><td class="num">0.07</td><td class="num">0.05</td></tr><tr><td class="rowhead">Risk parity (ERC)</td><td class="num">0.884</td><td class="num">0.8814</td><td class="num">0.8824</td><td class="num">0.89</td><td class="num">0.09</td><td class="num">0.07</td><td class="num">0.05</td><td class="num">0.05</td></tr><tr><td class="rowhead">Hierarchical RP</td><td class="num">0.9334</td><td class="num">0.9297</td><td class="num">0.9319</td><td class="num">0.9391</td><td class="num">0.14</td><td class="num">0.11</td><td class="num">0.08</td><td class="num">0.07</td></tr></tbody></table><figcaption>By rebalancing frequency.</figcaption></figure><p>Turnover runs 5% to 14% a year depending on how often the book is rebalanced. Annual rebalancing is best, which says the covariance estimate is stable enough that re-optimising monthly mostly adds noise and cost.</p><h2>The whole period, held throughout</h2><p class="note">What each surviving strategy would have produced over the full thirty-nine years, with every setting fixed where development left it and nothing refitted.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">strategy</th><th class="">status</th><th class="num">return, %</th><th class="num">volatility, %</th><th class="num">Sharpe</th><th class="num">vs the Agg</th><th class="num">p</th><th class="num">alpha, % a year</th><th class="num">t</th><th class="num">beta</th><th class="num">duration, years</th><th class="num">turnover, %</th></tr></thead><tbody><tr><td class="rowhead">HRP + Rolling 60m overlay</td><td class="">confirmatory</td><td class="num">5.15</td><td class="num">2.551</td><td class="num" style="background:rgba(46,125,90,0.420)">0.814</td><td class="num">0.336</td><td class="num"><strong>0.0</strong><span class="star">***</span></td><td class="num">1.034</td><td class="num">4.463</td><td class="num">0.484</td><td class="num">4.027</td><td class="num">36.26</td></tr><tr><td class="rowhead">HRP, annual</td><td class="">confirmatory</td><td class="num">4.994</td><td class="num">2.529</td><td class="num" style="background:rgba(46,125,90,0.393)">0.762</td><td class="num">0.284</td><td class="num"><strong>0.0</strong><span class="star">***</span></td><td class="num">0.824</td><td class="num">4.397</td><td class="num">0.512</td><td class="num">3.873</td><td class="num">2.144</td></tr><tr><td class="rowhead">ERC, annual</td><td class="">confirmatory</td><td class="num">5.359</td><td class="num">3.245</td><td class="num" style="background:rgba(46,125,90,0.365)">0.707</td><td class="num">0.228</td><td class="num"><strong>0.0</strong><span class="star">***</span></td><td class="num">0.849</td><td class="num">4.027</td><td class="num">0.671</td><td class="num">4.986</td><td class="num">1.464</td></tr><tr><td class="rowhead">HRP + Momentum (Sharpe) overlay</td><td class="">confirmatory</td><td class="num">4.694</td><td class="num">2.392</td><td class="num" style="background:rgba(46,125,90,0.354)">0.686</td><td class="num">0.207</td><td class="num"><strong>0.007</strong><span class="star">***</span></td><td class="num">0.634</td><td class="num">3.05</td><td class="num">0.466</td><td class="num">3.515</td><td class="num">18.124</td></tr><tr><td class="rowhead">Rolling 60m, long only</td><td class="">exploratory</td><td class="num">6.088</td><td class="num">4.954</td><td class="num" style="background:rgba(46,125,90,0.318)">0.616</td><td class="num">0.138</td><td class="num">0.107</td><td class="num">1.365</td><td class="num">2.598</td><td class="num">0.785</td><td class="num">6.173</td><td class="num">67.502</td></tr><tr><td class="rowhead">Agg index</td><td class="">benchmark</td><td class="num">5.158</td><td class="num">4.496</td><td class="num" style="background:rgba(46,125,90,0.247)">0.479</td><td class="num"><span class="nil">&#8212;</span></td><td class="num"><span class="nil">&#8212;</span></td><td class="num">0.0</td><td class="num">0.0</td><td class="num">1.0</td><td class="num"><span class="nil">&#8212;</span></td><td class="num"><span class="nil">&#8212;</span></td></tr><tr><td class="rowhead">Momentum (Sharpe), long only</td><td class="">exploratory</td><td class="num">4.025</td><td class="num">3.343</td><td class="num" style="background:rgba(46,125,90,0.158)">0.306</td><td class="num">-0.172</td><td class="num"><strong>0.097</strong><span class="star">*</span></td><td class="num">-0.087</td><td class="num">-0.192</td><td class="num">0.516</td><td class="num">4.079</td><td class="num">156.872</td></tr></tbody></table><figcaption>1987 to 2026, net of per-asset trading costs. The settings were chosen on the development sample and carried forward unchanged, so this is one continuous record rather than two studies joined together.</figcaption></figure><p><strong>This table should be read last and trusted least.</strong> Twenty-eight of the thirty-nine years are the development sample, so the full-period figures are dominated by the same data the strategies were selected on. Every confirmatory strategy clears the index here at better than one percent, and not one of them cleared it on the holdout alone. The full sample describes what holding these portfolios would have returned; the holdout is what tests whether the edge was real.</p><p>The standalone risk-adjusted momentum book shows what the difference looks like. Over the full period its alpha is -0.09% a year with a t statistic of -0.19, which is nothing. That number is made of +0.75% on development and -1.96% on the holdout. Averaging a selected period with an unselected one produces a figure that describes neither.</p><p>The ordering also moves. Hierarchical risk parity leads equal risk contribution over the full period and over development, and trails it on the holdout. The two are close enough throughout that the gap between them is not worth defending in either direction.</p><h2>Conclusions</h2><p class="note">What the evidence supports, and what it does not.</p><ul class="checks"><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">Risk parity beat the Aggregate index in every period tested</span><span class="check__detail">development p < 0.001 and full sample p < 0.001 for both methods; on the holdout alone both beat the index but neither reaches five percent, at p = 0.126 for hierarchical and 0.060 for equal risk contribution</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">The margin is not explained by duration</span><span class="check__detail">unchanged against a duration matched benchmark, p = 0.008 and 0.012</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">It survives costs and institutional financing</span><span class="check__detail">turnover under 15% a year, and 90 to 252bp of headroom to the financing breakeven</span></li><li class="check check--pass"><span class="chip chip--pass">PASS</span><span class="check__label">It uses no return forecast</span><span class="check__detail">the covariance matrix only, at every point in the construction</span></li><li class="check check--fail"><span class="chip chip--fail">FAIL</span><span class="check__label">Return forecasting adds anything on this universe</span><span class="check__detail">regression and all four machine learning families are indistinguishable from the index on development, and both technical signals carried into the holdout failed there</span></li><li class="check check--fail"><span class="chip chip--fail">FAIL</span><span class="check__label">The technical overlays are worth running</span><span class="check__detail">both beat the index on development and both finish below plain risk parity on the holdout</span></li></ul><h2>Next steps</h2><figure class="tablewrap"><table><thead><tr><th class="rowhead">step</th><th class="">why</th></tr></thead><tbody><tr><td class="rowhead">Replace funds with indices or futures</td><td class="">The universe is mutual funds, which charge 20 to 80 basis points and carry manager decisions. High yield&#x27;s daily returns autocorrelate at 0.24 from stale pricing. Index or futures data removes both.</td></tr><tr><td class="rowhead">Add genuinely different exposures</td><td class="">Adding more US bonds reduced measured independence rather than raising it. TIPS, international sovereigns, emerging market debt and bank loans are different factors, not more of the same one.</td></tr><tr><td class="rowhead">Test on a second market</td><td class="">If the duration and forecastability relationship is structural it should appear in gilts and bunds. That is stronger evidence than another robustness check on the same data.</td></tr><tr><td class="rowhead">Cost aware optimisation</td><td class="">On the parent project, trading a fraction of the way toward the target each period rather than fully rebalancing raised Sharpe from 0.06 to 0.23 with turnover cut ninefold.</td></tr></tbody></table></figure><h2>Limitations</h2><figure class="tablewrap"><table><thead><tr><th class="rowhead">limitation</th><th class="">what it means</th></tr></thead><tbody><tr><td class="rowhead">Mutual funds, not indices</td><td class="">The universe is built from funds, which charge 20 to 80 basis points and carry manager decisions an index would not. Index or futures data would remove both.</td></tr><tr><td class="rowhead">Three holdings are marked with a lag</td><td class="">High yield and the two municipal funds autocorrelate between 0.24 and 0.25 at daily frequency, because those markets are matrix priced rather than traded. Lagged marks understate measured volatility, so a risk-based method will hold slightly more of those assets than it would on transaction prices. Correcting the variance for the autocorrelation moves the holdout edge from +0.146 to +0.108, so the effect is real but does not carry the result. The headline numbers apply no correction, which is the less favourable of the two.</td></tr><tr><td class="rowhead">Daily forecast skill on those three is not forecast skill</td><td class="">Machine learning models report 4.5 to 8.4% out of sample R squared on the three matrix priced holdings and negative figures on the other eight. Moving the target from one day to one month erases the gap, which is what a pricing lag does and what real forecast skill would not. No regression or machine learning strategy is carried into the holdout for this reason.</td></tr><tr><td class="rowhead">Eleven assets is a small universe</td><td class="">Appendix B measures how much independent variation it contains, and the answer is less than the count suggests.</td></tr><tr><td class="rowhead">The holdout was opened once on the parent project</td><td class="">It is clean of any model being fitted to it, but not of having been seen once before this project began.</td></tr><tr><td class="rowhead">Two strategies were carried without clearing the bar</td><td class="">The rolling selection and momentum on the Sharpe ratio did not reach five percent on development. They were carried in standalone form to answer whether the signals work alone or only as an overlay. Their holdout figures answer that question and should not be read as validation of anything.</td></tr></tbody></table></figure>
   </main>
   <nav class="pager"><a class="pager__slot pager__slot--prev" href="phase2_strategies.html"><span class="pager__kind">&larr; Previous</span><span class="pager__label">Strategies</span></a><a class="pager__slot pager__slot--index" href="index.html"><span class="pager__kind">All phases</span><span class="pager__label">All sections</span></a><a class="pager__slot pager__slot--next" href="appendix_method.html"><span class="pager__kind">Next &rarr;</span><span class="pager__label">Implementation</span></a></nav>
   <footer class="colophon">

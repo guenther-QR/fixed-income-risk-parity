@@ -329,7 +329,7 @@ span.pager__slot { border-color: transparent; }  /* first and last page */
     </div>
     <h1><span class="masthead__phase">Appendix B</span>Market Dynamics</h1>
     <p class="standfirst">Decomposing the variance of the universe through principal components, and measuring forecastability as a function of duration and volatility. Neither result builds a portfolio. Together they explain why the portfolio that works is built from the covariance matrix.</p>
-    <p class="built">Generated 04 September 2026, 14:21</p>
+    <p class="built">Generated 04 September 2026, 14:36</p>
   </header>
   <main>
     <h2>How much of this universe is distinct</h2><p class="note">Eleven tickers is not eleven decisions. The question has a defined answer rather than a rule of thumb.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">component</th><th class="num">eigenvalue</th><th class="num">share of variance</th><th class="num">cumulative</th></tr></thead><tbody><tr><td class="rowhead">PC1</td><td class="num">7.7456</td><td class="num">0.7041</td><td class="num">0.7041</td></tr><tr><td class="rowhead">PC2</td><td class="num">1.4577</td><td class="num">0.1325</td><td class="num">0.8367</td></tr><tr><td class="rowhead">PC3</td><td class="num">0.6376</td><td class="num">0.058</td><td class="num">0.8946</td></tr><tr><td class="rowhead">PC4</td><td class="num">0.5879</td><td class="num">0.0534</td><td class="num">0.9481</td></tr><tr><td class="rowhead">PC5</td><td class="num">0.1898</td><td class="num">0.0173</td><td class="num">0.9653</td></tr><tr><td class="rowhead">PC6</td><td class="num">0.1565</td><td class="num">0.0142</td><td class="num">0.9795</td></tr><tr><td class="rowhead">PC7</td><td class="num">0.0755</td><td class="num">0.0069</td><td class="num">0.9864</td></tr><tr><td class="rowhead">PC8</td><td class="num">0.0551</td><td class="num">0.005</td><td class="num">0.9914</td></tr><tr><td class="rowhead">PC9</td><td class="num">0.05</td><td class="num">0.0045</td><td class="num">0.996</td></tr><tr><td class="rowhead">PC10</td><td class="num">0.0334</td><td class="num">0.003</td><td class="num">0.999</td></tr><tr><td class="rowhead">PC11</td><td class="num">0.0109</td><td class="num">0.001</td><td class="num">1.0</td></tr></tbody></table><figcaption>Eigenvalues of the correlation matrix of monthly excess returns. Eleven assets, so they sum to 11.</figcaption></figure><p>The standard summary of that spectrum is the <strong>participation ratio</strong>:</p><div class="formula">N<sub>eff</sub> &nbsp;=&nbsp; <span class='t t1'>(&Sigma; &lambda;<sub>i</sub>)&sup2;</span> &nbsp;/&nbsp; <span class='t t3'>&Sigma; &lambda;<sub>i</sub>&sup2;</span><span class="formula__cap">effective number of independent assets</span></div><p>It has two fixed points that make it readable. Eleven uncorrelated assets give eleven equal eigenvalues and a ratio of <code>11&sup2;/11 = 11</code>. Eleven copies of one asset give a single eigenvalue of 11 and a ratio of <code>11&sup2;/11&sup2; = 1</code>. Here the eigenvalues sum to 11 and their squares to 62.94, so the ratio is <code>121 / 62.94 = 1.92</code>.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">measure</th><th class="num">value</th><th class="">what it is</th></tr></thead><tbody><tr><td class="rowhead">nominal assets</td><td class="num">11.0</td><td class="">assets held in the portfolio</td></tr><tr><td class="rowhead">effective independent assets</td><td class="num">1.92</td><td class="">participation ratio of the eigenvalues, (sum L)^2 / sum(L^2)</td></tr><tr><td class="rowhead">PC1 share</td><td class="num">0.7041</td><td class="">share of variance in the first principal component</td></tr><tr><td class="rowhead">mean correlation</td><td class="num">0.6599</td><td class="">average pairwise correlation of excess returns</td></tr></tbody></table></figure><p><strong>Read this as a description of the covariance structure, not a test.</strong> It carries no p-value and it depends on the sample used to estimate the correlation matrix. Two other measures point the same way: the first principal component holds 70.4% of the variance and the average pairwise correlation is 0.66. The practical consequence is that adding more bonds adds little, and extending the universe from 12 assets to 26 lowered this measure rather than raising it.</p><h2>Forecastability as a function of duration and volatility</h2><p class="note">Does a bond get harder to forecast as it gets riskier? Two ways of asking, on the same twelve observations.</p><p><strong>The setup.</strong> Each of the twelve fixed income assets contributes one observation. Its <em>y</em> value is that asset's out of sample R squared, taken from the univariate combination forecast: one number per asset, measuring how much better the model predicts that asset's returns than a rolling mean does. Its <em>x</em> value is a measure of how much risk the asset carries, and two are used separately: modified duration, and annualised volatility.</p><p>That gives <strong>two bivariate relationships</strong>, not four: R squared against duration, and R squared against volatility. Each is then measured two ways, which is where the four numbers in the table come from.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">statistic</th><th class="">what it measures</th></tr></thead><tbody><tr><td class="rowhead">Spearman rho</td><td class="">Correlation of the &lt;em&gt;ranks&lt;/em&gt; rather than the values. Rank the twelve assets by R squared, rank them again by duration, and measure how closely the two orderings agree. This is the headline because the claim is about ordering, and because ranks are not distorted by one asset with an extreme duration.</td></tr><tr><td class="rowhead">Pearson r</td><td class="">Correlation of the values themselves. Included as a check that the result is not an artefact of the rank transform.</td></tr><tr><td class="rowhead">OLS slope and t</td><td class="">An ordinary least squares fit of R squared on the risk measure, across the twelve assets. The slope says how much predictive R squared is lost per year of duration; the t statistic says whether that slope is distinguishable from zero.</td></tr><tr><td class="rowhead">p-values</td><td class="">One for each correlation, testing the null that the two orderings are unrelated.</td></tr></tbody></table></figure><figure class="tablewrap"><table><thead><tr><th class="rowhead">asset</th><th class="num">oos_r2</th><th class="num">duration</th><th class="num">vol</th><th class="num">rank_r2</th><th class="num">rank_duration</th><th class="num">rank_vol</th></tr></thead><tbody><tr><td class="rowhead">ust3m</td><td class="num">0.0344</td><td class="num">0.25</td><td class="num">0.0087</td><td class="num">1.0</td><td class="num">12.0</td><td class="num">12.0</td></tr><tr><td class="rowhead">ust2y</td><td class="num">0.0184</td><td class="num">1.9</td><td class="num">0.0222</td><td class="num">2.0</td><td class="num">11.0</td><td class="num">11.0</td></tr><tr><td class="rowhead">hy</td><td class="num">0.0159</td><td class="num">4.0</td><td class="num">0.0702</td><td class="num">3.0</td><td class="num">9.0</td><td class="num">4.0</td></tr><tr><td class="rowhead">ig_short</td><td class="num">0.0152</td><td class="num">2.5</td><td class="num">0.0254</td><td class="num">4.0</td><td class="num">10.0</td><td class="num">10.0</td></tr><tr><td class="rowhead">mbs</td><td class="num">0.0116</td><td class="num">4.5</td><td class="num">0.0405</td><td class="num">5.0</td><td class="num">7.0</td><td class="num">9.0</td></tr><tr><td class="rowhead">ig</td><td class="num">0.0114</td><td class="num">4.2</td><td class="num">0.0458</td><td class="num">6.0</td><td class="num">8.0</td><td class="num">7.0</td></tr><tr><td class="rowhead">muni_hy</td><td class="num">0.0069</td><td class="num">7.5</td><td class="num">0.0588</td><td class="num">7.0</td><td class="num">4.0</td><td class="num">5.0</td></tr><tr><td class="rowhead">muni</td><td class="num">0.0066</td><td class="num">5.0</td><td class="num">0.0457</td><td class="num">8.0</td><td class="num">5.0</td><td class="num">8.0</td></tr><tr><td class="rowhead">ust5y</td><td class="num">0.003</td><td class="num">4.6</td><td class="num">0.0493</td><td class="num">9.0</td><td class="num">6.0</td><td class="num">6.0</td></tr><tr><td class="rowhead">ust10y</td><td class="num">-0.0007</td><td class="num">8.4</td><td class="num">0.0802</td><td class="num">10.0</td><td class="num">3.0</td><td class="num">3.0</td></tr><tr><td class="rowhead">ig_long</td><td class="num">-0.0014</td><td class="num">12.0</td><td class="num">0.0803</td><td class="num">11.0</td><td class="num">2.0</td><td class="num">2.0</td></tr><tr><td class="rowhead">ust30y</td><td class="num">-0.0022</td><td class="num">18.5</td><td class="num">0.1315</td><td class="num">12.0</td><td class="num">1.0</td><td class="num">1.0</td></tr></tbody></table><figcaption>Rank 1 is the most forecastable asset, the longest duration and the highest volatility respectively.</figcaption></figure><p>The two rank columns are close to mirrors. The three most forecastable assets rank 12th, 11th and 9th by duration; the three least forecastable rank 1st, 2nd and 3rd.</p><figure class="tablewrap"><table><thead><tr><th class="rowhead">predictor</th><th class="num">n</th><th class="num">spearman rho</th><th class="num">spearman p</th><th class="num">pearson r</th><th class="num">pearson p</th><th class="num">OLS slope</th><th class="num">OLS t</th><th class="num">OLS R2</th></tr></thead><tbody><tr><td class="rowhead">duration</td><td class="num">12.0</td><td class="num">-0.958</td><td class="num"><strong>0.0</strong><span class="star">***</span></td><td class="num">-0.7811</td><td class="num"><strong>0.0027</strong><span class="star">***</span></td><td class="num">-0.0016</td><td class="num">-3.9561</td><td class="num">0.6101</td></tr><tr><td class="rowhead">vol</td><td class="num">12.0</td><td class="num">-0.8182</td><td class="num"><strong>0.0011</strong><span class="star">***</span></td><td class="num">-0.7795</td><td class="num"><strong>0.0028</strong><span class="star">***</span></td><td class="num">-0.2475</td><td class="num">-3.9349</td><td class="num">0.6076</td></tr></tbody></table></figure><p>Reading the table: <strong>Spearman gives -0.958 against duration and -0.818 against volatility</strong>, so the two orderings run almost exactly opposite. Pearson is -0.78 on both, so the result does not depend on the rank transform. The regression slope of -0.0016 means each additional year of duration costs about 16 basis points of predictive R squared, with a t statistic of -3.96 across twelve observations.</p><p>Twelve assets is a small sample and they are not independent draws from anything, so these p-values are descriptive rather than a clean hypothesis test. The reason to take the ordering seriously is that it also holds across model families that share no functional form, and that it has a mechanical explanation rather than only a statistical one.</p><figure class="chartwrap"><svg class="chart" preserveAspectRatio="xMidYMid meet" xmlns:xlink="http://www.w3.org/1999/xlink"   viewBox="0 0 514.602138 242.427469" xmlns="http://www.w3.org/2000/svg" version="1.1">
@@ -374,16 +374,16 @@ z
      <g id="line2d_1">
       <path d="M 62.736053 207.79075 
 L 62.736053 8.20675 
-" clip-path="url(#p0e07619625)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pc12218b1e9)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_2">
       <defs>
-       <path id="m65c627fa1e" d="M 0 0 
+       <path id="mc5909a1903" d="M 0 0 
 L 0 3 
 " style="stroke: var(--ink-muted); stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#m65c627fa1e" x="62.736053" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mc5909a1903" x="62.736053" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_1">
@@ -429,11 +429,11 @@ z
      <g id="line2d_3">
       <path d="M 118.327585 207.79075 
 L 118.327585 8.20675 
-" clip-path="url(#p0e07619625)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pc12218b1e9)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_4">
       <g>
-       <use xlink:href="#m65c627fa1e" x="118.327585" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mc5909a1903" x="118.327585" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_2">
@@ -500,11 +500,11 @@ z
      <g id="line2d_5">
       <path d="M 173.919116 207.79075 
 L 173.919116 8.20675 
-" clip-path="url(#p0e07619625)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pc12218b1e9)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_6">
       <g>
-       <use xlink:href="#m65c627fa1e" x="173.919116" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mc5909a1903" x="173.919116" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_3">
@@ -520,11 +520,11 @@ L 173.919116 8.20675
      <g id="line2d_7">
       <path d="M 229.510648 207.79075 
 L 229.510648 8.20675 
-" clip-path="url(#p0e07619625)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pc12218b1e9)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_8">
       <g>
-       <use xlink:href="#m65c627fa1e" x="229.510648" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mc5909a1903" x="229.510648" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_4">
@@ -552,11 +552,11 @@ z
      <g id="line2d_9">
       <path d="M 285.10218 207.79075 
 L 285.10218 8.20675 
-" clip-path="url(#p0e07619625)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pc12218b1e9)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_10">
       <g>
-       <use xlink:href="#m65c627fa1e" x="285.10218" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mc5909a1903" x="285.10218" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_5">
@@ -589,11 +589,11 @@ z
      <g id="line2d_11">
       <path d="M 340.693712 207.79075 
 L 340.693712 8.20675 
-" clip-path="url(#p0e07619625)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pc12218b1e9)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_12">
       <g>
-       <use xlink:href="#m65c627fa1e" x="340.693712" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mc5909a1903" x="340.693712" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_6">
@@ -610,11 +610,11 @@ L 340.693712 8.20675
      <g id="line2d_13">
       <path d="M 396.285243 207.79075 
 L 396.285243 8.20675 
-" clip-path="url(#p0e07619625)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pc12218b1e9)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_14">
       <g>
-       <use xlink:href="#m65c627fa1e" x="396.285243" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mc5909a1903" x="396.285243" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_7">
@@ -631,11 +631,11 @@ L 396.285243 8.20675
      <g id="line2d_15">
       <path d="M 451.876775 207.79075 
 L 451.876775 8.20675 
-" clip-path="url(#p0e07619625)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pc12218b1e9)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_16">
       <g>
-       <use xlink:href="#m65c627fa1e" x="451.876775" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#mc5909a1903" x="451.876775" y="207.79075" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_8">
@@ -991,16 +991,16 @@ z
      <g id="line2d_17">
       <path d="M 48.004297 187.671497 
 L 494.404297 187.671497 
-" clip-path="url(#p0e07619625)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pc12218b1e9)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_18">
       <defs>
-       <path id="m2b5f1ae480" d="M 0 0 
+       <path id="m2f82331138" d="M 0 0 
 L -3 0 
 " style="stroke: var(--ink-muted); stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#m2b5f1ae480" x="48.004297" y="187.671497" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m2f82331138" x="48.004297" y="187.671497" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_10">
@@ -1066,11 +1066,11 @@ z
      <g id="line2d_19">
       <path d="M 48.004297 162.91776 
 L 494.404297 162.91776 
-" clip-path="url(#p0e07619625)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pc12218b1e9)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_20">
       <g>
-       <use xlink:href="#m2b5f1ae480" x="48.004297" y="162.91776" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m2f82331138" x="48.004297" y="162.91776" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_11">
@@ -1087,11 +1087,11 @@ L 494.404297 162.91776
      <g id="line2d_21">
       <path d="M 48.004297 138.164022 
 L 494.404297 138.164022 
-" clip-path="url(#p0e07619625)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pc12218b1e9)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_22">
       <g>
-       <use xlink:href="#m2b5f1ae480" x="48.004297" y="138.164022" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m2f82331138" x="48.004297" y="138.164022" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_12">
@@ -1108,11 +1108,11 @@ L 494.404297 138.164022
      <g id="line2d_23">
       <path d="M 48.004297 113.410285 
 L 494.404297 113.410285 
-" clip-path="url(#p0e07619625)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pc12218b1e9)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_24">
       <g>
-       <use xlink:href="#m2b5f1ae480" x="48.004297" y="113.410285" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m2f82331138" x="48.004297" y="113.410285" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_13">
@@ -1129,11 +1129,11 @@ L 494.404297 113.410285
      <g id="line2d_25">
       <path d="M 48.004297 88.656548 
 L 494.404297 88.656548 
-" clip-path="url(#p0e07619625)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pc12218b1e9)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_26">
       <g>
-       <use xlink:href="#m2b5f1ae480" x="48.004297" y="88.656548" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m2f82331138" x="48.004297" y="88.656548" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_14">
@@ -1150,11 +1150,11 @@ L 494.404297 88.656548
      <g id="line2d_27">
       <path d="M 48.004297 63.90281 
 L 494.404297 63.90281 
-" clip-path="url(#p0e07619625)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pc12218b1e9)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_28">
       <g>
-       <use xlink:href="#m2b5f1ae480" x="48.004297" y="63.90281" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m2f82331138" x="48.004297" y="63.90281" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_15">
@@ -1171,11 +1171,11 @@ L 494.404297 63.90281
      <g id="line2d_29">
       <path d="M 48.004297 39.149073 
 L 494.404297 39.149073 
-" clip-path="url(#p0e07619625)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pc12218b1e9)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_30">
       <g>
-       <use xlink:href="#m2b5f1ae480" x="48.004297" y="39.149073" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m2f82331138" x="48.004297" y="39.149073" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_16">
@@ -1226,11 +1226,11 @@ z
      <g id="line2d_31">
       <path d="M 48.004297 14.395335 
 L 494.404297 14.395335 
-" clip-path="url(#p0e07619625)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
+" clip-path="url(#pc12218b1e9)" style="fill: none; stroke: var(--rule); stroke-opacity: 0.55; stroke-width: 0.6; stroke-linecap: square"/>
      </g>
      <g id="line2d_32">
       <g>
-       <use xlink:href="#m2b5f1ae480" x="48.004297" y="14.395335" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
+       <use xlink:href="#m2f82331138" x="48.004297" y="14.395335" style="fill: var(--ink-muted); stroke: var(--ink-muted); stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_17">
@@ -1364,7 +1364,7 @@ z
    <g id="line2d_33">
     <path d="M 48.004297 187.671497 
 L 494.404297 187.671497 
-" clip-path="url(#p0e07619625)" style="fill: none; stroke-dasharray: 3.7,1.6; stroke-dashoffset: 0; stroke: var(--ink-muted)"/>
+" clip-path="url(#pc12218b1e9)" style="fill: none; stroke-dasharray: 3.7,1.6; stroke-dashoffset: 0; stroke: var(--ink-muted)"/>
    </g>
    <g id="patch_3">
     <path d="M 48.004297 207.79075 
@@ -1378,7 +1378,7 @@ L 494.404297 207.79075
    </g>
    <g id="PathCollection_1">
     <defs>
-     <path id="m25f5e4948d" d="M 0 4.1833 
+     <path id="m85e61c0819" d="M 0 4.1833 
 C 1.109424 4.1833 2.173559 3.742521 2.95804 2.95804 
 C 3.742521 2.173559 4.1833 1.109424 4.1833 0 
 C 4.1833 -1.109424 3.742521 -2.173559 2.95804 -2.95804 
@@ -1390,19 +1390,19 @@ C -2.173559 3.742521 -1.109424 4.1833 0 4.1833
 z
 " style="stroke: #4169e1"/>
     </defs>
-    <g clip-path="url(#p0e07619625)">
-     <use xlink:href="#m25f5e4948d" x="68.295206" y="17.27875" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#m25f5e4948d" x="104.985617" y="96.426597" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#m25f5e4948d" x="151.682504" y="108.739454" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#m25f5e4948d" x="118.327585" y="112.399198" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#m25f5e4948d" x="162.80081" y="130.053806" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#m25f5e4948d" x="156.129826" y="131.143074" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#m25f5e4948d" x="229.510648" y="153.316931" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#m25f5e4948d" x="173.919116" y="155.070191" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#m25f5e4948d" x="165.024471" y="172.997992" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#m25f5e4948d" x="249.523599" y="190.981175" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#m25f5e4948d" x="329.575405" y="194.361483" style="fill: #4169e1; stroke: #4169e1"/>
-     <use xlink:href="#m25f5e4948d" x="474.113388" y="198.71875" style="fill: #4169e1; stroke: #4169e1"/>
+    <g clip-path="url(#pc12218b1e9)">
+     <use xlink:href="#m85e61c0819" x="68.295206" y="17.27875" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m85e61c0819" x="104.985617" y="96.426597" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m85e61c0819" x="151.682504" y="108.739454" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m85e61c0819" x="118.327585" y="112.399198" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m85e61c0819" x="162.80081" y="130.053806" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m85e61c0819" x="156.129826" y="131.143074" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m85e61c0819" x="229.510648" y="153.316931" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m85e61c0819" x="173.919116" y="155.070191" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m85e61c0819" x="165.024471" y="172.997992" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m85e61c0819" x="249.523599" y="190.981175" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m85e61c0819" x="329.575405" y="194.361483" style="fill: #4169e1; stroke: #4169e1"/>
+     <use xlink:href="#m85e61c0819" x="474.113388" y="198.71875" style="fill: #4169e1; stroke: #4169e1"/>
     </g>
    </g>
    <g id="text_19">
@@ -1620,7 +1620,7 @@ z
   </g>
  </g>
  <defs>
-  <clipPath id="p0e07619625">
+  <clipPath id="pc12218b1e9">
    <rect x="48.004297" y="8.20675" width="446.4" height="199.584"/>
   </clipPath>
  </defs>
