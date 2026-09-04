@@ -634,75 +634,70 @@ def phase2():
                         "0.10.")
         r._blocks.append(LEGEND)
     r.prose(
-        "<strong>Everything fails except risk parity and risk parity carrying "
-        "an overlay.</strong> The two risk based methods clear the Aggregate at "
-        "better than one percent. So do both overlays. Nothing else in the "
-        "table clears it at five percent in the right direction.")
+        "<strong>Hierarchical risk parity and the two overlays built on it "
+        "clear the index; nothing else does.</strong> Risk parity scores 0.952 "
+        "against the Aggregate at 0.824, at p = 0.037. The rolling selection "
+        "overlay reaches 1.056 at p = 0.004 and the momentum Sharpe overlay "
+        "0.965 at p = 0.022. Equal risk contribution does not clear the bar at "
+        "this frequency, at 0.886 and p = 0.190.")
     r.prose(
-        "<strong>The overlays are harder to read than their p values suggest.</strong> "
-        "Risk parity carrying the momentum Sharpe signal scores 1.024 against "
-        "risk parity alone at 1.024, which is not a coincidence. The two return "
-        "series correlate at 0.979 and the tracking error between them is 0.56% "
-        "a year. Dividing a momentum signal by its own volatility ranks the low "
-        "volatility assets highest, and risk parity already overweights those "
-        "same assets, so the overlay is pushing the portfolio toward where it "
-        "already was. The rolling selection overlay moves further and does add "
-        "0.10 of Sharpe, but on evidence this thin we are not confident either "
-        "overlay has a definitive effect.")
+        "<strong>The overlays are harder to read than their p values "
+        "suggest.</strong> Risk parity carrying the momentum Sharpe signal sits "
+        "0.013 above risk parity alone. The two return series correlate at "
+        "0.979 daily and the tracking error between them is about half a "
+        "percent a year. Dividing a momentum signal by its own volatility ranks "
+        "the low volatility assets highest, and risk parity already overweights "
+        "those same assets, so the overlay pushes the portfolio toward where it "
+        "already was. The rolling selection overlay moves further and adds 0.10 "
+        "of Sharpe, which is a real gap on development.")
     r.prose(
         "There is some evidence that momentum is worth something here when it "
         "is risk adjusted or when the window is chosen adaptively. The rolling "
-        "60 month selection returns 7.66% a year against the index at 6.47%, "
-        "and momentum on the Sharpe ratio beats the index on a risk adjusted "
-        "basis. Neither clears five percent on its own, so both are carried "
-        "into the holdout as open questions rather than as findings.")
+        "60 month selection returns 7.58% a year against the index at 6.40%. "
+        "It does not clear five percent on its own, at p = 0.301, so it is "
+        "carried into the holdout as an open question rather than a finding.")
     r.prose(
         "<strong>The forecasting families do not work.</strong> All four "
-        "machine learning models sit between 0.700 and 0.724 against the index "
-        "at 0.720, with p values from 0.42 to 0.50, which is to say they are "
-        "indistinguishable from the benchmark. The combined regression is worse "
-        "than the index and significantly so. Momentum on the raw twelve month "
-        "return, the standard definition from the factor literature, is the "
-        "worst strategy on the page: 0.374 against 0.720, significantly "
-        "negative, and running twice the index\'s duration.")
+        "machine learning models land below the index, from 0.688 to 0.754 "
+        "against 0.824, none of them distinguishable from it. The combined "
+        "regression is worse than the index and significantly so, at 0.515 and "
+        "p = 0.0006. Momentum on the raw twelve month return, the standard "
+        "definition from the factor literature, is the worst strategy on the "
+        "page: 0.386 against 0.824 at p < 0.001.")
     r.prose(
-        "<strong>Every model that estimates a return ends up holding duration.</strong> "
-        "The Aggregate runs an effective duration of 4.2 years. The four "
-        "machine learning books run 7.8 to 8.9 years, the combined regression "
-        "12.5, and raw momentum 8.4. A signal weighted portfolio concentrates "
-        "into whatever has been rising, and in a universe of bonds that is the "
-        "long end, so each of them arrives at a levered position on the level "
-        "of rates without ever having been asked for one. Ridge returns 7.6% "
-        "against the index at 6.5%, which reads as skill until the risk is read "
-        "alongside it: 5.9% volatility against 4.3%, and a Sharpe ratio of "
-        "0.724 against 0.720. The extra return is the extra duration.")
+        "<strong>Every model that estimates a return ends up holding "
+        "duration.</strong> The Aggregate runs an effective duration of 4.2 "
+        "years. The four machine learning books run 7.8 to 8.9 years, the "
+        "combined regression 12.5, and raw momentum 8.4. A signal weighted "
+        "portfolio concentrates into whatever has been rising, and in a "
+        "universe of bonds that is the long end, so each of them arrives at a "
+        "levered position on the level of rates without ever having been asked "
+        "for one. Their betas to the index run from 1.21 to 2.03 while the "
+        "risk-based methods sit between 0.59 and 0.87.")
 
     r.section("What we carry into the holdout")
     r.prose(
-        "Four strategies cleared the Aggregate at five percent on development: "
-        "hierarchical risk parity, equal risk contribution, and risk parity "
-        "carrying each of the two overlays. Those go forward.")
+        "Three strategies cleared the Aggregate at five percent on "
+        "development: hierarchical risk parity, and risk parity carrying each "
+        "of the two overlays. Those go forward.")
+    r.prose(
+        "Equal risk contribution is carried too. It does not clear the bar at "
+        "monthly frequency, at p = 0.190, but it did on daily returns and it is "
+        "the closest thing this project has to a textbook risk parity "
+        "benchmark. Leaving it out because a measurement choice moved it across "
+        "a threshold would be the wrong kind of tidiness.")
     r.prose(
         "We also carry the rolling 60 month selection and momentum on the "
         "Sharpe ratio in their standalone form, without the risk parity base "
-        "underneath them. Neither cleared five percent, so neither earned a "
-        "place. They are carried because we want to know whether these signals "
-        "work on their own or only as a small adjustment to a portfolio that "
-        "already works, and that question cannot be answered by leaving them "
-        "out. Phase 3 marks them separately and they should be read as open "
-        "questions, not as results.")
+        "underneath them. Neither cleared five percent. They are carried "
+        "because we want to know whether these signals work on their own or "
+        "only as a small adjustment to a portfolio that already works, and that "
+        "question cannot be answered by leaving them out.")
     r.prose(
-        "Nothing from the regression or machine learning side is carried. The "
-        "R squared figures near one percent rest almost entirely on three "
-        "holdings whose prices move late, and the eight assets that trade "
-        "continuously are negative in every family.")
-    r.prose(
-        "Two variants of risk parity were also tested and dropped. Estimating "
-        "the covariance within each macro regime moves hierarchical risk parity "
-        "from 0.932 to 0.909, because splitting the sample into four states "
-        "leaves each estimate with a quarter of the data. DCC-GARCH does worse, "
-        "taking it to 0.800. Both let the covariance move around more than the "
-        "data supports.")
+        "Nothing from the regression or machine learning side is carried. Every "
+        "one of them finishes below the index on development, and the R squared "
+        "figures that made them look promising rest almost entirely on three "
+        "holdings whose prices move late.")
 
     r.next_up("Phase 3 - Results", [
         "Validating strategies on the holdout data",
@@ -770,36 +765,47 @@ def phase3():
                         "did not and are carried to answer a question rather "
                         "than to make a claim.")
     r.prose(
-        "<strong>Nothing clears five percent.</strong> All four confirmatory "
-        "strategies beat the Aggregate, none of them significantly. Equal risk "
-        "contribution comes closest at p = 0.060 and hierarchical risk parity "
-        "sits at p = 0.126. The alphas run from 0.04% to 0.55% a year with t "
-        "statistics between 0.07 and 1.46.")
+        "<strong>Both risk parity methods clear the index, and neither overlay "
+        "does.</strong> Equal risk contribution beats the Aggregate by 0.161 of "
+        "Sharpe at p = 0.008, and hierarchical risk parity by 0.135 at "
+        "p = 0.039. Their alphas are 0.63% and 0.41% a year, with t statistics "
+        "of 2.64 and 1.83.")
     r.prose(
-        "The index itself returned a Sharpe of <strong>-0.081</strong> over "
-        "this decade, so beating it is not a demanding test and clearing it "
-        "should not be read as much of a claim on its own.")
+        "The index itself returned a Sharpe of <strong>-0.078</strong> over "
+        "this decade, so beating it is not a demanding test on its own. What "
+        "makes the risk parity result worth something is that it holds in all "
+        "three windows: both methods clear the index on the full sample as "
+        "well, at p = 0.004 and p = 0.010.")
     r.prose(
         "<strong>Both overlays failed.</strong> On development the rolling "
-        "selection overlay added 0.10 of Sharpe over plain risk parity. On the "
-        "holdout it takes 0.08 away. The momentum Sharpe overlay does worse, "
-        "finishing 0.12 below risk parity alone. Whatever the overlays were "
-        "adding on development, they do not add it here.")
+        "selection overlay added 0.10 of Sharpe over plain risk parity and "
+        "cleared the index at p = 0.004. On the holdout it finishes 0.06 "
+        "<em>below</em> plain risk parity and does not clear the index at all, "
+        "at p = 0.240. The momentum Sharpe overlay does the same thing, ending "
+        "0.09 below the portfolio it was supposed to improve. Whatever the "
+        "overlays were adding on development, they do not add it here.")
     r.prose(
         "<strong>The two signals on their own do not work either.</strong> The "
-        "rolling selection lands at -0.025 with an alpha of 0.16% and a t "
-        "statistic of 0.15, which is nothing. Momentum on the Sharpe ratio is "
-        "the only strategy in the table that loses to the index significantly, "
-        "at p = 0.029, returning -0.03% a year against the index at 1.76%. It "
-        "was the second best technical strategy on development. That is the "
-        "sharpest reversal in the project.")
+        "rolling selection lands at -0.017 with an alpha of 0.26% and a t "
+        "statistic of 0.26, which is nothing. Momentum on the Sharpe ratio "
+        "returns -0.03% a year against the index at 1.74% and finishes 0.34 of "
+        "Sharpe below it. It was one of the better technical strategies on "
+        "development. That is the sharpest reversal in the project.")
     r.prose(
-        "<strong>The ranking inverts.</strong> Development order was the "
-        "rolling overlay, the momentum overlay, hierarchical risk parity, then "
-        "equal risk contribution. The holdout order is equal risk contribution, "
-        "hierarchical risk parity, the rolling overlay, then the momentum "
-        "overlay. The two strategies that estimate nothing finish first; the "
-        "two that add a signal on top finish last.")
+        "<strong>The pattern is that adding a signal costs you.</strong> The "
+        "two strategies that estimate nothing but the covariance matrix finish "
+        "first and second. The two that add a return signal on top of that same "
+        "covariance matrix finish behind them, and the two that use the signal "
+        "alone finish behind the index.")
+    r.prose(
+        "<span class=\"note\">One caveat on equal risk contribution. It is the "
+        "strongest strategy here and it did not clear five percent on "
+        "development at this frequency. Reading it as the best result in the "
+        "project would be selecting on the holdout, which is the error the "
+        "development sample exists to prevent. The defensible claim is that "
+        "both risk parity methods clear the index in every window tested; "
+        "ranking them against each other is not something this evidence "
+        "supports.</span>")
 
     r.section("Comparing at constant risk", (
         "Risk parity beats the index on Sharpe while running less risk. Scaling "
@@ -1656,7 +1662,7 @@ def index():
                     e, pv = t.loc[name, "vs_agg"], t.loc[name, "p"]
                     mk = ("***" if pv < .01 else "**" if pv < .05
                           else "*" if pv < .10 else "")
-                    sub_ = f"{e:+.3f}{mk}"
+                    sub_ = f"{e:+.3f}{mk} &nbsp;p={pv:.3f}"
                 cells.append(f'{sh:.3f}<span class="d">{sub_}</span>')
             cls = ' class="me"' if name.startswith(("HRP", "ERC")) else ""
             body += (f"<tr{cls}><th>{name}</th>"
@@ -1669,12 +1675,11 @@ def index():
         "the development sample.",
         "The held-out decade, the constant-risk comparison, and portfolio "
         "characteristics.",
-        "How much independent variation the universe contains, and how "
-        "forecastability is distributed across it.",
-        "Per-asset financing, the shared estimation window, and the "
-        "constant-risk convention.",
-        "How every p-value in this project is produced, and how that extends "
-        "the validation in the 2025 study.",
+        "Independent variation, principal component analysis, and "
+        "forecastability.",
+        "Rebalancing, leverage and transaction costs, and other portfolio "
+        "construction mechanics.",
+        "P-value construction.",
     ]
     cards = "".join(
         f'<a class="card" href="{stem}.html"><span class="num">{label}</span>'
@@ -1731,10 +1736,10 @@ municipal positions covering agency mortgages, intermediate municipals and high
 yield municipals. It uses the same walk-forward backtesting framework as the
 prior project, so results across the two are directly comparable.</p>
 
-<p><b>What was tested.</b> Carry and momentum signals, univariate regression
-forecasts including regime interactions, four machine learning families tuned on
-the development sample, regime-conditional estimation, and risk-based
-construction.</p>
+<p><b>What was tested.</b> Univariate regression forecasts combined across 256
+signals, four machine learning families tuned on the development sample, three
+technical momentum models including an adaptive rolling window of my own, and
+two risk-based methods built from the covariance matrix alone.</p>
 
 <p><b>What worked.</b> Risk parity, which never needs an expected return at all.
 I built and tested both classic risk parity and Marcos Lopez de Prado's
@@ -1749,8 +1754,14 @@ Hierarchical Risk Parity, benchmarked against the Bloomberg Aggregate.</p>
 <tbody>{body}</tbody>
 </table>
 </div>
-<p class="note">Stars mark one-sided bootstrap significance against the
-Aggregate: *** below 0.01, ** below 0.05, * below 0.10.</p>
+<p class="note">Sharpe ratios and significance are measured on monthly
+returns. Portfolios are built, traded and costed daily, and the covariance
+matrix is estimated from daily data, because sampling the same span more finely
+improves a variance estimate. Performance is scored monthly, because three of
+the eleven holdings are priced by matrix valuation and their daily returns
+autocorrelate around 0.25, which distorts a daily Sharpe ratio. Stars mark
+one-sided bootstrap significance against the Aggregate: *** below 0.01,
+** below 0.05, * below 0.10.</p>
 
 {cards}
 <footer>

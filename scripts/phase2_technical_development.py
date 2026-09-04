@@ -53,8 +53,18 @@ LOOKBACK, SKIP = 252, 21
 TILT, CAP, VOL_TARGET = 0.5, 0.15, 0.02
 
 
-def nw_ols(y, Xm, lags=21):
-    """OLS with Newey-West standard errors. Returns coefs and t statistics."""
+def nw_ols(y, Xm, lags=None):
+    """OLS with Newey-West standard errors. Returns coefs and t statistics.
+
+    The lag truncation follows Newey and West (1994), four times the sample
+    size over one hundred raised to two ninths, rather than a fixed count. A
+    lag length appropriate for daily data is far too long for monthly data: on
+    a hundred and twenty-eight months, twenty-one lags is a sixth of the sample
+    and inflates the t statistic materially.
+    """
+    if lags is None:
+        lags = max(1, int(4.0 * (len(y) / 100.0) ** (2.0 / 9.0)))
+    lags = min(lags, max(1, len(y) // 4))
     X = np.column_stack([np.ones(len(y)), Xm])
     b, *_ = np.linalg.lstsq(X, y, rcond=None)
     e = y - X @ b

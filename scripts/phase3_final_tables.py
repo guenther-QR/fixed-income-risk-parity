@@ -1,4 +1,18 @@
-"""The two tables that go in the writeup, built from the same return paths.
+"""The tables that go in the writeup, built from the same return paths.
+
+Covariance is estimated on daily data and performance is measured on monthly.
+The two want different things from the sampling frequency. Merton (1980) is the
+reason: the precision of a variance estimate improves as the same span is
+sampled more finely, while the precision of a mean depends on the length of the
+span and not on how often it is observed. So daily observations make the
+covariance matrix better and do nothing for expected returns.
+
+Measurement runs the other way. Three of the eleven holdings are priced by
+matrix valuation and their daily returns autocorrelate around 0.25, which
+distorts a daily Sharpe ratio and the inference built on it. A month of
+compounding removes most of that. Portfolios are therefore constructed, traded
+and costed daily, and the resulting return series is compounded to monthly
+before anything is scored.
 
 The development table and the holdout table have to describe the same
 portfolios, so both are scored from one set of daily return series rather than
@@ -30,9 +44,15 @@ from macro.stats import inference as inf  # noqa: E402
 TD = import_module("phase2_technical_development")
 
 P = ROOT / "data/processed"
-PPY = 252
+PPY = 12                 # scoring frequency: monthly
+BLOCK = 12               # one year of monthly blocks in the bootstrap
 DEV_END = "2015-12-31"
 BENCH = "Agg index"
+
+
+def to_monthly(D: pd.DataFrame) -> pd.DataFrame:
+    """Compound daily strategy returns into monthly ones."""
+    return (1.0 + D).resample("ME").prod() - 1.0
 
 HOLDOUT_SET = {
     "HRP + Rolling 60m overlay": "confirmatory",
@@ -63,7 +83,8 @@ def score(D, cols, rf, mask, durn, turns):
             "vol": m["vol"], "sharpe": m["sharpe"],
             "vs_agg": np.nan if c == BENCH else m["sharpe"] - bm["sharpe"],
             "p": (np.nan if c == BENCH else
-                  inf.sharpe_difference(x, bench, rf=rf2, ppy=PPY)["p_one_sided"]),
+                  inf.sharpe_difference(x, bench, rf=rf2, ppy=PPY,
+                                        mean_block=BLOCK)["p_one_sided"]),
             "alpha_pct_yr": a[0] * PPY * 100, "t_alpha": t[0], "beta": a[1],
             "duration": durn.get(c, np.nan), "turnover": turns.get(c, np.nan)})
     return pd.DataFrame(rows).set_index("strategy")
@@ -71,6 +92,7 @@ def score(D, cols, rf, mask, durn, turns):
 
 def main() -> int:
     rf = pd.read_parquet(P / "fi_daily_rf.parquet").squeeze()
+    rf = (1.0 + rf).resample("ME").prod() - 1.0
     H = pd.read_parquet(P / "fi_holdout_paths.parquet")
     T = pd.read_parquet(P / "fi_technical_paths.parquet")
     HR = pd.read_parquet(P / "fi_holdout_results.parquet")
@@ -96,6 +118,9 @@ def main() -> int:
 
     D = pd.concat(frames, axis=1)
     D = D.loc[:, ~D.columns.duplicated()].dropna(how="any")
+    print(f"daily paths: {len(D):,} days, {D.shape[1]} series")
+    D = to_monthly(D)
+    print(f"scored on {len(D)} months, {D.index[0]:%Y-%m} to {D.index[-1]:%Y-%m}")
     dev = D.index <= pd.Timestamp(DEV_END)
 
     dev_cols = [c for c in D.columns]
@@ -120,7 +145,7 @@ def main() -> int:
     ALL = ALL.sort_values("sharpe", ascending=False)
     ALL.to_parquet(P / "fi_table_fullsample.parquet")
     print(f"\n=== HOLDOUT, {D.index[dev.sum()]:%Y-%m} to {D.index[-1]:%Y-%m}, "
-          f"{(~dev).sum():,} days ===")
+          f"{(~dev).sum()} months ===")
     print(OOS.round(4).to_string())
     print(f"\n=== FULL SAMPLE, {D.index[0]:%Y-%m} to {D.index[-1]:%Y-%m}, "
           f"settings frozen on development ===")

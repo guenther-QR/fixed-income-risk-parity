@@ -48,10 +48,10 @@ municipal positions covering agency mortgages, intermediate municipals and high
 yield municipals. It uses the same walk-forward backtesting framework as the
 prior project, so results across the two are directly comparable.</p>
 
-<p><b>What was tested.</b> Carry and momentum signals, univariate regression
-forecasts including regime interactions, four machine learning families tuned on
-the development sample, regime-conditional estimation, and risk-based
-construction.</p>
+<p><b>What was tested.</b> Univariate regression forecasts combined across 256
+signals, four machine learning families tuned on the development sample, three
+technical momentum models including an adaptive rolling window of my own, and
+two risk-based methods built from the covariance matrix alone.</p>
 
 <p><b>What worked.</b> Risk parity, which never needs an expected return at all.
 I built and tested both classic risk parity and Marcos Lopez de Prado's
@@ -63,13 +63,19 @@ Hierarchical Risk Parity, benchmarked against the Bloomberg Aggregate.</p>
 <div class="scroll">
 <table>
 <thead><tr><th>Strategy</th><th>Development<br>1987-2015</th><th>Holdout<br>2016-2026</th><th>Full sample<br>1987-2026</th></tr></thead>
-<tbody><tr class="me"><th>HRP + Rolling 60m overlay</th><td>1.125<span class="d">+0.405***</span></td><td>-0.014<span class="d">+0.067</span></td><td>0.814<span class="d">+0.336***</span></td></tr><tr class="me"><th>HRP, annual</th><td>1.024<span class="d">+0.303***</span></td><td>0.065<span class="d">+0.146</span></td><td>0.762<span class="d">+0.284***</span></td></tr><tr class="me"><th>ERC, annual</th><td>0.940<span class="d">+0.219***</span></td><td>0.094<span class="d">+0.175*</span></td><td>0.707<span class="d">+0.228***</span></td></tr><tr class="me"><th>HRP + Momentum (Sharpe) overlay</th><td>1.024<span class="d">+0.304***</span></td><td>-0.053<span class="d">+0.028</span></td><td>0.686<span class="d">+0.207***</span></td></tr><tr><th>Rolling 60m, long only</th><td>0.854<span class="d">+0.134</span></td><td>-0.025<span class="d">+0.056</span></td><td>0.616<span class="d">+0.138</span></td></tr><tr><th>Agg index</th><td>0.720<span class="d">benchmark</span></td><td>-0.081<span class="d">benchmark</span></td><td>0.479<span class="d">benchmark</span></td></tr><tr><th>Momentum (Sharpe), long only</th><td>0.808<span class="d">+0.088</span></td><td>-0.488<span class="d">-0.408**</span></td><td>0.306<span class="d">-0.172*</span></td></tr></tbody>
+<tbody><tr class="me"><th>HRP + Rolling 60m overlay</th><td>1.056<span class="d">+0.232*** &nbsp;p=0.004</span></td><td>-0.006<span class="d">+0.073 &nbsp;p=0.240</span></td><td>0.721<span class="d">+0.208*** &nbsp;p=0.002</span></td></tr><tr class="me"><th>HRP, annual</th><td>0.952<span class="d">+0.128** &nbsp;p=0.037</span></td><td>0.057<span class="d">+0.135** &nbsp;p=0.039</span></td><td>0.676<span class="d">+0.163*** &nbsp;p=0.004</span></td></tr><tr class="me"><th>ERC, annual</th><td>0.886<span class="d">+0.062 &nbsp;p=0.190</span></td><td>0.082<span class="d">+0.161*** &nbsp;p=0.008</span></td><td>0.636<span class="d">+0.123*** &nbsp;p=0.010</span></td></tr><tr><th>Rolling 60m, long only</th><td>0.901<span class="d">+0.077 &nbsp;p=0.301</span></td><td>-0.017<span class="d">+0.061 &nbsp;p=0.368</span></td><td>0.616<span class="d">+0.103 &nbsp;p=0.161</span></td></tr><tr class="me"><th>HRP + Momentum (Sharpe) overlay</th><td>0.965<span class="d">+0.141** &nbsp;p=0.022</span></td><td>-0.030<span class="d">+0.048 &nbsp;p=0.315</span></td><td>0.579<span class="d">+0.067 &nbsp;p=0.141</span></td></tr><tr><th>Agg index</th><td>0.824<span class="d">benchmark</span></td><td>-0.078<span class="d">benchmark</span></td><td>0.513<span class="d">benchmark</span></td></tr><tr><th>Momentum (Sharpe), long only</th><td>0.696<span class="d">-0.128 &nbsp;p=0.173</span></td><td>-0.415<span class="d">-0.336* &nbsp;p=0.065</span></td><td>0.265<span class="d">-0.248** &nbsp;p=0.023</span></td></tr></tbody>
 </table>
 </div>
-<p class="note">Stars mark one-sided bootstrap significance against the
-Aggregate: *** below 0.01, ** below 0.05, * below 0.10.</p>
+<p class="note">Sharpe ratios and significance are measured on monthly
+returns. Portfolios are built, traded and costed daily, and the covariance
+matrix is estimated from daily data, because sampling the same span more finely
+improves a variance estimate. Performance is scored monthly, because three of
+the eleven holdings are priced by matrix valuation and their daily returns
+autocorrelate around 0.25, which distorts a daily Sharpe ratio. Stars mark
+one-sided bootstrap significance against the Aggregate: *** below 0.01,
+** below 0.05, * below 0.10.</p>
 
-<a class="card" href="phase1_idea.html"><span class="num">Phase 1</span><span class="ttl">The Idea</span><span class="dsc">Extension from lessons learned in my macro portfolio project. Asset universe and data collection.</span></a><a class="card" href="phase2_strategies.html"><span class="num">Phase 2</span><span class="ttl">Strategies</span><span class="dsc">Five model classes, how each forms its weights, and how they score on the development sample.</span></a><a class="card" href="phase3_results.html"><span class="num">Phase 3</span><span class="ttl">Results</span><span class="dsc">The held-out decade, the constant-risk comparison, and portfolio characteristics.</span></a><a class="card" href="appendix_method.html"><span class="num">Appendix A</span><span class="ttl">Implementation</span><span class="dsc">How much independent variation the universe contains, and how forecastability is distributed across it.</span></a><a class="card" href="appendix_universe.html"><span class="num">Appendix B</span><span class="ttl">Market Dynamics</span><span class="dsc">Per-asset financing, the shared estimation window, and the constant-risk convention.</span></a><a class="card" href="appendix_eval.html"><span class="num">Appendix C</span><span class="ttl">Evaluating Results</span><span class="dsc">How every p-value in this project is produced, and how that extends the validation in the 2025 study.</span></a>
+<a class="card" href="phase1_idea.html"><span class="num">Phase 1</span><span class="ttl">The Idea</span><span class="dsc">Extension from lessons learned in my macro portfolio project. Asset universe and data collection.</span></a><a class="card" href="phase2_strategies.html"><span class="num">Phase 2</span><span class="ttl">Strategies</span><span class="dsc">Five model classes, how each forms its weights, and how they score on the development sample.</span></a><a class="card" href="phase3_results.html"><span class="num">Phase 3</span><span class="ttl">Results</span><span class="dsc">The held-out decade, the constant-risk comparison, and portfolio characteristics.</span></a><a class="card" href="appendix_method.html"><span class="num">Appendix A</span><span class="ttl">Implementation</span><span class="dsc">Independent variation, principal component analysis, and forecastability.</span></a><a class="card" href="appendix_universe.html"><span class="num">Appendix B</span><span class="ttl">Market Dynamics</span><span class="dsc">Rebalancing, leverage and transaction costs, and other portfolio construction mechanics.</span></a><a class="card" href="appendix_eval.html"><span class="num">Appendix C</span><span class="ttl">Evaluating Results</span><span class="dsc">P-value construction.</span></a>
 <footer>
 The project this grew out of:
 <a class="plain" href="https://guenther-qr.github.io/macro-portfolio-rebuild/">macro-portfolio-rebuild</a>.
