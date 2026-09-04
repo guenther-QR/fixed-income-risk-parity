@@ -859,32 +859,6 @@ def phase3():
         "2022 against the index at 13.2%. They hold less duration than the "
         "index, which is the obvious explanation and the one worth testing.")
 
-    r.section("Is it a duration bet?", (
-        "Risk parity underweights volatile assets. In bonds, volatility is "
-        "mostly duration. If holding less duration is the whole story, an "
-        "investor could just buy shorter bonds and skip the covariance "
-        "matrix."))
-    r.prose(
-        "To test that, the benchmark is rebuilt to carry the same interest rate "
-        "exposure and none of the structure: equal weight, rescaled each month "
-        "to match the strategy\'s own duration, with the difference in cash. "
-        "This is a control portfolio for the duration question, not a second "
-        "benchmark; the Aggregate remains the only benchmark in this project.")
-    if DT is not None:
-        d = DT.copy()
-        d = d.drop(columns=[c for c in d.columns if "plain 1/N" in c])
-        d.index.name = "strategy"
-        d.columns = [c.replace("dm p", "p").replace("dm CI low", "CI low")
-                     .replace("dm CI high", "CI high")
-                     .replace("vs duration-matched 1/N", "vs duration matched")
-                     for c in d.columns]
-        r.table(d.round(4), align_right=list(d.columns), stars=["p"])
-    r.prose(
-        "<strong>The edge is unchanged.</strong> Hierarchical risk parity goes "
-        "from +0.151 to +0.147 once duration is matched, at p = 0.008, and "
-        "equal risk contribution from +0.087 to +0.088 at p = 0.012. All "
-        "intervals exclude zero, so duration is not the explanation.")
-
     r.section("Portfolio characteristics", (
         "What the portfolio actually holds, month by month."))
     if HW is not None and len(HW):
@@ -1008,8 +982,6 @@ def phase3():
          "the holdout alone both beat the index but neither reaches five "
          "percent, at p = 0.126 for hierarchical and 0.060 for equal risk "
          "contribution"),
-        (True, "The margin is not explained by duration",
-         "unchanged against a duration matched benchmark, p = 0.008 and 0.012"),
         (True, "It survives costs and institutional financing",
          "turnover under 15% a year, and 90 to 252bp of headroom to the "
          "financing breakeven"),
@@ -1662,23 +1634,31 @@ def appendix_eval():
 # ------------------------------------------------------------------- index
 
 def index():
-    A = trim(get("fi_aligned_table"))
-    Bt = trim(get("fi_aligned_bootstrap"))
+    # The same three tables the phase pages render, so the summary cannot drift
+    # away from the results it is summarising.
+    TB = {tag: get(f"fi_table_{name}") for tag, name in
+          [("dev", "development"), ("oos", "holdout"), ("full", "fullsample")]}
 
     body = ""
-    if A is not None:
-        for name in A.index:
+    if all(v is not None for v in TB.values()):
+        order = TB["full"].sort_values("sharpe", ascending=False).index
+        for name in order:
             cells = []
             for tag in ["dev", "oos", "full"]:
-                sh = A.loc[name, f"{tag}_sharpe"]
-                sub = "benchmark"
-                if Bt is not None and name in Bt.index:
-                    e = Bt.loc[name, f"{tag}_edge"]
-                    p = Bt.loc[name, f"{tag}_p"]
-                    mk = "***" if p < .01 else "**" if p < .05 else "*" if p < .10 else ""
-                    sub = f"{e:+.3f}{mk}"
-                cells.append(f'{sh:.3f}<span class="d">{sub}</span>')
-            cls = ' class="me"' if ("RP" in name or "parity" in name) else ""
+                t = TB[tag]
+                if name not in t.index:
+                    cells.append('&mdash;<span class="d">not carried</span>')
+                    continue
+                sh = t.loc[name, "sharpe"]
+                if name == "Agg index":
+                    sub_ = "benchmark"
+                else:
+                    e, pv = t.loc[name, "vs_agg"], t.loc[name, "p"]
+                    mk = ("***" if pv < .01 else "**" if pv < .05
+                          else "*" if pv < .10 else "")
+                    sub_ = f"{e:+.3f}{mk}"
+                cells.append(f'{sh:.3f}<span class="d">{sub_}</span>')
+            cls = ' class="me"' if name.startswith(("HRP", "ERC")) else ""
             body += (f"<tr{cls}><th>{name}</th>"
                      + "".join(f"<td>{c}</td>" for c in cells) + "</tr>")
 
@@ -1687,8 +1667,8 @@ def index():
         "universe and data collection.",
         "Five model classes, how each forms its weights, and how they score on "
         "the development sample.",
-        "The held-out decade, the constant-risk comparison, the duration check, "
-        "and portfolio characteristics.",
+        "The held-out decade, the constant-risk comparison, and portfolio "
+        "characteristics.",
         "How much independent variation the universe contains, and how "
         "forecastability is distributed across it.",
         "Per-asset financing, the shared estimation window, and the "
