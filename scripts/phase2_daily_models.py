@@ -64,6 +64,7 @@ TILT_CAP = 0.15
 REGIME_LAG = 45                  # calendar days; IP and CPI publish with a lag
 
 COST_BP = RB.COST_BP
+DUR = import_module("phase2_canonical").DUR
 
 
 def regime_frame(index):
@@ -229,30 +230,38 @@ def main() -> int:
     pd.concat(mskill, axis=0).to_parquet(P / "fi_dmodel_ml_skill.parquet")
 
     # ---------------------------------------------------- technical signals
-    carry = pd.DataFrame(
-        {a: X[f"d_carry_{a}"] if f"d_carry_{a}" in X else np.nan for a in assets},
-        index=X.index)
-    if carry.isna().all().all():
-        carry = r.rolling(PPY).mean() * PPY          # realised yield proxy
+    # Carry is not built here. A carry signal is a yield less a financing rate,
+    # and the seven funds in this universe are price series with no yield
+    # attached, so it can only be formed for the Treasury sleeve. A trailing
+    # return standing in for carry is momentum under another name.
     mom = r.rolling(PPY).apply(lambda x: np.prod(1 + x) - 1, raw=True).shift(21)
     # Momentum on risk-adjusted return, not raw return: the same trailing window
     # divided by its own volatility. On a bond book the raw version simply ranks
     # by duration, which is a risk bet wearing a signal's clothes.
     msharpe = (r.rolling(PPY).mean() / r.rolling(PPY).std()).shift(21)
 
-    signals = {"Carry": carry, "Momentum": mom, "Momentum (Sharpe)": msharpe,
+    signals = {"Momentum 12-1": mom, "Momentum (Sharpe)": msharpe,
                "Regression": uni}
     for k, v in fcst.items():
         signals[f"ML {k.replace('_', ' ')}"] = v
 
     first = r.index[BURN_IN]
-    strat, turns = {}, {}
+    strat, turns, wpaths = {}, {}, {}
     for name, F in signals.items():
         Z = zrows(F.reindex(columns=assets)).loc[first:]
-        for mode in ("tilt", "base"):
-            s, tn = portfolio(Z, r, rates, mode)
-            strat[f"{name}, {mode}"] = s
-            turns[f"{name}, {mode}"] = tn
+        # Signal weighted only. A bounded tilt around equal weight is mostly
+        # equal weight, which flatters a signal by anchoring it to a portfolio
+        # that already works.
+        s, tn = portfolio(Z, r, rates, "base")
+        strat[f"{name}, base"] = s
+        turns[f"{name}, base"] = tn
+        # Keep the weight path so portfolio duration can be reported without
+        # rerunning the whole zoo.
+        Wb = Z.clip(lower=0.0)
+        Wb = Wb.div(Wb.sum(axis=1).replace(0, np.nan), axis=0).fillna(
+            1.0 / len(assets))
+        wpaths[f"{name}, base"] = (Wb * pd.Series(DUR).reindex(
+            Wb.columns)).sum(axis=1)
 
     # Risk-based reference, annual rebalancing, on the same dates.
     for lbl, fn in [("HRP", lambda S, c: RB.RP.hierarchical_rp(S, list(c))),
@@ -264,6 +273,8 @@ def main() -> int:
 
     S = pd.DataFrame(strat).dropna(how="any")
     S.to_parquet(P / "fi_dmodel_strategies.parquet")
+    if wpaths:
+        pd.DataFrame(wpaths).to_parquet(P / "fi_dmodel_duration.parquet")
 
     dev = S.index <= pd.Timestamp(DEV_END)
     oos = S.index >= pd.Timestamp(OOS_START)

@@ -339,6 +339,7 @@ def phase2():
     T = get("fi_dmodel_summary")
     ML = get("fi_dmodel_ml_chosen")
     MLS = get("fi_dmodel_ml_skill")
+    MLM = get("fi_ml_monthly_tuned")
     UNI = get("fi_dmodel_regression_skill")
     RANK = get("fi_regressor_ranks")
     FAM = get("fi_regressor_families")
@@ -356,7 +357,7 @@ def phase2():
 
     r.metrics([
         ("4", "model families", None),
-        ("2", "ways of forming weights", None),
+        ("1", "way of forming weights", None),
         (f"{bd:.3f}" if bd is not None else "0.807", "Agg Sharpe, development",
          None),
         ("60", "month burn-in, every model", None),
@@ -549,6 +550,63 @@ def phase2():
         "The regression does not show this pattern. Averaging 256 univariate "
         "fits dilutes any single artefact rather than concentrating on it, "
         "which is the practical argument for the combination approach.")
+    if MLM is not None and MLS is not None:
+        r.section("Forecasting a day against forecasting a month", (
+            "The same signals and the same four families, asked to predict the "
+            "next month instead of the next day. Each horizon is tuned on its "
+            "own grid, so the comparison is not one horizon wearing the "
+            "other's settings."))
+        d = (MLS["dev_r2"].unstack() * 100)
+        stale = [c for c in ["hy", "muni", "muni_hy"] if c in d.columns]
+        clean = [c for c in d.columns if c not in stale]
+        rows = []
+        for fam in MLM.index:
+            key = fam if fam in d.index else fam.replace("_", " ")
+            if key not in d.index:
+                continue
+            dd, mm = d.loc[key], MLM.loc[fam] * 100
+            rows.append({
+                "family": fam.replace("_", " ").capitalize(),
+                "daily, the 3": dd[stale].mean(),
+                "daily, the other 8": dd[clean].mean(),
+                "daily gap": dd[stale].mean() - dd[clean].mean(),
+                "monthly, the 3": mm["stale_3"],
+                "monthly, the other 8": mm["clean_8"],
+                "monthly gap": mm["stale_3"] - mm["clean_8"]})
+        if rows:
+            t = pd.DataFrame(rows).set_index("family")
+            r.table(t.round(2), align_right=list(t.columns),
+                    heat=["daily gap", "monthly gap"],
+                    caption="Development out of sample R squared in percent. "
+                            "The three are high yield and the two municipal "
+                            "funds, whose prices are set by matrix valuation; "
+                            "the other eight trade continuously.")
+        r.prose(
+            "<strong>The gap between the two groups is the whole daily "
+            "result, and a month erases it.</strong> On a one day target the "
+            "three funds priced by matrix valuation score between +4.5% and "
+            "+8.4% while the eight that trade continuously are negative in "
+            "every family, a gap of 4.6 to 9.3 points. On a one month target "
+            "that gap falls to between 0.2 and 3.0 points. Same signals, same "
+            "models, same tuning procedure; only the horizon changes.")
+        r.prose(
+            "A day or two of stale marking survives into a one day return and "
+            "washes out of a twenty-one day one. Nothing else in the setup "
+            "distinguishes those three holdings from the other eight, so the "
+            "daily advantage is a property of how the funds are priced rather "
+            "than a property of bond returns.")
+        r.prose(
+            "The monthly models are not carried into the results. They are "
+            "negative in every family, and two qualifications apply to how "
+            "negative. <strong>Ridge selected the largest penalty its grid "
+            "offered at both horizons</strong>, so its monthly figure is a "
+            "limit of the search rather than a reading of the method; the "
+            "comparison of its two columns still holds, because that is "
+            "measured within one fitted model. And every family that moved "
+            "chose heavier regularisation for the monthly problem, correctly, "
+            "since a month of returns inside a fixed window carries roughly a "
+            "twentieth of the independent observations that a day does.")
+
     r.prose(
         "<strong>The conclusion drawn here, before the holdout is opened, is "
         "that none of these models is expected to survive it.</strong> The "
@@ -560,30 +618,34 @@ def phase2():
         "marked. That is a structural weakness rather than a tuning problem, "
         "and no amount of further specification search addresses it.")
 
-    r.section("Return forecast tilting", (
-        "A return forecast can guide all of the allocation or only part of it. "
-        "Both are tested."))
+    r.section("From a signal to a portfolio", (
+        "Every model in this phase produces a number per asset per day. The "
+        "same rule turns that number into weights, so the comparison between "
+        "families is a comparison of the signals rather than of their "
+        "packaging."))
     r.prose(
-        "<strong>Tilt.</strong> Start from equal weight and move away from it "
-        "in proportion to the forecast, with a cap on how far any single "
-        "position can go. The forecast is standardised across assets first, so "
-        "what drives the tilt is which assets look good relative to the others "
-        "rather than the level of the forecast:")
+        "The forecast is first standardised across assets on each date, which "
+        "makes the signal purely relative. What drives the portfolio is which "
+        "holdings look good against the others that day, not the level of the "
+        "forecast:")
     r.formula(
-        "w &nbsp;=&nbsp; clip( <span class='t t1'>w<sub>eq</sub></span> "
-        "&nbsp;+&nbsp; <span class='t t2'>&Lambda;</span> &middot; "
-        "<span class='t t3'>z</span> , &nbsp;bounds )",
-        "bounded tilt, lambda = 0.5, cap 15 points per asset")
+        "<span class='t t1'>z<sub>i</sub></span> &nbsp;=&nbsp; "
+        "( <span class='t t3'>x<sub>i</sub></span> &minus; "
+        "<span class='t t2'>&mu;</span> ) &nbsp;/&nbsp; "
+        "<span class='t t2'>&sigma;</span>",
+        "cross-sectional standardisation, across the eleven assets each day")
     r.prose(
-        "With eleven assets equal weight is 9.1% each. A lambda of 0.5 means an "
-        "asset one standard deviation above the cross-sectional average gets "
-        "roughly 13.6% and one a standard deviation below gets 4.5%, before the "
-        "15 point cap binds. So <em>Regression, tilt</em> in the results below "
-        "is equal weight moved by the combined regression forecast, not a fixed "
-        "blend of two portfolios.")
+        "Weights are then the positive part of that score, normalised to sum "
+        "to one. An asset scoring below the daily average is not held; the "
+        "rest are held in proportion to how far above it they sit. The book is "
+        "long only and fully invested, and the signal alone sets it.")
     r.prose(
-        "<strong>Base.</strong> The signal alone sets the weights, long only "
-        "and normalized to sum to one, with no base allocation underneath.")
+        "An earlier version of this project also reported a bounded variant "
+        "that started from equal weight and moved only part of the way toward "
+        "the signal. It is not reported here. A bounded tilt around equal "
+        "weight is mostly equal weight, so it flatters a signal by anchoring "
+        "it to a portfolio that already works, and it makes a weak signal and "
+        "a strong one look more alike than they are.")
 
     r.section("Risk parity, in detail", (
         "The fourth family, and the only one that never estimates an expected "
@@ -647,13 +709,22 @@ def phase2():
         "The third family. No return model is estimated; a rule is applied to "
         "past prices and yields, and the rule is the whole strategy."))
     r.prose(
-        "<strong>Carry</strong> ranks each holding by its yield less the "
-        "financing rate, which for a bond is the return earned if the curve "
-        "does not move. <strong>Momentum</strong> ranks by trailing return. "
+        "<strong>Momentum 12-1</strong> ranks each holding by its return over "
+        "the past twelve months, skipping the most recent one. "
         "<strong>Momentum (Sharpe)</strong> divides that trailing return by its "
         "own volatility, so an asset is ranked on how consistently it rose "
-        "rather than how far. Each appears twice below, once as a bounded tilt "
-        "and once as a signal-weighted book.")
+        "rather than how far. <strong>Rolling 60-month selection</strong> "
+        "declines to fix a window at all: every month, each asset scores "
+        "sixteen candidate windows on the trailing five years and trades "
+        "whichever has predicted it best.")
+    r.prose(
+        "A carry signal was intended as a third member of this family and is "
+        "not reported. Carry on a bond is its yield less the financing rate, "
+        "and seven of the eleven holdings are funds quoted as prices with no "
+        "yield attached, so the signal can only be formed for the Treasury "
+        "sleeve. A trailing return standing in for it is momentum under "
+        "another name, which is what an earlier version of this page reported "
+        "as a separate model class.")
     r.prose(
         "Momentum needs a lookback window, and choosing one is where this "
         "family is most easily fitted to its own sample. Asness, Moskowitz and "
@@ -666,6 +737,54 @@ def phase2():
         "need it. Their own bond results are the weakest in the paper and do "
         "not reach statistical significance, which is the first evidence "
         "against a momentum tilt working here.")
+    r.section("Asness's factor, built his way", (
+        "The uniform definition is only half of his method. The other half is "
+        "the portfolio, and it is not the long-only book reported above."))
+    r.prose(
+        "His momentum factor is a zero-cost spread. Every asset is weighted by "
+        "its cross-sectional rank less the average rank, scaled so the book "
+        "holds a dollar long and a dollar short. Ranks rather than raw scores, "
+        "he notes, because ranks blunt the influence of outliers:")
+    r.formula(
+        "<span class='t t1'>w<sub>i</sub></span> &nbsp;=&nbsp; "
+        "<span class='t t2'>c</span> &middot; ( rank(<span class='t t3'>S"
+        "<sub>i</sub></span>) &minus; "
+        "<span style='white-space:nowrap'>&Sigma; rank(S)/N</span> )",
+        "weights sum to zero; c scales the book to one dollar per side")
+    r.prose(
+        "<strong>Built his way, on this universe, the factor loses money.</strong> "
+        "It returns -1.6% a year on development and -3.4% on the holdout, with "
+        "a correlation to the Aggregate of 0.07 and a duration tilt under a "
+        "year, so it is a clean factor rather than a disguised bet on the "
+        "level of rates. It simply does not work here. That agrees with his own "
+        "paper, where bonds are the weakest of the eight markets and the only "
+        "one whose premium does not reach significance.")
+    r.prose(
+        "The rank weighting makes no difference at this size. Weighting by rank "
+        "and weighting by standardised score produce development results of "
+        "-0.252 and -0.255, which is the same portfolio. He gains from ranks "
+        "because he has hundreds of securities and outliers to blunt; with "
+        "eleven there is nothing to blunt.")
+    r.prose(
+        "<strong>Almost all of the loss is the cost of trading it.</strong> A "
+        "spread and its exact inverse pay the same costs, so running both "
+        "gives two equations in the gross return and the cost. Solving them "
+        "puts trading costs at 4.5 to 5.0% a year, on turnover of 450 to 480%, "
+        "and the gross return between -1.3% and +1.2%. The factor is not "
+        "wrong-signed; it is close to nothing, wrapped in five percent of "
+        "costs. Inverting it does not help, because the costs are paid in "
+        "either direction.")
+    r.prose(
+        "<span class=\"note\">A practical limitation applies to every "
+        "long-short result on this page. Seven of the eleven holdings are "
+        "mutual funds, which cannot be sold short. The Treasury legs could be "
+        "expressed in futures, but the credit and municipal legs would require "
+        "swaps or exchange-traded substitutes that are not in this universe. "
+        "The spreads are reported as evidence about the signal, not as "
+        "portfolios that could have been run.</span>")
+
+    r.section("Choosing the lookback window", (
+        "Where the family is most easily fitted to its own sample."))
     r.prose(
         "Four ways of setting the window were tested, differing only in how "
         "much the data was allowed to choose. Each is applied as a tilt around "
@@ -746,15 +865,36 @@ def phase2():
         "the covariance matrix another, and the gap between those groups is "
         "wider than the gap between any two individual models.")
     r.prose(
-        "Two patterns are worth naming. <strong>Every base variant scores well "
-        "below its tilt</strong>: carry falls from 0.61 to 0.27, the regression "
-        "from 0.67 to 0.50, momentum from 0.62 to 0.27. The volatility column "
-        "explains it. A signal-weighted book concentrates into whatever the "
-        "signal likes at that moment, which on a bond universe is usually the "
-        "long end, so it runs at 7 to 9% volatility against 5% for the bounded "
-        "version. And <strong>turnover separates the two groups as sharply as "
-        "performance does</strong>: the risk-based methods trade 1.5 to 2% of "
-        "the book a year, the forecast-driven ones 12 to 72%.")
+        "<strong>The two groups separate more sharply than any two models "
+        "within a group.</strong> Both risk-based methods clear the Aggregate "
+        "at better than one percent significance. Of the models that estimate "
+        "an expected return, the four machine learning families land between "
+        "0.700 and 0.724 against the index at 0.720, with p values from 0.42 "
+        "to 0.50. Four different families at four different levels of "
+        "flexibility, none distinguishable from the benchmark.")
+    r.prose(
+        "<strong>Every model that estimates a return ends up holding duration.</strong> "
+        "The Aggregate runs an effective duration of 4.2 years, estimated from "
+        "its own sensitivity to the ten year yield. The four machine learning "
+        "books run 7.8 to 8.9 years, the combined regression 12.5, and raw "
+        "momentum 8.4. A signal-weighted portfolio concentrates into whatever "
+        "has been rising, and in a universe of bonds that is the long end, so "
+        "each of them arrives at a levered position on the level of rates "
+        "without ever having been asked for one.")
+    r.prose(
+        "That accounts for the machine learning cluster. Ridge returns 7.6% "
+        "against the index at 6.5%, which reads as skill until the risk is "
+        "read alongside it: 5.9% volatility against 4.3%, 1.9 times the "
+        "duration, and a Sharpe ratio of 0.724 against 0.720. The extra return "
+        "is the extra duration, priced about as the market would price it. The "
+        "risk-based methods sit at half the index's beta and beat it anyway.")
+    r.prose(
+        "<strong>Turnover separates them as sharply as performance does.</strong> "
+        "The risk-based methods trade one to two percent of the book a year. "
+        "The signal-driven ones trade 28 to 241 percent. On a universe where "
+        "one-way costs run from two basis points on the two year Treasury to "
+        "forty-five on high yield municipals, that difference is the whole "
+        "result for several of them.")
 
     r.section("From Development to Validation", (
         "Two strategies are carried into the holdout."))
@@ -775,10 +915,19 @@ def phase2():
         "bond funds that share one dominant factor, most of that movement is "
         "estimation noise.")
     r.prose(
-        "Nothing from the return-forecasting side is carried. Out of sample R "
-        "squared near one percent is real but too small to size a position on, "
-        "and the base-weighted versions show what happens when it is allowed "
-        "to try.")
+        "Nothing from the return-forecasting side is carried on its own. Out "
+        "of sample R squared near one percent is real but too small to size a "
+        "position on, and it rests on three holdings whose prices move late.")
+    r.prose(
+        "<strong>Two technical strategies are carried anyway, and it is worth "
+        "being explicit that they did not earn it.</strong> Neither the "
+        "rolling window selection nor the risk-adjusted momentum book clears "
+        "the index at five percent on development. They are taken into the "
+        "holdout in their standalone form so that the question of whether they "
+        "work alone or only as an overlay is answered rather than left open. "
+        "Phase 3 marks them as exploratory and they should be read that way: a "
+        "strategy that would not have been selected cannot be validated by the "
+        "sample meant to test the selection.")
 
     r.next_up("Phase 3 - Results", [
         "Validating strategies on the holdout data",
@@ -792,6 +941,8 @@ def phase2():
 # ------------------------------------------------------------------ phase 3
 
 def phase3():
+    FULL = get("fi_table_fullsample")
+    OOS_T = get("fi_table_holdout")
     r = PhaseReport(
         phase="Phase 3", title="Results",
         summary=("The held-out decade, 2016 to 2026, opened once after "
@@ -1092,6 +1243,50 @@ def phase3():
         "has to trade back against price drift every month. Annual rebalancing "
         "is marginally best, which says the covariance estimate is stable "
         "enough that monthly re-optimisation is mostly noise.")
+    if FULL is not None:
+        r.section("The whole period, held throughout", (
+            "What each surviving strategy would have produced over the full "
+            "thirty-nine years, with every setting fixed where development "
+            "left it and nothing refitted."))
+        t = FULL.copy()
+        t = t.rename(columns={
+            "return": "return, %", "vol": "volatility, %", "sharpe": "Sharpe",
+            "vs_agg": "vs the Agg", "p": "p", "alpha_pct_yr": "alpha, % a year",
+            "t_alpha": "t", "beta": "beta", "duration": "duration, years",
+            "turnover": "turnover, %"})
+        for c2 in ["return, %", "volatility, %", "turnover, %"]:
+            if c2 in t.columns:
+                t[c2] = t[c2] * 100
+        t.index.name = "strategy"
+        r.table(t.round(3),
+                align_right=[c2 for c2 in t.columns if c2 != "status"],
+                stars=["p"], heat=["Sharpe"],
+                caption="1987 to 2026, net of per-asset trading costs. The "
+                        "settings were chosen on the development sample and "
+                        "carried forward unchanged, so this is one continuous "
+                        "record rather than two studies joined together.")
+        r.prose(
+            "<strong>This table should be read last and trusted least.</strong> "
+            "Twenty-eight of the thirty-nine years are the development sample, "
+            "so the full-period figures are dominated by the same data the "
+            "strategies were selected on. Every confirmatory strategy clears "
+            "the index here at better than one percent, and not one of them "
+            "cleared it on the holdout alone. The full sample describes what "
+            "holding these portfolios would have returned; the holdout is what "
+            "tests whether the edge was real.")
+        r.prose(
+            "The standalone risk-adjusted momentum book shows what the "
+            "difference looks like. Over the full period its alpha is -0.09% a "
+            "year with a t statistic of -0.19, which is nothing. That number is "
+            "made of +0.75% on development and -1.96% on the holdout. Averaging "
+            "a selected period with an unselected one produces a figure that "
+            "describes neither.")
+        r.prose(
+            "The ordering also moves. Hierarchical risk parity leads equal risk "
+            "contribution over the full period and over development, and trails "
+            "it on the holdout. The two are close enough throughout that the "
+            "gap between them is not worth defending in either direction.")
+
     r.section("Conclusions", (
         "What the evidence supports, and what it does not."))
     r.checks([
