@@ -146,6 +146,10 @@ strong { font-weight: 600; }
 /* ------------------------------------------------------------------- tables */
 
 .tablewrap { margin: 1.5rem 0; overflow-x: auto; }
+/* Wide tables: shrink the type and tighten the cells so the whole
+   frame fits without the reader scrolling sideways. */
+.tablewrap.compact table { font-size: 0.78rem; }
+.tablewrap.compact th, .tablewrap.compact td { padding: 0.3rem 0.45rem; white-space: nowrap; }
 table { border-collapse: collapse; width: 100%; font-size: .9rem; min-width: 30rem; }
 thead th {
   text-align: left; font-family: var(--mono); font-weight: 500; font-size: .72rem;

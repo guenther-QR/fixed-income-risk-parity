@@ -57,7 +57,8 @@ class PhaseReport:
               heat: list[str] | None = None,
               heat_rows: bool = False,
               row_class: dict | None = None,
-              stars: list[str] | None = None) -> "PhaseReport":
+              stars: list[str] | None = None,
+              compact: bool = False) -> "PhaseReport":
         """Render a frame.
 
         heat        columns to shade by value, green positive, red negative.
@@ -118,7 +119,8 @@ class PhaseReport:
 
         cap = f"<figcaption>{caption}</figcaption>" if caption else ""
         self._blocks.append(
-            f'<figure class="tablewrap"><table><thead><tr>{head}</tr></thead>'
+            f'<figure class="tablewrap{" compact" if compact else ""}">'
+            f'<table><thead><tr>{head}</tr></thead>'
             f'<tbody>{"".join(body)}</tbody></table>{cap}</figure>'
         )
         return self
