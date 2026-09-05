@@ -1,11 +1,8 @@
-"""Stylesheet for phase reports.
-
-Colors are defined as tokens on bare :root (light), then redefined for
-prefers-color-scheme:dark and again for an explicit [data-theme] stamp, so the
-page resolves correctly in all three viewer states.
-"""
-
-CSS = """
+<title>Appendix D References</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@400;600&display=swap">
+<style>
 :root {
   /* Neutrals carry a slight blue-green bias - chosen, not inherited grey. */
   --ground:      #f7f8f7;
@@ -332,11 +329,30 @@ tr.bench-row th, tr.bench-row td {
   border-top: 1.5px solid #cf6a1a;
   border-bottom: 1.5px solid #cf6a1a;
 }
-tr.bench-row th::after { content: " \2190 benchmark"; color: #cf6a1a;
+tr.bench-row th::after { content: " 90 benchmark"; color: #cf6a1a;
   font-size: .78em; letter-spacing: .04em; white-space: nowrap; }
 .byline { font-family: var(--mono, monospace); font-size: .78rem;
   letter-spacing: .06em; color: var(--muted); margin: .2rem 0 1rem; }
 .disclaimer { margin: 3rem 0 0; padding-top: 1rem;
   border-top: 1px solid var(--rule); font-size: .8rem; color: var(--muted);
   opacity: .65; }
-"""
+</style>
+<div class="page">
+  <header class="masthead">
+    <div class="masthead__rail">
+      <a class="crumb" href="index.html">&larr; Fixed Income Risk Parity</a>
+    </div>
+    <h1><span class="masthead__phase">Appendix D</span>References</h1>
+    <p class="byline">Gus Guenther, September 2026</p>
+    <p class="standfirst">Papers and sources the project draws on.</p>
+  </header>
+  <main>
+    <h2>References</h2><p class="note">Each of these is cited at the point it is used above.</p><p>Lopez de Prado, M. (2016). Building Diversified Portfolios that Outperform Out of Sample. <em>Journal of Portfolio Management</em>, 42(4), 59-69. <span class="note">Hierarchical risk parity, the clustering construction used throughout.</span></p><p>Frazzini, A. and Pedersen, L. H. (2014). Betting Against Beta. <em>Journal of Financial Economics</em>, 111(1), 1-25. <span class="note">The leverage-constraint argument in the leverage costs section.</span></p><p>DeMiguel, V., Garlappi, L. and Uppal, R. (2009). Optimal Versus Naive Diversification: How Inefficient is the 1/N Portfolio Strategy? <em>Review of Financial Studies</em>, 22(5), 1915-1953. <span class="note">Why the forecast tilts in Phase 2 are bounded rather than fed to an optimiser.</span></p><p>Politis, D. N. and Romano, J. P. (1994). The Stationary Bootstrap. <em>Journal of the American Statistical Association</em>, 89(428), 1303-1313. <span class="note">The resampling scheme behind every p-value reported in this project.</span></p><p>Campbell, J. Y. and Thompson, S. B. (2008). Predicting Excess Stock Returns Out of Sample: Can Anything Beat the Historical Average? <em>Review of Financial Studies</em>, 21(4), 1509-1531. <span class="note">The benchmark for what counts as an economically meaningful out of sample R squared, cited in Phase 1.</span></p><p>Clark, T. E. and West, K. D. (2007). Approximately Normal Tests for Equal Predictive Accuracy in Nested Models. <em>Journal of Econometrics</em>, 138(1), 291-311. <span class="note">The test behind the p-values on the forecast skill table in Phase 1.</span></p><p>Cochrane, J. H. and Piazzesi, M. (2005). Bond Risk Premia. <em>American Economic Review</em>, 95(1), 138-160. <span class="note">The forward rate factor, used as a signal and cited on the scale of bond return predictability.</span></p><p>Ledoit, O. and Wolf, M. (2008). Robust Performance Hypothesis Testing with the Sharpe Ratio. <em>Journal of Empirical Finance</em>, 15(5), 850-859. <span class="note">The basis for the bootstrap in Appendix C, and the reference the 2025 study cited.</span></p><p>Ledoit, O. and Wolf, M. (2004). Honey, I Shrunk the Sample Covariance Matrix. <em>Journal of Portfolio Management</em>, 30(4), 110-119. <span class="note">The covariance estimator used by every risk-based strategy in this project.</span></p>
+    <p class="disclaimer">For research purposes only. This is not investment
+    advice.</p>
+  </main>
+  <nav class="pager"><a class="pager__slot pager__slot--prev" href="appendix_eval.html"><span class="pager__kind">&larr; Previous</span><span class="pager__label">Evaluating Results</span></a><a class="pager__slot pager__slot--index" href="index.html"><span class="pager__kind">All phases</span><span class="pager__label">All sections</span></a><span class="pager__slot"></span></nav>
+  <footer class="colophon">
+    Gus Guenther &#183; Fixed Income Risk Parity &#183; regenerate with <code>py scripts/build_site.py</code>
+  </footer>
+</div>

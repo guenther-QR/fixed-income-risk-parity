@@ -42,6 +42,8 @@ PAGE_DESC = {
         "forecastability.",
     "appendix_eval":
         "P-value construction.",
+    "appendix_refs":
+        "Papers and sources the project draws on.",
 }
 
 PAGES = [
@@ -51,6 +53,7 @@ PAGES = [
     ("appendix_method", "Appendix A", "Implementation"),
     ("appendix_universe", "Appendix B", "Market Dynamics"),
     ("appendix_eval", "Appendix C", "Evaluating Results"),
+    ("appendix_refs", "Appendix D", "References"),
 ]
 
 DROP_ROWS = ["Inverse volatility", "2s10s barbell 50/50"]
@@ -1027,145 +1030,47 @@ def appendix_universe():
     eig = get("fi_breadth_evidence")
     breadth = get("fi_breadth_stats")
 
-    r.section("How much of this universe is distinct", (
-        "Eleven tickers is not eleven decisions. The question has a defined "
-        "answer rather than a rule of thumb."))
+    r.section("Principal component analysis (PCA)", (
+        "We use principal component analysis to rediscover that these fixed "
+        "income assets are driven primarily by four factors. The literature "
+        "usually defines these as level, slope and curvature. We have a fourth "
+        "factor in our run, probably because we hold assets with different "
+        "dynamics, credit in particular, rather than just a normal interest "
+        "rate curve."))
     if eig is not None:
         t = eig.copy()
         t.index.name = "component"
         r.table(t.round(4), align_right=list(t.columns),
                 caption="Eigenvalues of the correlation matrix of monthly "
                         "excess returns. Eleven assets, so they sum to 11.")
+    r.section("Forecastability and duration")
     r.prose(
-        "The standard summary of that spectrum is the <strong>participation "
-        "ratio</strong>:")
-    r.formula(
-        "N<sub>eff</sub> &nbsp;=&nbsp; "
-        "<span class='t t1'>(&Sigma; &lambda;<sub>i</sub>)&sup2;</span>"
-        " &nbsp;/&nbsp; "
-        "<span class='t t3'>&Sigma; &lambda;<sub>i</sub>&sup2;</span>",
-        "effective number of independent assets")
-    r.prose(
-        "It has two fixed points that make it readable. Eleven uncorrelated "
-        "assets give eleven equal eigenvalues and a ratio of "
-        "<code>11&sup2;/11 = 11</code>. Eleven copies of one asset give a "
-        "single eigenvalue of 11 and a ratio of <code>11&sup2;/11&sup2; = 1</code>. "
-        "Here the eigenvalues sum to 11 and their squares to 62.94, so the "
-        "ratio is <code>121 / 62.94 = 1.92</code>.")
-    if breadth is not None:
-        r.table(breadth, align_right=["value"])
-    r.prose(
-        "<strong>Read this as a description of the covariance structure, not a "
-        "test.</strong> It carries no p-value and it depends on the sample used "
-        "to estimate the correlation matrix. Two other measures point the same "
-        "way: the first principal component holds 70.4% of the variance and the "
-        "average pairwise correlation is 0.66. The practical consequence is "
-        "that adding more bonds adds little, and extending the universe from 12 "
-        "assets to 26 lowered this measure rather than raising it.")
+        "Each of the twelve fixed income assets contributes one observation: "
+        "its out of sample R squared from the univariate combination forecast "
+        "against its modified duration. <strong>The relationship is negative "
+        "and it is the clearest pattern in the universe.</strong> The short "
+        "end is forecastable and the long end is not. A two year Treasury "
+        "earns most of its return from carry and rolldown, both of which are "
+        "known the day it is bought; a thirty year earns most of its return "
+        "from the change in yield, which is not. The same fact that makes the "
+        "short end predictable makes it low risk.")
 
-    r.section("Forecastability as a function of duration and volatility", (
-        "Does a bond get harder to forecast as it gets riskier? Two ways of "
-        "asking, on the same twelve observations."))
+    r.section("Why this favours a risk-based portfolio")
     r.prose(
-        "<strong>The setup.</strong> Each of the twelve fixed income assets "
-        "contributes one observation. Its <em>y</em> value is that asset's out "
-        "of sample R squared, taken from the univariate combination forecast: "
-        "one number per asset, measuring how much better the model predicts "
-        "that asset's returns than a rolling mean does. Its <em>x</em> value is "
-        "a measure of how much risk the asset carries, and two are used "
-        "separately: modified duration, and annualised volatility.")
+        "Skill is concentrated in the assets that carry almost none of the "
+        "risk. The most forecastable holdings are the short ones, and they "
+        "account for a small share of the universe\'s variance, while the "
+        "thirty year Treasury and long credit dominate it and have negative "
+        "out of sample R squared. A forecast-driven portfolio therefore faces "
+        "a choice with no good branch: size positions by conviction and the "
+        "book barely moves, or size them to matter and the risk ends up "
+        "dominated by the assets the forecast cannot call.")
     r.prose(
-        "That gives <strong>two bivariate relationships</strong>, not four: "
-        "R squared against duration, and R squared against volatility. Each is "
-        "then measured two ways, which is where the four numbers in the table "
-        "come from.")
-    r.table(pd.DataFrame([
-        ("Spearman rho", "Correlation of the <em>ranks</em> rather than the "
-         "values. Rank the twelve assets by R squared, rank them again by "
-         "duration, and measure how closely the two orderings agree. This is "
-         "the headline because the claim is about ordering, and because ranks "
-         "are not distorted by one asset with an extreme duration."),
-        ("Pearson r", "Correlation of the values themselves. Included as a "
-         "check that the result is not an artefact of the rank transform."),
-        ("OLS slope and t", "An ordinary least squares fit of R squared on the "
-         "risk measure, across the twelve assets. The slope says how much "
-         "predictive R squared is lost per year of duration; the t statistic "
-         "says whether that slope is distinguishable from zero."),
-        ("p-values", "One for each correlation, testing the null that the two "
-         "orderings are unrelated."),
-    ], columns=["statistic", "what it measures"]).set_index("statistic"))
-    if ranks is not None:
-        keep = [c for c in ["oos_r2", "duration", "vol", "rank_r2",
-                            "rank_duration", "rank_vol"] if c in ranks.columns]
-        t = ranks[keep]
-        t.index.name = "asset"
-        r.table(t.round(4), align_right=list(t.columns),
-                caption="Rank 1 is the most forecastable asset, the longest "
-                        "duration and the highest volatility respectively.")
-    r.prose(
-        "The two rank columns are close to mirrors. The three most forecastable "
-        "assets rank 12th, 11th and 9th by duration; the three least "
-        "forecastable rank 1st, 2nd and 3rd.")
-    if tests is not None:
-        t = tests.copy()
-        t.index.name = "predictor"
-        r.table(t.round(4), align_right=list(t.columns),
-                stars=["spearman p", "pearson p"])
-    r.prose(
-        "Reading the table: <strong>Spearman gives -0.958 against duration and "
-        "-0.818 against volatility</strong>, so the two orderings run almost "
-        "exactly opposite. Pearson is -0.78 on both, so the result does not "
-        "depend on the rank transform. The regression slope of -0.0016 means "
-        "each additional year of duration costs about 16 basis points of "
-        "predictive R squared, with a t statistic of -3.96 across twelve "
-        "observations.")
-    r.prose(
-        "Twelve assets is a small sample and they are not independent draws "
-        "from anything, so these p-values are descriptive rather than a clean "
-        "hypothesis test. The reason to take the ordering seriously is that it "
-        "also holds across model families that share no functional form, and "
-        "that it has a mechanical explanation rather than only a statistical "
-        "one.")
-    if fipred is not None:
-        t = fipred
-        fig, ax = charts.new_axes(8.0, 3.6)
-        ax.scatter(t["duration"], t["oos_r2"] * 100, s=70,
-                   color=charts.SERIES[0], zorder=3)
-        for a, row in t.iterrows():
-            ax.annotate(a, (row["duration"], row["oos_r2"] * 100),
-                        textcoords="offset points", xytext=(6, 4),
-                        fontsize=8, color=charts.MUTED)
-        ax.axhline(0, color=charts.MUTED, linewidth=1.0, linestyle="--")
-        ax.set_xlabel("modified duration, years")
-        ax.set_ylabel("out of sample R squared")
-        charts.percent_axis(ax, decimals=1)
-        r.figure(charts.to_svg(fig),
-                 "Every asset above five years of duration sits below the "
-                 "line.")
+        "If expected returns cannot be used where the risk is but the risk "
+        "structure itself can be estimated, the portfolio should be built from "
+        "the covariance matrix alone. That is the argument for the approach "
+        "carried into Phase 3.")
 
-    r.section("Why this favours a risk-based portfolio", (
-        "The two results above combine into the reason risk parity works here "
-        "and forecasting does not."))
-    r.prose(
-        "Skill is concentrated in assets that carry almost none of the risk. "
-        "The most forecastable holdings account for a small fraction of "
-        "universe variance, while the 30 year Treasury and long credit, which "
-        "dominate it, have negative out of sample R squared. A forecast-driven "
-        "portfolio therefore faces a choice with no good branch: size positions "
-        "by conviction and the book barely moves, or size them to matter and "
-        "the risk is dominated by assets the forecast cannot call.")
-    r.prose(
-        "The mechanism is in the return decomposition. A bond's return splits "
-        "into carry, rolldown, duration and convexity, and the first two are "
-        "known when you buy it. A short bond's return is mostly those two; a "
-        "long bond's is mostly the yield change, which is not known. The same "
-        "fact that makes short bonds forecastable makes them low risk.")
-    r.prose(
-        "If expected returns cannot be used but the risk structure can, the "
-        "portfolio should be built from the covariance matrix alone. That is "
-        "the argument for the approach in Phase 3, and it is why it sits here "
-        "as justification rather than being presented as the origin of the "
-        "idea.")
     paginate(r, "appendix_universe")
     return r.render(OUT / "appendix_universe.html")
 
@@ -1222,125 +1127,61 @@ def appendix_method():
         "daily, and the cost difference is larger than the difference in gross "
         "performance.")
 
-    r.section("Leverage costs", (
-        "Why leverage enters at all: a Sharpe ratio earned at 2.8% volatility "
-        "and one earned at 4.2% are not comparable claims, so every strategy is "
-        "scaled to the benchmark's own volatility before being ranked. Scaling "
-        "up means borrowing, and borrowing costs money, so the only honest "
-        "version of that comparison charges for it."))
+    r.section("Leverage costs")
     r.prose(
-        "This matters more in fixed income than almost anywhere else. Frazzini "
-        "and Pedersen's account of the low beta anomaly is that low volatility "
-        "assets earn better risk-adjusted returns precisely <em>because</em> "
-        "most investors cannot borrow cheaply: an investor who needs a return "
-        "target and cannot lever must reach for volatile assets instead, "
-        "bidding them up and leaving the low volatility ones cheap. A strategy "
-        "that harvests that anomaly is therefore only available to someone who "
-        "can finance it. <strong>The assumption throughout is an institutional "
-        "book</strong> with access to repo, listed futures and cleared swaps, "
-        "not a retail margin account.")
-    r.prose(
-        "What it costs then depends on what instrument carries the position, "
-        "the same way transaction costs do.")
-    r.table(pd.DataFrame([
-        ("Treasuries, 2 to 30 year", "3bp", "Repo or the futures basis. "
-         "<em>General collateral</em> repo is lending against any Treasury the "
-         "borrower chooses to deliver, as opposed to a specific bond someone "
-         "needs, so it is the cheapest secured borrowing that exists. SOFR is "
-         "itself built from general collateral Treasury repo transactions, "
-         "which makes financing a Treasury close to definitionally flat to the "
-         "reference rate."),
-        ("Agency mortgages", "15bp", "TBA dollar rolls and agency repo, which "
-         "trade a few basis points wide of Treasury general collateral."),
-        ("Investment grade credit", "50bp", "Total return swap at SOFR + 30 to "
-         "75bp, plus a 10 to 25bp agent fee where one applies."),
-        ("High yield", "65bp", "Same structure, priced wider."),
-        ("Municipals", "110bp", "No municipal futures contract and no liquid "
-         "municipal total return swap, so the only route is a margin loan "
-         "against the fund at SOFR + 50 to 150bp."),
-    ], columns=["holding", "over the risk free rate", "route"]).set_index(
-        "holding"), align_right=["over the risk free rate"])
-    if FDET is not None:
-        t = FDET.drop(columns=[c for c in DROP_ROWS if c in FDET.columns])
-        t.index.name = "asset"
-        r.table(t.round(4), align_right=list(t.columns),
-                caption="Per-asset rate and each strategy's average weight. The "
-                        "blended cost is the product summed down each column.")
-    r.prose(
-        "<strong>The blended rates land between 39 and 42 basis points and "
-        "barely differ across strategies.</strong> That is worth pausing on, "
-        "because you would expect risk parity to finance far more cheaply than "
-        "equal weight: it holds a third of the book in the two year Treasury, "
-        "which borrows at 3bp. It does not, for two reasons. It tilts just as "
-        "hard toward short investment grade, which costs 50bp. And it barely "
-        "underweights the municipals at 110bp, because municipals are not the "
-        "risky assets in this universe. They run at 4.0% and 5.5% volatility "
-        "against the 30 year Treasury's 13.4%, so equalising risk contributions "
-        "leaves them close to their equal weight.")
-    if FROUTE is not None:
-        t = FROUTE.drop(index=[i for i in DROP_ROWS if i in FROUTE.index],
-                        errors="ignore").copy()
-        t.columns = ["proportional, bp", "overlay, bp"][:t.shape[1]]
-        t.index.name = "strategy"
-        r.table(t.round(1), align_right=list(t.columns))
-    r.prose(
-        "Those blended rates assume <strong>proportional scaling</strong>: to "
-        "run the book at 1.5 times, every position is bought at 1.5 times, "
-        "including the municipal fund. That means taking a margin loan against "
-        "an illiquid mutual fund, which no desk would actually do.")
-    r.prose(
-        "The realistic alternative is an <strong>overlay</strong>. Hold the "
-        "cash book exactly as the strategy specifies, including the municipals "
-        "at their unlevered weight, and obtain the <em>additional</em> exposure "
-        "only through instruments that have a derivative: Treasury futures for "
-        "the rates sleeve, total return swaps for credit. The municipal sleeve "
-        "is never levered at all, so its 110bp never enters the marginal cost, "
-        "and the borrowed portion is financed at the blend of the cheaper "
-        "instruments instead. That works out around 28 basis points rather than "
-        "40.")
-    r.prose(
-        "<strong>Every number in this project uses the proportional figure, the "
-        "more expensive of the two</strong>, so the leverage drag reported here "
-        "is an upper bound on what an implementation would pay.")
+        "Some of the strategies here run less risk than the Aggregate and earn "
+        "less return than it too, which makes them hard to compare on a Sharpe "
+        "ratio alone. Grossing the lower risk book up to the index\'s own "
+        "volatility gives an apples to apples picture of how the risk adjusted "
+        "returns actually shake out, but doing that means borrowing, and "
+        "borrowing has a real cost we want to approximate rather than ignore. "
+        "<strong>The assumption throughout is an institutional book</strong> "
+        "with access to repo, listed futures and cleared swaps, not a retail "
+        "margin account, and the charge is applied per asset because what "
+        "financing costs depends on which instrument carries the position.")
 
-    r.section("What the assumption is worth")
+    r.section("Rebalancing frequency", (
+        "How often a portfolio trades is a cost decision, and the right answer "
+        "is not the same for a strategy that follows a signal as for one that "
+        "does not."))
     r.prose(
-        "The unlevered comparison does not depend on it at all: hierarchical "
-        "risk parity scores 0.659 against the Aggregate's 0.518 over the full "
-        "sample holding no leverage, and every significance test runs on the "
-        "unlevered series. The constant-risk comparison does depend on it, and "
-        "it has a breakeven.")
-    KEEP = ["Hierarchical RP", "Risk parity (ERC)", "HRP", "ERC"]
-    if FBE is not None:
-        keep = [c for c in ["leverage", "pays_bp", "breakeven_bp",
-                            "headroom_bp"] if c in FBE.columns]
-        t = FBE.reindex([i for i in KEEP if i in FBE.index])[keep].copy()
-        t.columns = ["scaling", "pays, bp", "breakeven, bp",
-                     "headroom, bp"][:len(keep)]
+        "Risk parity is the clean case, so it is used as the example. It has no "
+        "signal: rebalancing is only rebalancing, pulling the weights back to "
+        "where the covariance matrix says they belong, and not an attempt to "
+        "capture anything. A bond covariance matrix estimated on an expanding "
+        "window barely moves between one year and the next, so most of what "
+        "frequent trading corrects is drift that would have reverted on its "
+        "own.")
+    if REB is not None:
+        keep = [i for i in REB.index if i.startswith(("HRP, ", "ERC, "))
+                and "rolling" not in i and "expanding" not in i]
+        t = REB.loc[keep, [c for c in ["dev_sharpe", "oos_sharpe", "oos_vs_agg",
+                                       "trades", "turnover"] if c in REB.columns]]
+        t.columns = ["dev Sharpe", "holdout Sharpe", "holdout vs Agg",
+                     "trades", "turnover"][:t.shape[1]]
         t.index.name = "strategy"
-        r.table(t.round(1), align_right=list(t.columns),
-                caption="Against the Aggregate index.")
-    if SENS is not None:
-        t = SENS.reindex([i for i in KEEP + ["Agg index (VBMFX)"]
-                          if i in SENS.index])
-        t.index.name = "strategy"
-        r.table(t.round(3), align_right=list(t.columns),
-                caption="Sharpe at constant risk under a flat spread applied to "
-                        "every asset, so the per-asset result can be located "
-                        "against the simpler assumption.")
+        r.table(t.round(4), compact=True, align_right=list(t.columns),
+                caption="Expanding covariance window, all eleven assets. "
+                        "Turnover is what was actually traded, one way, "
+                        "annualised.")
     r.prose(
-        "Equal risk contribution pays 41 basis points against a breakeven of "
-        "294, so financing would have to be roughly seven times more expensive "
-        "before the result reverses. The hierarchical version has less headroom "
-        "because it needs more scaling to reach the index's risk.")
+        "<strong>Less trading is better at every step, for both methods and in "
+        "both windows.</strong> Annual rebalancing gives the highest Sharpe and "
+        "the lowest turnover at the same time, at 39 trades across thirty-eight "
+        "years, while daily rebalancing turns over 15 to 17% of the book a year "
+        "to produce a worse result.")
     r.prose(
-        "<strong>The more leverage a strategy needs, the more of its edge "
-        "belongs to whoever finances it.</strong> That restates what produces "
-        "the result rather than undermining it. Frazzini and Pedersen's account "
-        "of the low beta anomaly is that it persists <em>because</em> most "
-        "investors cannot lever cheaply, so a strategy harvesting it should "
-        "work for an institution financing at repo and stop working for someone "
-        "paying 150 over.")
+        "The signal-driven classes behave differently, and worse. A technical, "
+        "regression or machine learning strategy trades because its forecast "
+        "changed, so trading more often means acting on more of the forecast, "
+        "including the part that is noise. The technical family shows it "
+        "plainly: momentum on the raw twelve month return turns over 241% a "
+        "year and finishes last of everything tested, and the adaptive window "
+        "search is worst of all when it retrades monthly, at 155% turnover and "
+        "the poorest holdout figure in the project. <strong>Trading more on a "
+        "signal amplifies its noise; trading more on a risk-based rule "
+        "roughly pays for the better-fitted portfolio it buys you.</strong> "
+        "Neither argues for daily trading.")
 
     r.section("The Aggregate's effective duration", (
         "Quoted as 4.2 years throughout, and estimated rather than taken from "
@@ -1363,64 +1204,16 @@ def appendix_method():
         "modified duration of each holding, so nothing in the results depends "
         "on it.")
 
-    r.section("Rebalancing frequency", (
-        "Daily data separates estimating the covariance from trading on it. The "
-        "matrix is estimated on every day available; the portfolio trades on "
-        "whatever schedule costs justify."))
-    if REB is not None:
-        keep = [i for i in REB.index if i.startswith(("HRP, ", "ERC, "))
-                and "rolling" not in i and "expanding" not in i]
-        t = REB.loc[keep, [c for c in ["dev_sharpe", "oos_sharpe", "oos_vs_agg",
-                                       "trades", "turnover"] if c in REB.columns]]
-        t.columns = ["dev Sharpe", "holdout Sharpe", "holdout vs Agg",
-                     "trades", "turnover"][:t.shape[1]]
-        t.index.name = "strategy"
-        r.table(t.round(4), align_right=list(t.columns),
-                caption="Expanding covariance window, all eleven assets. "
-                        "Turnover is what was actually traded, one way, "
-                        "annualised.")
-    r.prose(
-        "<strong>Less trading is better at every step, for both methods and in "
-        "both windows.</strong> Annual rebalancing gives the highest Sharpe and "
-        "the lowest turnover simultaneously, at 39 trades across thirty-eight "
-        "years. Daily rebalancing turns over 15 to 17% of the book a year to "
-        "produce a worse result. A bond covariance matrix estimated on an "
-        "expanding window barely moves between rebalances, so frequent trading "
-        "is mostly paying costs to correct drift that would have reverted.")
-    r.prose(
-        "One pattern runs through every row: <strong>hierarchical risk parity "
-        "leads on development and equal risk contribution leads on the "
-        "holdout.</strong> That is consistent across all eight combinations "
-        "rather than a single cell, and it is what you would expect if the "
-        "clustering step fits structure that does not fully generalise.")
+    paginate(r, "appendix_method")
+    return r.render(OUT / "appendix_method.html")
 
-    if OVL is not None:
-        r.section("Leverage route", (
-            "Scaling to the benchmark's risk means borrowing, and there are two "
-            "ways to do it. Appendix A sets out both; this is what each is "
-            "worth."))
-        t = OVL[[c for c in ["dev_leverage", "dev_bp", "dev_sharpe",
-                             "dev_vs_agg", "dev_p", "oos_sharpe", "oos_vs_agg",
-                             "oos_p"] if c in OVL.columns]].copy()
-        t.columns = ["scaling", "cost bp", "dev Sharpe", "dev vs Agg", "dev p",
-                     "holdout Sharpe", "holdout vs Agg", "holdout p"][:t.shape[1]]
-        t.index.name = "strategy"
-        r.table(t.round(4), align_right=list(t.columns),
-                stars=["dev p", "holdout p"],
-                caption="Proportional scales every position, including the "
-                        "municipal fund. Overlay holds municipals at their cash "
-                        "weight and takes the borrowed exposure only through "
-                        "instruments that have a derivative.")
-        r.prose(
-            "The overlay saves about sixteen basis points of borrowing cost, "
-            "worth roughly +0.02 of Sharpe in development and +0.03 on the "
-            "holdout. It also changes what the levered book holds: the extra "
-            "exposure concentrates in Treasuries and credit rather than being "
-            "spread across the strategy's own weights, so it is a slightly "
-            "different portfolio and not purely a cheaper one. Every headline "
-            "number in this project uses the proportional route, which is the "
-            "more expensive of the two.")
 
+# ---------------------------------------------------------------- appendix C
+
+def references():
+    r = PhaseReport(
+        phase="Appendix D", title="References",
+        summary=PAGE_DESC["appendix_refs"], status="complete", project=PROJECT)
     r.section("References", (
         "Each of these is cited at the point it is used above."))
     r.prose(
@@ -1471,14 +1264,13 @@ def appendix_method():
         "Matrix. <em>Journal of Portfolio Management</em>, 30(4), 110-119. "
         "<span class=\"note\">The covariance estimator used by every "
         "risk-based strategy in this project.</span>")
-    paginate(r, "appendix_method")
-    return r.render(OUT / "appendix_method.html")
+    paginate(r, "appendix_refs")
+    return r.render(OUT / "appendix_refs.html")
 
-
-# ---------------------------------------------------------------- appendix C
 
 def appendix_eval():
     Bt = trim(get("fi_aligned_bootstrap"))
+    SIGC = get("fi_significance_comparison")
     r = PhaseReport(
         phase="Appendix C", title="Evaluating Results",
         summary=PAGE_DESC["appendix_eval"],
@@ -1511,13 +1303,13 @@ def appendix_eval():
          "strategy and the benchmark, on every date, and keep only dates where "
          "both exist."),
         ("2", "Resample in blocks", "Build a synthetic history the same length "
-         "as the real one by drawing contiguous <em>blocks</em> of dates rather "
+         "as the real one by drawing contiguous blocks of dates rather "
          "than individual days. Blocks preserve whatever autocorrelation and "
          "volatility clustering the data has; drawing single days would destroy "
          "it and hand back the too-narrow error bar."),
         ("3", "Randomise the block length", "Block lengths are drawn from a "
          "geometric distribution rather than fixed. That is the "
-         "<em>stationary</em> part, and it prevents the result depending on an "
+         "stationary part, and it prevents the result depending on an "
          "arbitrary choice of block size."),
         ("4", "Keep the pair together", "The same block of dates is drawn for "
          "the strategy and the benchmark. Both live through the same simulated "
@@ -1541,64 +1333,42 @@ def appendix_eval():
         "Blocks average twelve periods. The seed is fixed, so the numbers "
         "reproduce exactly. Stars in every table mark *** below 0.01, ** below "
         "0.05 and * below 0.10.")
-    r.prose(
-        "One limit worth stating: this handles serial dependence, but it does "
-        "not correct for having tried many strategies. Twenty candidates "
-        "against a benchmark will produce a low p-value somewhere by chance, "
-        "which is the reason the holdout exists and the reason candidates are "
-        "chosen on development before it is opened.")
 
-    r.section("How this extends the 2025 work", (
-        "The original study bootstrapped a Sharpe difference too. Three things "
-        "are done differently here, and each is worth a small amount."))
+    r.section("Full Significance Results", (
+        "Every strategy carried past development, under the bootstrap this "
+        "project uses and under the textbook parametric alternative."))
     r.prose(
-        "The 2025 version drew 100,000 resamples of <em>individual</em> months, "
-        "paired across both series, and reported the fraction of resampled "
-        "differences at or below zero. It cited Ledoit and Wolf (2008), which "
-        "is the right reference, though that paper argues for a block bootstrap "
-        "rather than the independent draws it actually used.")
-    r.table(pd.DataFrame([
-        ("Blocks instead of single periods", "Individual draws destroy the "
-         "autocorrelation and volatility clustering in the data, which makes "
-         "the resampled distribution too narrow and the p-value too small."),
-        ("Random block length", "Fixed blocks make the answer depend on the "
-         "block size chosen. Drawing lengths from a geometric distribution "
-         "removes that, which is what makes the bootstrap stationary."),
-        ("Centring on the null", "The 2025 p-value was the raw fraction of "
-         "resamples below zero, which is a confidence statement about the "
-         "observed effect rather than a test against a null of no edge. "
-         "Shifting the distribution to a mean of zero first imposes the null."),
-    ], columns=["change", "why it matters"]).set_index("change"))
-    r.prose(
-        "Run side by side on the same data, the three changes move p-values by "
-        "at most about 0.03, always in the conservative direction on the "
-        "development sample. The 2025 conclusion was not wrong; it was measured "
-        "with a method that would understate p on more autocorrelated data, "
-        "which is exactly the situation in this universe.")
-    r.section("Significance", (
-        "A stationary block bootstrap, set out in full in Appendix C: 5,000 "
-        "paired resamples in blocks of random length, centred on the null of no "
-        "edge, counting how often chance reaches the observed gap."))
-    if Bt is not None:
-        for tag, win in [("dev", "Development"), ("oos", "Holdout"),
-                         ("full", "Full sample")]:
-            t = window(Bt, tag, ["edge", "lo", "hi", "p"],
-                       ["edge vs the Agg", "CI low", "CI high", "p"])
-            r.table(t.round(4), align_right=list(t.columns), stars=["p"],
+        "The p-values quoted everywhere else come from the stationary block "
+        "bootstrap described above. The conventional alternative is the "
+        "Jobson-Korkie test with Memmel\'s correction, the standard parametric "
+        "test for a difference between two Sharpe ratios, which assumes returns "
+        "are independent and normally distributed. Bond returns are neither, "
+        "which is why the bootstrap is used for the headline numbers, but the "
+        "comparison is worth showing.")
+    if SIGC is not None:
+        for tag, win in [("dev", "Development, 1987 to 2015"),
+                         ("oos", "Holdout, 2016 to 2026"),
+                         ("full", "Full sample, 1987 to 2026")]:
+            t = SIGC[[f"{tag}_edge", f"{tag}_t", f"{tag}_p_t",
+                      f"{tag}_p_boot"]].copy()
+            t.columns = ["edge vs the Agg", "t statistic",
+                         "p, standard t test", "p, block bootstrap"]
+            t.index.name = "strategy"
+            t.index = [STRATEGY_NAME.get(i, i) for i in t.index]
+            r.table(t.round(4), compact=True, align_right=list(t.columns),
+                    stars=["p, standard t test", "p, block bootstrap"],
                     caption=win)
     r.prose(
-        "Hierarchical risk parity clears the Aggregate in all three windows: "
-        "+0.122 on development, +0.115 on the holdout and +0.153 over the full "
-        "sample at p = 0.002. Equal risk contribution is not significant on "
-        "development alone but is on both the holdout and the full sample.")
+        "<strong>The two tests broadly agree.</strong> Three strategies clear "
+        "five percent on development under either, and four do so on the full "
+        "sample under either. The one disagreement is on the holdout, where "
+        "momentum on the Sharpe ratio loses to the index significantly under "
+        "the t test at p = 0.036 and falls just short under the bootstrap at "
+        "p = 0.065.")
     r.prose(
-        "Worth holding alongside that: <strong>equal weight also beat the "
-        "Aggregate over the holdout</strong>, at +0.103. Over that decade "
-        "almost any diversified bond book beat the index, so clearing it out of "
-        "sample is a real result against the benchmark a mandate uses and a "
-        "weaker claim about skill than it first appears. Measured against equal "
-        "weight instead, the holdout margin is +0.012 with an interval spanning "
-        "zero.")
+        "That the bootstrap is close to the parametric test rather than far "
+        "from it is itself worth knowing. The extra machinery is not doing much "
+        "work here, which means the results do not rest on the choice of test.")
 
     paginate(r, "appendix_eval")
     return r.render(OUT / "appendix_eval.html")
@@ -1678,10 +1448,13 @@ tr.me th,tr.me td{{font-weight:600}}
 .dsc{{display:block;color:var(--mut);font-size:.92rem}}
 footer{{margin-top:2.5rem;padding-top:1.2rem;border-top:1px solid var(--rule);font-size:.85rem;color:var(--mut)}}
 a.plain{{color:var(--acc)}}
+.byline{{font-family:"IBM Plex Mono",monospace;font-size:.76rem;letter-spacing:.06em;color:var(--mut);margin:-.6rem 0 1.6rem}}
+.disclaimer{{font-size:.8rem;color:var(--mut);opacity:.65;margin:2rem 0 0}}
 </style>
 <div class="wrap">
 <span class="eyebrow">Gus Guenther</span>
 <h1>Fixed Income Risk Parity</h1>
+<p class="byline">Gus Guenther, September 2026</p>
 <div class="intro">
 <p><b>The starting point.</b> This project builds on my
 <a class="plain" href="{URL_MACRO}">macro portfolio rebuild</a>, which showed how
@@ -1720,6 +1493,7 @@ Stars mark one-sided bootstrap significance: *** below 0.01, ** below 0.05,
 * below 0.10.</p>
 
 {cards}
+<p class="disclaimer">For research purposes only. This is not investment advice.</p>
 <footer>
 The project this grew out of:
 <a class="plain" href="{URL_MACRO}">macro-portfolio-rebuild</a>.
@@ -1739,6 +1513,7 @@ def main() -> int:
         if f.exists():
             f.unlink()
     for fn in [phase1, phase2, phase3, appendix_method, appendix_universe,
+               references,
                appendix_eval, index]:
         try:
             p = fn()

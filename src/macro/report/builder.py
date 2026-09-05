@@ -225,10 +225,13 @@ class PhaseReport:
       {self._crumb()}
     </div>
     <h1><span class="masthead__phase">{html.escape(self.phase)}</span>{html.escape(self.title)}</h1>
+    <p class="byline">Gus Guenther, September 2026</p>
     <p class="standfirst">{self.summary}</p>
   </header>
   <main>
     {"".join(self._blocks)}
+    <p class="disclaimer">For research purposes only. This is not investment
+    advice.</p>
   </main>
   {self._pager()}
   <footer class="colophon">
