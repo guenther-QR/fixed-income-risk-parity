@@ -22,6 +22,28 @@ DUR = {"ust2y": 1.9, "ust5y": 4.6, "ust10y": 8.4, "ust30y": 18.5,
        "ig_short": 2.5, "ig": 4.2, "ig_long": 12.0, "hy": 4.0, "mbs": 4.5,
        "muni": 5.0, "muni_hy": 7.5}
 
+# One line per page, shown on the summary card and as the page's own
+# standfirst. Keyed by stem so the two cannot fall out of step.
+PAGE_DESC = {
+    "phase1_idea":
+        "Extension from lessons learned in my macro portfolio project. Asset "
+        "universe and data collection.",
+    "phase2_strategies":
+        "Regression, machine learning, technical, and risk-based strategy "
+        "development.",
+    "phase3_results":
+        "Holdout decade results, constant risk comparisons and portfolio "
+        "characteristics. Conclusions and next steps.",
+    "appendix_method":
+        "Rebalancing, leverage and transaction costs, and other portfolio "
+        "construction mechanics.",
+    "appendix_universe":
+        "Independent variation, principal component analysis, and "
+        "forecastability.",
+    "appendix_eval":
+        "P-value construction.",
+}
+
 PAGES = [
     ("phase1_idea", "Phase 1", "The Idea"),
     ("phase2_strategies", "Phase 2", "Strategies"),
@@ -199,8 +221,7 @@ LEGEND = ('<div class="legend">'
 def phase1():
     r = PhaseReport(
         phase="Phase 1", title="The Idea",
-        summary=("Extension from lessons learned in my macro portfolio "
-                 "project. Asset universe and data collection."),
+        summary=PAGE_DESC["phase1_idea"],
         status="complete", project=PROJECT)
 
     stats = get("fi_daily_stats")
@@ -372,9 +393,7 @@ def phase1():
 def phase2():
     r = PhaseReport(
         phase="Phase 2", title="Strategies",
-        summary=("Four families of model, one estimation window and one "
-                 "benchmark. Everything on this page is measured on the "
-                 "development sample only; the holdout is opened in Phase 3."),
+        summary=PAGE_DESC["phase2_strategies"],
         status="complete", project=PROJECT)
 
     DEV = get("fi_table_development")
@@ -752,9 +771,7 @@ def phase3():
     OOS_T = get("fi_table_holdout")
     r = PhaseReport(
         phase="Phase 3", title="Results",
-        summary=("The held-out decade, 2016 to 2026, opened once after "
-                 "development was finished. Risk parity clears the Aggregate. "
-                 "Every model that needed a return forecast does not."),
+        summary=PAGE_DESC["phase3_results"],
         status="complete", project=PROJECT)
 
     T = get("fi_dmodel_summary")
@@ -1001,11 +1018,7 @@ def phase3():
 def appendix_universe():
     r = PhaseReport(
         phase="Appendix B", title="Market Dynamics",
-        summary=("Decomposing the variance of the universe through principal "
-                 "components, and measuring forecastability as a function of "
-                 "duration and volatility. Neither result builds a portfolio. "
-                 "Together they explain why the portfolio that works is built "
-                 "from the covariance matrix."),
+        summary=PAGE_DESC["appendix_universe"],
         status="complete", project=PROJECT)
 
     fipred = get("fi_predictability_risk")
@@ -1164,9 +1177,7 @@ def appendix_method():
     OVL = get("fi_overlay_summary")
     r = PhaseReport(
         phase="Appendix A", title="Implementation",
-        summary=("Burn-in and estimation windows. Transaction costs and "
-                 "leverage costs, both charged per asset. The constant-risk "
-                 "convention every comparison is made under."),
+        summary=PAGE_DESC["appendix_method"],
         status="complete", project=PROJECT)
 
     FDET = get("fi_financing_detail")
@@ -1470,7 +1481,7 @@ def appendix_eval():
     Bt = trim(get("fi_aligned_bootstrap"))
     r = PhaseReport(
         phase="Appendix C", title="Evaluating Results",
-        summary="P-values, bootstrapping.",
+        summary=PAGE_DESC["appendix_eval"],
         status="complete", project=PROJECT)
 
     r.section("How every p-value in this project is computed", (
@@ -1629,24 +1640,11 @@ def index():
             body += (f"<tr{cls}><th>{name}</th>"
                      + "".join(f"<td>{c}</td>" for c in cells) + "</tr>")
 
-    descs = [
-        "Extension from lessons learned in my macro portfolio project. Asset "
-        "universe and data collection.",
-        "Regression, machine learning, technical, and risk-based strategy "
-        "development.",
-        "Holdout decade results, constant risk comparisons and portfolio "
-        "characteristics. Conclusions and next steps.",
-        "Independent variation, principal component analysis, and "
-        "forecastability.",
-        "Rebalancing, leverage and transaction costs, and other portfolio "
-        "construction mechanics.",
-        "P-value construction.",
-    ]
     cards = "".join(
         f'<a class="card" href="{stem}.html"><span class="num">{label}</span>'
         f'<span class="ttl">{label}: {title}</span>'
-        f'<span class="dsc">{d}</span></a>'
-        for (stem, label, title), d in zip(PAGES, descs))
+        f'<span class="dsc">{PAGE_DESC[stem]}</span></a>'
+        for stem, label, title in PAGES)
 
     html = f"""<!doctype html>
 <meta charset="utf-8">
