@@ -1,0 +1,84 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Fixed Income Risk Parity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#f6f7f8;--fg:#16202b;--mut:#5d6b78;--rule:#dde3e8;--card:#fff;--acc:#12556b}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1417;--fg:#e6ecef;--mut:#93a3ad;--rule:#232d34;--card:#161d22;--acc:#5cb6c8}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"IBM Plex Sans",system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:52rem;margin:0 auto;padding:4rem 1.5rem 5rem}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);opacity:.7}
+h1{font-size:2.1rem;margin:.5rem 0 1.2rem;letter-spacing:-.02em}
+h2{font-size:.78rem;font-family:"IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin:2.4rem 0 .8rem}
+.intro p{margin:0 0 1.15rem;max-width:42rem}
+.intro b{color:var(--fg)}
+.scroll{overflow-x:auto;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+table{border-collapse:collapse;width:100%;font-size:.86rem;font-variant-numeric:tabular-nums}
+th,td{padding:.6rem .7rem;text-align:right;border-bottom:1px solid var(--rule);white-space:nowrap;vertical-align:top}
+thead th{font-weight:500;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);line-height:1.4}
+tbody th{text-align:left;font-weight:400}
+tbody tr:last-child td,tbody tr:last-child th{border-bottom:none}
+tr.me th,tr.me td{font-weight:600}
+.d{display:block;font-size:.74rem;color:var(--mut);font-weight:400}
+.note{font-size:.8rem;color:var(--mut);margin:.7rem 0 2.4rem;max-width:42rem}
+.card{display:block;background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:1.1rem 1.3rem;margin-bottom:.7rem;text-decoration:none;color:inherit}
+.card:hover{border-color:var(--acc)}
+.num{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--acc)}
+.ttl{display:block;font-weight:600;font-size:1.05rem;margin:.15rem 0 .3rem}
+.dsc{display:block;color:var(--mut);font-size:.92rem}
+footer{margin-top:2.5rem;padding-top:1.2rem;border-top:1px solid var(--rule);font-size:.85rem;color:var(--mut)}
+a.plain{color:var(--acc)}
+.byline{font-family:"IBM Plex Mono",monospace;font-size:.76rem;letter-spacing:.06em;color:var(--mut);margin:-.6rem 0 1.6rem}
+.disclaimer{font-size:.8rem;color:var(--mut);opacity:.65;margin:2rem 0 0}
+</style>
+<div class="wrap">
+<span class="eyebrow">Gus Guenther, September 2026</span>
+<h1>Fixed Income Risk Parity</h1>
+<div class="intro">
+<p><b>The starting point.</b> This project builds on my
+<a class="plain" href="https://guenther-qr.github.io/macro-portfolio-rebuild/">macro portfolio rebuild</a>, which showed how
+difficult equity returns are to predict but also produced real evidence that
+fixed income returns are predictable. The goal here was to take that evidence
+seriously and build a bond-only portfolio that beats its benchmark.</p>
+
+<p><b>The asset universe.</b> Eleven fixed income assets: four constant maturity
+Treasury holdings at 2, 5, 10 and 30 years, four corporate credit sleeves running
+from short investment grade through to high yield, and three securitized and
+municipal positions covering agency mortgages, intermediate municipals and high
+yield municipals. It uses the same walk-forward backtesting framework as the
+prior project, so results across the two are directly comparable.</p>
+
+<p><b>What was tested.</b> Univariate regression forecasts combined across 256
+signals, four machine learning families tuned on the development sample, three
+technical momentum models including an adaptive rolling window of my own, and
+two risk-based methods built from the covariance matrix alone.</p>
+
+<p><b>What worked.</b> Risk parity strategies, which work by utilizing
+risk-based position weighting instead of return forecasting. I built and tested
+both classic risk parity and Marcos Lopez de Prado's Hierarchical Risk Parity,
+benchmarked against the Bloomberg Aggregate.</p>
+
+</div>
+
+<h2>Sharpe ratio, and edge against the Aggregate index</h2>
+<div class="scroll">
+<table>
+<thead><tr><th>Strategy</th><th>Development<br>1987-2015</th><th>Holdout<br>2016-2026</th><th>Full sample<br>1987-2026</th></tr></thead>
+<tbody><tr class="me"><th>HRP + 60m rolling adaptive momentum overlay</th><td><span class="sig-cell">1.056<span class="d">+0.232*** &nbsp;p=0.004</span></span></td><td><span>-0.006<span class="d">+0.073 &nbsp;p=0.240</span></span></td><td><span class="sig-cell">0.721<span class="d">+0.208*** &nbsp;p=0.002</span></span></td></tr><tr class="me"><th>HRP, annual</th><td><span class="sig-cell">0.952<span class="d">+0.128** &nbsp;p=0.037</span></span></td><td><span class="sig-cell">0.057<span class="d">+0.135** &nbsp;p=0.039</span></span></td><td><span class="sig-cell">0.676<span class="d">+0.163*** &nbsp;p=0.004</span></span></td></tr><tr class="me"><th>ERC, annual</th><td><span>0.886<span class="d">+0.062 &nbsp;p=0.190</span></span></td><td><span class="sig-cell">0.082<span class="d">+0.161*** &nbsp;p=0.008</span></span></td><td><span class="sig-cell">0.636<span class="d">+0.123*** &nbsp;p=0.010</span></span></td></tr><tr><th>60m rolling adaptive momentum</th><td><span>0.901<span class="d">+0.077 &nbsp;p=0.301</span></span></td><td><span>-0.017<span class="d">+0.061 &nbsp;p=0.368</span></span></td><td><span>0.616<span class="d">+0.103 &nbsp;p=0.161</span></span></td></tr><tr class="me"><th>HRP + Momentum (Sharpe) overlay</th><td><span class="sig-cell">0.965<span class="d">+0.141** &nbsp;p=0.022</span></span></td><td><span>-0.030<span class="d">+0.048 &nbsp;p=0.315</span></span></td><td><span>0.579<span class="d">+0.067 &nbsp;p=0.141</span></span></td></tr><tr><th>Agg index</th><td><span>0.824<span class="d">benchmark</span></span></td><td><span>-0.078<span class="d">benchmark</span></span></td><td><span>0.513<span class="d">benchmark</span></span></td></tr><tr><th>Momentum (Sharpe)</th><td><span>0.696<span class="d">-0.128 &nbsp;p=0.173</span></span></td><td><span>-0.415<span class="d">-0.336* &nbsp;p=0.065</span></span></td><td><span class="sig-cell">0.265<span class="d">-0.248** &nbsp;p=0.023</span></span></td></tr></tbody>
+</table>
+</div>
+<p class="note">Shaded cells beat the Aggregate at five percent or better.
+Stars mark one-sided bootstrap significance: *** below 0.01, ** below 0.05,
+* below 0.10.</p>
+
+<a class="card" href="phase1_idea.html"><span class="num">Phase 1</span><span class="ttl">Phase 1: The Idea</span><span class="dsc">Extension from lessons learned in my macro portfolio project. Asset universe and data collection.</span></a><a class="card" href="phase2_strategies.html"><span class="num">Phase 2</span><span class="ttl">Phase 2: Strategies</span><span class="dsc">Regression, machine learning, technical, and risk-based strategy development.</span></a><a class="card" href="phase3_results.html"><span class="num">Phase 3</span><span class="ttl">Phase 3: Results</span><span class="dsc">Holdout decade results, constant risk comparisons and portfolio characteristics. Conclusions and next steps.</span></a><a class="card" href="appendix_method.html"><span class="num">Appendix A</span><span class="ttl">Appendix A: Implementation</span><span class="dsc">Rebalancing, leverage and transaction costs, and other portfolio construction mechanics.</span></a><a class="card" href="appendix_universe.html"><span class="num">Appendix B</span><span class="ttl">Appendix B: Market Dynamics</span><span class="dsc">Independent variation, principal component analysis, and forecastability.</span></a><a class="card" href="appendix_eval.html"><span class="num">Appendix C</span><span class="ttl">Appendix C: Evaluating Results</span><span class="dsc">P-value construction.</span></a><a class="card" href="appendix_refs.html"><span class="num">Appendix D</span><span class="ttl">Appendix D: References</span><span class="dsc">Papers and sources the project draws on.</span></a>
+<p class="disclaimer">For research purposes only. This is not investment advice.</p>
+<footer>
+The project this grew out of:
+<a class="plain" href="https://guenther-qr.github.io/macro-portfolio-rebuild/">macro-portfolio-rebuild</a>.
+&nbsp;&middot;&nbsp;
+<a class="plain" href="https://github.com/guenther-QR/fixed-income-risk-parity">Source on GitHub</a>
+</footer>
+</div>
