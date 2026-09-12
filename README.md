@@ -74,8 +74,8 @@ is reaching for return by extending duration, and neither is winning by holding
 less rate risk.
 
 **It survives costs and institutional financing.** Turnover is 1.5% to 2.1% a
-year, and there is 90 to 252 basis points of headroom to the financing
-breakeven.
+year, and there is plenty of room to assume more aggressive costs than the 
+institutional rates I assumed. Evidence this could work for retail investors.
 
 **Return forecasting adds nothing on this universe.** The combined regression
 and all four machine learning families finish below the index on development.
@@ -90,8 +90,7 @@ strategy tested, and the risk-adjusted version loses to the index out of sample.
 
 **The 60m rolling adaptive momentum strategy is the one open question.** It
 returns more than any other strategy on development and it does not clear five
-percent in any window. It is our own construction and it deserves a proper test
-on data this project has not touched.
+percent in any window. It is our own construction and it deserves more testing.
 
 ## Why risk parity and not forecasting
 
@@ -118,9 +117,10 @@ matrix alone.
   market debt and bank loans are different factors, not more of the same one.
 - **Test on a second market.** If the duration and forecastability relationship
   is structural it should appear in gilts and bunds.
-- **Cost aware optimisation.** On the parent project, trading a fraction of the
-  way toward the target each period rather than fully rebalancing raised Sharpe
-  from 0.06 to 0.23 with turnover cut ninefold.
+- **Expand testing of the 60m rolling momentum strategy.** My custom rolling
+  momentum strategy provides incremental returns as an overlay to the risk
+  parity framework on the development window but fails on the holdout. We should
+  continue to test and adapt this strategy to see if we can make it more robust. 
 
 ---
 
